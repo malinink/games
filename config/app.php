@@ -158,8 +158,8 @@ return [
 
         /*
          * Additional Service Providers...
-         */        
-	Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
+         */
+        Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
 
     ],
