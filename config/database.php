@@ -64,6 +64,19 @@ return [
             'strict'    => false,
             'engine'    => null,
         ],
+        
+        'mysql_testing' => [
+            'driver'    => 'mysql',
+            'host'      => env('TESTING_DB_HOST', 'localhost'),
+            'database'  => env('TESTING_DB_DATABASE', 'forge'),
+            'username'  => env('TESTING_DB_USERNAME', 'forge'),
+            'password'  => env('TESTING_DB_PASSWORD', ''),
+            'charset'   => 'utf8',
+            'collation' => 'utf8_unicode_ci',
+            'prefix'    => '',
+            'strict'    => false,
+            'engine'    => null,
+        ],
 
         'pgsql' => [
             'driver'   => 'pgsql',
