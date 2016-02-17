@@ -16,11 +16,20 @@
 
     <!-- rules and them excludes -->
     <rule ref="PSR2"/>
+    <!--    
+    <rule ref="Squiz.Commenting.FunctionComment" />
+    <rule ref="Squiz.Commenting.FunctionCommentThrowTag" />
+    <rule ref="Squiz.Commenting.FileComment" />
+    <rule ref="Squiz.Commenting.VariableComment" />
+    -->
+    
     <!-- tests and migrations does not have namespaces -->
     <rule ref="PSR1.Classes.ClassDeclaration">
         <exclude-pattern>tests</exclude-pattern>
         <exclude-pattern>database</exclude-pattern>
     </rule>
+    
+    
     <!-- blades have no php code -->
     <rule ref="Internal.NoCodeFound">
         <exclude-pattern>*.blade.php</exclude-pattern>
