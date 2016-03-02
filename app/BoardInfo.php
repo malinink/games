@@ -19,5 +19,5 @@ class BoardInfo extends Model
     public function games()
     {
         return $this->belongsTo('App\Game');
-    }  
+    }
 }
