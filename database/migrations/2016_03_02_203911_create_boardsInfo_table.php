@@ -6,7 +6,7 @@ use Illuminate\Database\Migrations\Migration;
 class CreateBoardsInfoTable extends Migration
 {
     public function up()
-    {     
+    {
         Schema::create(
             'boardsInfo',
             function (Blueprint $table) {
