@@ -29,17 +29,17 @@ class User extends Authenticatable
         return $this->hasOne('App\UserDefault');
     }
     
-    public function useringameinfo()
+    public function useringameinfos()
     {
         return $this->hasMany('App\UserIngameInfo');
     }
     
-    public function usergame()
+    public function usergames()
     {
         return $this->hasMany('App\UserGame');
     }
     
-    public function friend()
+    public function friends()
     {
         return $this->belongsToMany('App\User', 'friends_users', 'friend_id', 'user_id');
     }
