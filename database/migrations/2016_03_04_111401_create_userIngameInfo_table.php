@@ -15,8 +15,8 @@ class CreateUserIngameInfoTable extends Migration
       Schema::create('userIngameInfo', function (Blueprint $table) {
             $table->increments('type_id')->unsigned;
             $table->increments('user_id')->unsigned;
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('type_id')->references('id')->on('gamesType');
+            $table->foreign('user_id')->references('id')->on('user')->onDelete('cascade');
+            $table->foreign('type_id')->references('id')->on('gamesType')->onDelete('cascade');
             $table->integer('game_rating');
             $table->integer('games');
             $table->integer('wins');
@@ -34,3 +34,4 @@ class CreateUserIngameInfoTable extends Migration
     }
     
 }
+
