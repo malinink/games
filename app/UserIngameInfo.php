@@ -1,12 +1,26 @@
 <?php
-
+/**
+ *
+ * @IrenJones
+ */
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
 class UserIngameInfo extends Model
 {
-    protected $table ='userIngameInfo'; 
+    /**
+     * Table name
+     *
+     * @var string
+     */
+    protected $table ='user_ingame_info';
+    
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
     protected $fillable = [
         'type_id',
         'user_id',
@@ -15,6 +29,10 @@ class UserIngameInfo extends Model
         'wins'
     ];
     
+    /**
+     *
+     * @return User[]
+     */
     public function users()
     {
         return $this->belongsTo('App\User');
@@ -24,5 +42,4 @@ class UserIngameInfo extends Model
     {
         return $this->belongsTo('App\GameType');
     }
-    
 }
