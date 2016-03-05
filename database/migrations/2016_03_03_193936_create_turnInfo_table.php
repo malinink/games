@@ -1,5 +1,8 @@
 <?php
-
+/**
+ *
+ * @IrenJones
+ */
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
@@ -15,7 +18,7 @@ class CreateTurnInfoTable extends Migration
         Schema::create(
             'turnInfo',
             function (Blueprint $table) {
-                $table->integer('game_id')->unsigned;
+                $table->integer('game_id')->unsigned();
                 $table->foreign('game_id')->references('id')->on('games')->onDelete('cascade');
                 $table->smallInteger('turn_number');
                 $table->smallInteger('move');
@@ -35,4 +38,3 @@ class CreateTurnInfoTable extends Migration
         Schema::drop('turnInfo');
     }
 }
-

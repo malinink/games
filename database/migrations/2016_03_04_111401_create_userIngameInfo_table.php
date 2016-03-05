@@ -1,5 +1,8 @@
 <?php
-
+/**
+ *
+ * @IrenJones
+ */
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
@@ -12,11 +15,12 @@ class CreateUserIngameInfoTable extends Migration
      */
     public function up()
     {
-      Schema::create('userIngameInfo', function (Blueprint $table) {
-            $table->increments('type_id')->unsigned;
-            $table->increments('user_id')->unsigned;
-            $table->foreign('user_id')->references('id')->on('user')->onDelete('cascade');
-            $table->foreign('type_id')->references('id')->on('gamesType')->onDelete('cascade');
+        Schema::create('user_ingame_info', function (Blueprint $table) {
+            $table->increments('id');
+            $table->tinyInteger('game_type_id')->unsigned();
+            $table->integer('user_id')->unsigned();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('game_type_id')->references('id')->on('game_types')->onDelete('cascade');
             $table->integer('game_rating');
             $table->integer('games');
             $table->integer('wins');
@@ -30,8 +34,6 @@ class CreateUserIngameInfoTable extends Migration
      */
     public function down()
     {
-        Schema::drop('userIngameInfo');
+        Schema::drop('user_ingame_info');
     }
-    
 }
-
