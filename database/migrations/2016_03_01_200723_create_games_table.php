@@ -1,5 +1,8 @@
 <?php
-
+/**
+ *
+ * @Ananaskelly
+ */
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
@@ -16,8 +19,8 @@ class CreateGamesTable extends Migration
             'games',
             function (Blueprint $table) {
                 $table->increments('id');
-                $table->tinyInteger('type_id')->unsigned;
-                $table->foreign('type_id')->references('id')->on('gamesType')->onDelete('cascade');
+                $table->tinyInteger('game_type_id')->unsigned();
+                $table->foreign('game_type_id')->references('id')->on('game_types')->onDelete('cascade');
                 $table->boolean('private');
                 $table->dateTime('time_started');
                 $table->dateTime('time_finished');
