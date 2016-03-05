@@ -12,7 +12,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password', 'registration_date', 'last_visit'
     ];
 
     /**
@@ -23,4 +23,24 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+    
+    public function userdefault()
+    {
+        return $this->hasOne('App\UserDefault');
+    }
+    
+    public function useringameinfos()
+    {
+        return $this->hasMany('App\UserIngameInfo');
+    }
+    
+    public function usergames()
+    {
+        return $this->hasMany('App\UserGame');
+    }
+    
+    public function friends()
+    {
+        return $this->belongsToMany('App\User', 'friends_users', 'friend_id', 'user_id');
+    }
 }
