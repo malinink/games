@@ -21,7 +21,7 @@ class AdminController extends Controller
         if (Auth::user()->isAdmin == '1') {
             return view('admin/home');
         } else {
-            redirect('home')->with('message', 'You are not admin');
+            return redirect('home')->with('message', 'You are not admin');
         }
         
     }
