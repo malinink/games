@@ -1,5 +1,8 @@
 <?php
-
+/*
+ *
+ * @artesby
+ */
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
