@@ -39,7 +39,7 @@ class GameType extends Model
     
     /**
      *
-     * @return UserDefault[]
+     * @return User[]
      */
     public function users()
     {
