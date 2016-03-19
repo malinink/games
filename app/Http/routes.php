@@ -37,4 +37,8 @@ Route::group(['middleware' => 'web'], function () {
 /*
  * Admin route
  */
-Route::get('/home/admin', 'AdminController@index');
+Route::group(['middleware' => ['web', 'admin']], function () {
+    
+    Route::get('/home/admin', 'AdminController@index');
+    
+});
