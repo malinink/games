@@ -12,7 +12,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'registration_date', 'last_visit'
+        'name', 'email', 'password', 'registration_date', 'last_visit', 'default_game_type_id', 'default_game_private'
     ];
 
     /**
@@ -37,6 +37,11 @@ class User extends Authenticatable
     public function usergames()
     {
         return $this->hasMany('App\UserGame');
+    }
+    
+    public function gametypes()
+    {
+        return $this->belongsTo('App\GameType');
     }
     
     public function friends()
