@@ -12,7 +12,16 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'registration_date', 'last_visit'
+        'name', 'email', 'password', 'registration_date', 'last_visit', 'isAdmin'
+    ];
+    
+    /**
+     * Attributes to be casted.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'isAdmin' => 'boolean'
     ];
 
     /**
