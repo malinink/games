@@ -30,6 +30,7 @@ class AddMoreFieldsToUsersTable extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
+            $table->dropForeign('users_default_game_type_id_foreign');
             $table->dropColumn(['default_game_type_id', 'default_game_private']);
         });
     }
