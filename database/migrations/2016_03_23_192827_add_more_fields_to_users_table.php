@@ -16,7 +16,7 @@ class AddMoreFieldsToUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->integer('default_game_type_id')->unsigned();
+            $table->tinyInteger('default_game_type_id')->unsigned();
             $table->foreign('default_game_type_id')->references('id')->on('game_types')->onDelete('cascade');
             $table->boolean('default_game_private');
         });
