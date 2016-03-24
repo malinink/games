@@ -4,9 +4,8 @@ use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
-
 class UserIngameInfoTest extends TestCase
-{   
+{
     protected $userId1;
     protected $gameTypesId1;
     protected $userId2;
@@ -24,7 +23,8 @@ class UserIngameInfoTest extends TestCase
      */
     public function testCreate()
     {
-        global $userId1, $gameTypesId1,$userId2,$gameTypesId2,$inGameInfo1,$inGameInfo2,$user1,$user2,$Gametype1,$Gametype2;
+        global $userId1, $gameTypesId1,$userId2,$gameTypesId2,$inGameInfo1,
+            $inGameInfo2,$user1,$user2,$Gametype1,$Gametype2;
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         $Gametype1=\App\GameType::create([
             'type_name' => 'normal',
@@ -80,39 +80,41 @@ class UserIngameInfoTest extends TestCase
     /**
      * Check connection
      *
-     *  @return void
+     * @return void
      */
     public function testCheckfirst()
     {
         global $gameTypesId1,$userId1;
-        $this->seeInDatabase('user_ingame_info',['game_type_id'=> $gameTypesId1,'user_id'=> $userId1]);
+        
+        $this->seeInDatabase('user_ingame_info', ['game_type_id'=> $gameTypesId1,'user_id'=> $userId1]);
     }
     
     /**
      * Check connection
      *
-     *  @return void
-     */  
+     * @return void
+     */
     public function testChecksecond()
     {
         global $gameTypesId2,$userId2;
-        $this->seeInDatabase('user_ingame_info',['game_type_id'=> $gameTypesId2,'user_id'=> $userId2]);
+        
+        $this->seeInDatabase('user_ingame_info', ['game_type_id'=> $gameTypesId2,'user_id'=> $userId2]);
     }
      
     /**
      * Delete data
      *
-     *  @return void
-     */ 
+     * @return void
+     */
     
     public function testRemove()
     {
-       global $userId1,$userId2,$inGameInfo1,$inGameInfo2,$Gametype1,$Gametype2;
-      \App\UserIngameInfo::find($inGameInfo1->id)->delete();
-      \App\UserIngameInfo::find($inGameInfo2->id)->delete();
-      \App\GameType::find($Gametype1->id)->delete();
-      \App\GameType::find($Gametype2->id)->delete();
-      \App\User::find($userId1)->delete();
-      \App\User::find($userId2)->delete(); 
+        global $userId1,$userId2,$inGameInfo1,$inGameInfo2,$Gametype1,$Gametype2;
+        \App\UserIngameInfo::find($inGameInfo1->id)->delete();
+        \App\UserIngameInfo::find($inGameInfo2->id)->delete();
+        \App\GameType::find($Gametype1->id)->delete();
+        \App\GameType::find($Gametype2->id)->delete();
+        \App\User::find($userId1)->delete();
+        \App\User::find($userId2)->delete();
     }
 }
