@@ -19,6 +19,7 @@ class GameType extends Model
         'is_rating'
     );
     
+    public $timestamps = false;
     /**
      *
      * @return UserIngameInfo[]
