@@ -40,10 +40,10 @@ class GameType extends Model
     
     /**
      *
-     * @return UserDefault[]
+     * @return User[]
      */
-    public function userDefaults()
+    public function users()
     {
-        return $this->hasMany('App\UserDefault');
+        return $this->hasMany('App\User');
     }
 }
