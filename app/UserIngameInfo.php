@@ -22,7 +22,7 @@ class UserIngameInfo extends Model
      * @var array
      */
     protected $fillable = [
-        'type_id',
+        'game_type_id',
         'user_id',
         'game_rating',
         'games',
@@ -33,12 +33,12 @@ class UserIngameInfo extends Model
      *
      * @return User[]
      */
-    public function users()
+    public function user()
     {
         return $this->belongsTo('App\User');
     }
     
-    public function gameTypes()
+    public function gameType()
     {
         return $this->belongsTo('App\GameType');
     }
