@@ -33,3 +33,12 @@ Route::group(['middleware' => 'web'], function () {
     Route::get('/home', 'HomeController@index');
     
 });
+
+/*
+ * Admin route
+ */
+Route::group(['middleware' => ['web', 'admin']], function () {
+    
+    Route::get('/home/admin', 'AdminController@index');
+    
+});
