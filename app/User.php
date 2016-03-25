@@ -47,17 +47,25 @@ class User extends Authenticatable
      * @param int $id
      * @return int
      */
-    public static function userHasGame(User $user)
+    public static function getCurrentGameStatus(User $user)
     {
-        $lastGame = $user->usergames->last()->game;
-        if (is_null($lastGame->time_finished)) {
-            if (count($lastGame->usergames->all()) > 1) {
-                return 2;
+        constant($NO_GAME) = 0;
+        constant($SEARCH_GAME) = 1;
+        constant($LIVE_GAME) = 2;
+        
+        $lastUserGame = $user->usergames->last();
+        if (is_null($lastUserGame)) {
+                return $NO_GAME;
+        }
+        $game = $lastUserGame->game;
+        if (is_null($game->time_finished)) {
+            if (count($game->usergames->all()) > 1) {
+                return $LIVE_GAME;
             } else {
-                return 1;
+                return $SEARCH_GAME;
             }
         } else {
-            return 0;
+            return $NO_GAME;
         }
     }
     
