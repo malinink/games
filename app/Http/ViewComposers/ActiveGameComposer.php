@@ -6,6 +6,8 @@
 namespace App\Http\ViewComposers;
 
 use Illuminate\Contracts\View\View;
+use Auth;
+use User;
 
 class ActiveGameComposer extends ViewComposer
 {
@@ -17,7 +19,12 @@ class ActiveGameComposer extends ViewComposer
      */
     public function compose(View $view)
     {
-        $currentUser = \Auth::user();
-        $view->with('userActiveGame', \App\User::userHasGame($currentUser));
+        $currentUser = Auth::user();
+        $view->with([
+            'currentGameStatus' => $currentUser->getCurrentGameStatus(),
+            'NO_GAME' => User::NO_GAME,
+            'SEARCH_GAME' => User::SEARCH_GAME,
+            'LIVE_GAME' => User::LIVE_GAME,
+            ]);
     }
 }
