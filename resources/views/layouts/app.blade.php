@@ -52,6 +52,17 @@
 
                 <!-- Right Side Of Navbar -->
                 <ul class="nav navbar-nav navbar-right">
+                    @if ( isset($currentGameStatus) )
+                        <li>
+                            @if ($currentGameStatus === {{ Auth::user()->NO_GAME }})
+                                nogame
+                        @elseif ($currentGameStatus === {{ Auth::user()->SEARCH_GAME }})
+                                search
+                        @elseif ($currentGameStatus === {{ Auth::user()->LIVE_GAME }})
+                                live
+                        @endif
+                        </li>
+                    @endif
                     <!-- Authentication Links -->
                     @if (Auth::guest())
                         <li><a href="{{ url('/login') }}">Login</a></li>
