@@ -7,6 +7,15 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 class User extends Authenticatable
 {
     /**
+     * Constants for game status
+     *
+     * @var const int
+     */
+    const NO_GAME = 0;
+    const SEARCH_GAME = 1;
+    const LIVE_GAME = 2;
+    
+    /**
      * The attributes that are mass assignable.
      *
      * @var array
@@ -47,25 +56,21 @@ class User extends Authenticatable
      * @param int $id
      * @return int
      */
-    public static function getCurrentGameStatus(User $user)
+    public static function getCurrentGameStatus()
     {
-        constant($NO_GAME) = 0;
-        constant($SEARCH_GAME) = 1;
-        constant($LIVE_GAME) = 2;
-        
-        $lastUserGame = $user->usergames->last();
+        $lastUserGame = $this->usergames->max('id');
         if (is_null($lastUserGame)) {
-                return $NO_GAME;
+                return User::NO_GAME;
         }
         $game = $lastUserGame->game;
         if (is_null($game->time_finished)) {
-            if (count($game->usergames->all()) > 1) {
-                return $LIVE_GAME;
+            if (is_null($game->time_started)) {
+                return User::SEARCH_GAME;
             } else {
-                return $SEARCH_GAME;
+                return User::LIVE_GAME;
             }
         } else {
-            return $NO_GAME;
+            return User::NO_GAME;
         }
     }
     
