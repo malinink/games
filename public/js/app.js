@@ -4,9 +4,13 @@
  */
 
 $(document).ready(function(){
-    $('.user-info').tooltipster({
-        theme: 'tooltipster-shadow',
-        content: $('<div class="center font"><img class="img-user" src="img/alien.png"> Maybe some userInfo </div>')
+    $('.user-info').popover({
+        title: 'User info',
+        content: '<img class="img-user" width="48px" src="alien.png">maybe rating or something else',
+        template: '<div class="popover" role="tooltip"><div class="arrow"></div>' +
+        '<h3 class="center font popover-title"></h3><div class="font center popover-content"></div></div>',
+        html: true,
+        trigger: 'hover'
     });
     /**
     *
@@ -421,7 +425,7 @@ $(document).ready(function(){
                        $('.cover-content').show();
                    }
                    abroad(opposite, enemy);
-                   $('#' + currentCell).removeClass('opposite');
+                   $('#' + currentCell).removeClass(opposite);
                    getObj(opposite)[enemy] = null;
                }
                /*
