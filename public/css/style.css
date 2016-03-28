@@ -29,7 +29,7 @@ body {
     height: 100%;
 }
 .header {
-    height: 3%;
+    height: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -164,40 +164,16 @@ body {
     width: 30px;
 }
 .list-content {
+    font-family: Sun;
     padding-top: 1%;
     width: 40%;
-    height: 50%;
+    height: 60%;
     margin-left: -20%;
     margin-top: -25%;
     min-width: 400px;
     min-height: 300px;
 }
-input[type="checkbox"]{
-    display: none;
-}
-input[type="checkbox"] + label{
-    height: 16px;
-    width: 20px;
-    display:inline-block;
-    padding: 0 0 0 0px;
-    cursor: pointer;
-    border-radius: 7px;
-    background-color: white;
-    -webkit-box-shadow: inset 0px 0px 8px 0px darkgray;
-    -moz-box-shadow: inset 0px 0px 8px 0px darkgray;
-    box-shadow: inset 0px 0px 8px 0px darkgray;
-}
-input[type="checkbox"]:checked + label {
-    background: url(../img/duck.png) no-repeat;
-    background-position: center;
-}
-div.checkbox {
-    height: 30px;
-}
-.check-label {
-    position : absolute;
-    left: 20%;
-}
+
 .accept-figure {
     position: absolute;
     top: 80%;
