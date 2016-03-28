@@ -6,7 +6,18 @@ use Illuminate\Database\Eloquent\Model;
 
 class TurnInfo extends Model
 {
-    protected $table= 'turnInfo';
+    /**
+     * Table name
+     *
+     * @var string
+     */
+    protected $table= 'turn_infos';
+    
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
     protected $fillable = array(
             'game_id',
             'turn_number',
@@ -15,7 +26,18 @@ class TurnInfo extends Model
             'turn_start_time',
             'user_turn'
     );
+
+    /**
+     * Disable Timestamps fields
+     *
+     * @var boolean
+     */
+    public $timestamps = false;
     
+    /**
+     *
+     * @return Game
+     */
     public function games()
     {
         return $this->belongsTo('App\Game');
