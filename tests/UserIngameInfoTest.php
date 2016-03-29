@@ -98,25 +98,27 @@ class UserIngameInfoTest extends TestCase
     {
         global $gameTypesId1,$userId1,$inGameInfo1Id;
         
-        $this->seeInDatabase('user_ingame_infos',
-            ['game_type_id'=> $gameTypesId1,'user_id'=> $userId1]);
+        $this->seeInDatabase(
+            'user_ingame_infos',
+            ['game_type_id'=> $gameTypesId1,'user_id'=> $userId1]
+        );
         
-        //testing from one side      
+        //testing from one side
         $info=  App\UserIngameInfo::find($inGameInfo1Id);
         $Emil=$info->user;
-        $this->assertEquals($info->user_id,$Emil->id);
+        $this->assertEquals($info->user_id, $Emil->id);
         
-        $chess=$info->gameType;       
-        $this->assertEquals($info->game_type_id,$chess->id);
+        $chess=$info->gameType;
+        $this->assertEquals($info->game_type_id, $chess->id);
         
         //testing from other side
         $Berwald=  App\User::find($userId1);
         $infoBerwald=$Berwald->userIngameInfos()->first();
-        $this->assertEquals($Berwald->id,$infoBerwald->user_id);
+        $this->assertEquals($Berwald->id, $infoBerwald->user_id);
         
         $gameTino= App\GameType::find($gameTypesId1);
         $infoTino=$gameTino->userIngameInfos()->first();
-        $this->assertEquals($gameTino->id,$infoTino->game_type_id);
+        $this->assertEquals($gameTino->id, $infoTino->game_type_id);
     }
     /**
      * Check connection
@@ -127,26 +129,28 @@ class UserIngameInfoTest extends TestCase
     {
         global $gameTypesId2,$userId2,$inGameInfo2Id;
         
-        $this->seeInDatabase('user_ingame_infos',
-            ['game_type_id'=> $gameTypesId2,'user_id'=> $userId2]);
+        $this->seeInDatabase(
+            'user_ingame_infos',
+            ['game_type_id'=> $gameTypesId2,'user_id'=> $userId2]
+        );
         
         //testing from one side
         $info=  App\UserIngameInfo::find($inGameInfo2Id);
         $Lucas=$info->user;
-        $this->assertEquals($info->user_id,$Lucas->id);
+        $this->assertEquals($info->user_id, $Lucas->id);
         
-        $chess=$info->gameType;       
-        $this->assertEquals($info->game_type_id,$chess->id);  
+        $chess=$info->gameType;
+        $this->assertEquals($info->game_type_id, $chess->id);
         
         
         //testing from other side
         $Berwald=  App\User::find($userId2);
         $infoBerwald=$Berwald->userIngameInfos()->first();
-        $this->assertEquals($Berwald->id,$infoBerwald->user_id);
+        $this->assertEquals($Berwald->id, $infoBerwald->user_id);
         
         $gameTino= App\GameType::find($gameTypesId2);
         $infoTino=$gameTino->userIngameInfos()->first();
-        $this->assertEquals($gameTino->id,$infoTino->game_type_id);
+        $this->assertEquals($gameTino->id, $infoTino->game_type_id);
     }
     /**
      * Check connection
@@ -160,19 +164,19 @@ class UserIngameInfoTest extends TestCase
         //testing from one side
         $info= App\UserIngameInfo::find($inGameInfo3Id);
         $Lucas=$info->user;
-        $this->assertEquals($info->user_id,$Lucas->id);
+        $this->assertEquals($info->user_id, $Lucas->id);
         
-        $chess=$info->gameType;       
-        $this->assertEquals($info->game_type_id,$chess->id); 
+        $chess=$info->gameType;
+        $this->assertEquals($info->game_type_id, $chess->id);
         
         //testing from other side
         $Berwald=  App\User::find($userId3);
         $infoBerwald=$Berwald->userIngameInfos()->first();
-        $this->assertEquals($Berwald->id,$infoBerwald->user_id);
+        $this->assertEquals($Berwald->id, $infoBerwald->user_id);
         
         $gameTino= App\GameType::find($gameTypesId3);
         $infoTino=$gameTino->userIngameInfos()->first();
-        $this->assertEquals($gameTino->id,$infoTino->game_type_id);
+        $this->assertEquals($gameTino->id, $infoTino->game_type_id);
     
     }
     /**
@@ -201,5 +205,4 @@ class UserIngameInfoTest extends TestCase
         $info->user->delete();
         $info->gameType->delete();
     }
-        
 }
