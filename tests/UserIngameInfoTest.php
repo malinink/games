@@ -92,7 +92,7 @@ class UserIngameInfoTest extends TestCase
     /**
      * Check connection
      *
-     * @return voidss
+     * @return void
      */
     public function testCheckfirst()
     {
