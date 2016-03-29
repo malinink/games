@@ -38,3 +38,11 @@ $factory->define(App\Game::class, function (Faker\Generator $faker) {
         'bonus' => 0,
     ];
 });
+
+$factory->define(App\UserIngameInfo::class, function (Faker\Generator $faker) {
+    return [
+        'game_rating'=>rand(100, 2000),
+        'games'=> rand(5, 20),
+        'wins'=> rand(5, 20),
+    ];
+});
