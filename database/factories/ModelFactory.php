@@ -41,6 +41,12 @@ $factory->define(App\Game::class, function (Faker\Generator $faker) {
 
 $factory->define(App\UserIngameInfo::class, function (Faker\Generator $faker) {
     return [
+        'game_type_id' => function () {
+            return factory(App\GameType::class)->create()->id;
+        },
+        'user_id' => function () {
+            return factory(App\User::class)->create()->id;
+        },
         'game_rating'=>rand(100, 2000),
         'games'=> rand(5, 20),
         'wins'=> rand(5, 20),
