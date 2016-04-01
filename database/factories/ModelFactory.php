@@ -19,3 +19,22 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
         'remember_token' => str_random(10),
     ];
 });
+
+$factory->define(App\GameType::class, function (Faker\Generator $faker) {
+    return [
+        'type_name' => str_random(10),
+        'time_on_turn' => rand(15, 60),
+        'is_rating' => $faker->boolean(),
+    ];
+});
+
+$factory->define(App\Game::class, function (Faker\Generator $faker) {
+    return [
+        'game_type_id' => function () {
+            return factory(App\GameType::class)->create()->id;
+        },
+        'private' => $faker->boolean(),
+        'winner' => $faker->boolean(),
+        'bonus' => 0,
+    ];
+});
