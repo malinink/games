@@ -52,7 +52,7 @@ class ModelsFactoriesTest extends TestCase
      * @return void
      */
     public function testUserIngameInfoFactory()
-    {     
+    {
         $user_ingame = factory(App\UserIngameInfo::class)->make();
         $user_ingame->save();
         $user_ingame->delete();
