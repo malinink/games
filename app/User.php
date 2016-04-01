@@ -58,7 +58,7 @@ class User extends Authenticatable
      */
     public function getCurrentGameStatus()
     {
-        $lastUserGame = $this->usergames->max('id');
+        $lastUserGame = $this->usergames->sortBy('id')->last();
         if (is_null($lastUserGame)) {
                 return User::NO_GAME;
         }
