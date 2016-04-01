@@ -14,7 +14,7 @@ class UserIngameInfo extends Model
      *
      * @var string
      */
-    protected $table ='user_ingame_info';
+    protected $table ='user_ingame_infos';
     
     /**
      * The attributes that are mass assignable.
@@ -30,15 +30,26 @@ class UserIngameInfo extends Model
     ];
     
     /**
+     * Disable Timestamps fields
      *
-     * @return User[]
+     * @var boolean
      */
-    public function users()
+    public $timestamps = false;
+    
+    /**
+     *
+     * @return User
+     */
+    public function user()
     {
         return $this->belongsTo('App\User');
     }
     
-    public function gameTypes()
+    /**
+     *
+     * @return GameType
+     */
+    public function gameType()
     {
         return $this->belongsTo('App\GameType');
     }

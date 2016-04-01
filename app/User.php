@@ -28,7 +28,7 @@ class User extends Authenticatable
         'last_visit',
         'default_game_type_id',
         'default_game_private',
-        'isAdmin',
+        'is_admin',
     ];
     
     /**
@@ -37,7 +37,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $casts = [
-        'isAdmin' => 'boolean'
+        'is_admin' => 'boolean'
     ];
 
     /**
@@ -73,12 +73,13 @@ class User extends Authenticatable
             return User::NO_GAME;
         }
     }
-    
+
     /**
      *
      * @return UserIngameInfo[]
      */
-    public function useringameinfos()
+
+    public function userIngameInfos()
     {
         return $this->hasMany('App\UserIngameInfo');
     }
@@ -87,7 +88,7 @@ class User extends Authenticatable
      *
      * @return UserGame[]
      */
-    public function usergames()
+    public function userGames()
     {
         return $this->hasMany('App\UserGame');
     }
@@ -96,7 +97,7 @@ class User extends Authenticatable
      *
      * @return GameType[]
      */
-    public function gametypes()
+    public function gameTypes()
     {
         return $this->belongsTo('App\GameType');
     }

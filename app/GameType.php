@@ -9,9 +9,18 @@ use Illuminate\Database\Eloquent\Model;
 
 class GameType extends Model
 {
-    
+    /**
+     * Table name
+     *
+     * @var string
+     */
     protected $table = 'game_types';
     
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
     protected $fillable = array(
         'id',
         'type_name',
@@ -19,7 +28,13 @@ class GameType extends Model
         'is_rating'
     );
     
+    /**
+     * Disable Timestamps fields
+     *
+     * @var boolean
+     */
     public $timestamps = false;
+    
     /**
      *
      * @return UserIngameInfo[]

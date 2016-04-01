@@ -9,7 +9,18 @@ use Illuminate\Database\Eloquent\Model;
 
 class Game extends Model
 {
+    /**
+     * Table name
+     *
+     * @var string
+     */
     protected $table = 'games';
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
     protected $fillable = array(
         'id',
         'type_id',
@@ -20,22 +31,45 @@ class Game extends Model
         'bonus'
     );
     
-    public function boardsInfo()
+    /**
+     * Disable Timestamps fields
+     *
+     * @var boolean
+     */
+    public $timestamps = false;
+
+    /**
+     *
+     * @return BoardInfo[]
+     */
+    public function boardInfos()
     {
         return $this->hasMany('App\BoardInfo');
     }
     
-    public function turnInfo()
+    /**
+     *
+     * @return TurnInfo[]
+     */
+    public function turnInfos()
     {
         return $this->hasMany('App\TurnInfo');
     }
     
-    public function usergames()
+    /**
+     *
+     * @return UserGame[]
+     */
+    public function userGames()
     {
         return $this->hasMany('App\UserGame');
     }
     
-    public function gamesType()
+    /**
+     *
+     * @return GameType
+     */
+    public function gameType()
     {
         return $this->belongsTo('App\GameType');
     }
