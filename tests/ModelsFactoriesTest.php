@@ -13,10 +13,6 @@ class ModelsFactoriesTest extends TestCase
      */
     public function testUserFactory()
     {
-        $res=DB::table('users')->count();
-        if ($res==0) {
-            DB::statement('ALTER TABLE users AUTO_INCREMENT=1;');
-        }
         $user = factory(App\User::class)->make();
         $user->save();
         $user->delete();
@@ -29,10 +25,6 @@ class ModelsFactoriesTest extends TestCase
      */
     public function testGameTypeFactory()
     {
-        $res=DB::table('game_types')->count();
-        if ($res==0) {
-            DB::statement('ALTER TABLE game_types AUTO_INCREMENT=1;');
-        }
         $gameType = factory(App\GameType::class)->make();
         $gameType->save();
         $gameType->delete();
@@ -45,10 +37,6 @@ class ModelsFactoriesTest extends TestCase
      */
     public function testGameFactory()
     {
-        $res=DB::table('games')->count();
-        if ($res==0) {
-            DB::statement('ALTER TABLE games AUTO_INCREMENT=1;');
-        }
         $game = factory(App\Game::class)->make();
         $game->save();
         $game->delete();
@@ -64,11 +52,7 @@ class ModelsFactoriesTest extends TestCase
      * @return void
      */
     public function testUserIngameInfoFactory()
-    {
-        $res=DB::table('user_ingame_infos')->count();
-        if ($res==0) {
-            DB::statement('ALTER TABLE user_ingame_infos AUTO_INCREMENT=1;');
-        }
+    {     
         $user_ingame = factory(App\UserIngameInfo::class)->make();
         $user_ingame->save();
         $user_ingame->delete();
