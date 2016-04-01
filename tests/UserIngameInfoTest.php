@@ -20,11 +20,12 @@ class UserIngameInfoTest extends TestCase
      *
      *  @return void
     */
-    public function runDatabaseMigrations(){
+    public function runDatabaseMigrations()
+    {
         $this->artisan('migrate --database=mysql_testing');
         
-        $this->beforeApplicationDestroyed(function(){
-            $this->artisan('migrate:rollback --database=mysql_testing');
+        $this->beforeApplicationDestroyed(function () {
+                $this->artisan('migrate:rollback --database=mysql_testing');
         });
     }
    
