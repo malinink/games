@@ -16,6 +16,19 @@ class UserIngameInfoTest extends TestCase
     protected $trashId2;
     
     /**
+     * Migrate before start and rollback after work
+     *
+     *  @return void
+    */
+    public function runDatabaseMigrations(){
+        $this->artisan('migrate --database=mysql_testing');
+        
+        $this->beforeApplicationDestroyed(function(){
+            $this->artisan('migrate:rollback --database=mysql_testing');
+        });
+    }
+   
+    /**
      * Testing with links
      *
      *  @return void
@@ -25,6 +38,8 @@ class UserIngameInfoTest extends TestCase
         global $userId1, $gameTypesId1,$inGameInfo1Id,$trashId1,$trashId2;
         
         $gametype1 = factory(App\GameType::class)->create();
+        $gameTypesId1=$gametype1->id;
+        
         $user1 = factory(App\User::class)->create();
         $inGameInfo1= factory(App\UserIngameInfo::class)->make();
         
@@ -38,7 +53,6 @@ class UserIngameInfoTest extends TestCase
         $inGameInfo1->save();
         
         $inGameInfo1Id=$inGameInfo1->id;
-        
         $this->seeInDatabase(
             'user_ingame_infos',
             ['game_type_id'=> $gameTypesId1,'user_id'=> $userId1]
