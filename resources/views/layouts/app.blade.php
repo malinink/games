@@ -52,13 +52,13 @@
 
                 <!-- Right Side Of Navbar -->
                 <ul class="nav navbar-nav navbar-right">
-                    @if ( isset($currentGameStatus) )
+                    @if ( Auth::check() )
                         <li>
-                            @if ($currentGameStatus === {{ Auth::user()->NO_GAME }})
+                            @if ($currentGameStatus === $NO_GAME)
                                 nogame
-                        @elseif ($currentGameStatus === {{ Auth::user()->SEARCH_GAME }})
+                        @elseif ($currentGameStatus === $SEARCH_GAME)
                                 search
-                        @elseif ($currentGameStatus === {{ Auth::user()->LIVE_GAME }})
+                        @elseif ($currentGameStatus === $LIVE_GAME)
                                 live
                         @endif
                         </li>
