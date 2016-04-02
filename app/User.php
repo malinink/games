@@ -53,7 +53,6 @@ class User extends Authenticatable
      * Show if user $id has an active game:
      * 0 - no game; 1 - searching for opponent; 2 - playing match
      *
-     * @param int $id
      * @return int
      */
     public function getCurrentGameStatus()
@@ -78,7 +77,6 @@ class User extends Authenticatable
      *
      * @return UserIngameInfo[]
      */
-
     public function userIngameInfos()
     {
         return $this->hasMany('App\UserIngameInfo');
