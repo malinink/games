@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * @artesby
+ * @author artesby
  */
 namespace App\Http\ViewComposers;
 
@@ -23,9 +23,6 @@ class ActiveGameComposer extends ViewComposer
             $currentUser = Auth::user();
             $view->with([
                 'currentGameStatus' => $currentUser->getCurrentGameStatus(),
-                'NO_GAME' => User::NO_GAME,
-                'SEARCH_GAME' => User::SEARCH_GAME,
-                'LIVE_GAME' => User::LIVE_GAME,
                 ]);
         }
     }
