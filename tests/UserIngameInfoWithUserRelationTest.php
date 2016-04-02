@@ -38,7 +38,7 @@ class UserIngameInfoWithUserRelationTest extends TestCase
     
     /**
      *
-     * @depends testUserToUserIngameInfoIsCollection
+     * @depends testUserToUserIngameInfosIsCollection
      */
     public function testUserToUserIngameInfosRelation()
     {
