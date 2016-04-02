@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * @artesby
+ * @author artesby
  */
 namespace App\Http\ViewComposers;
 
