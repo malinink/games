@@ -1,146 +1,87 @@
 <?php
+/*
+ *
+ * @author IrenJones
+ */
 
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Collection;
+use App\UserIngameInfo;
 
 class UserIngameInfoTest extends TestCase
 {
-    protected $userId1;
-    protected $gameTypesId1;
-    protected $inGameInfo1Id;
-    
-    protected $inGameInfo3Id;
-    
-    protected $trashId1;
-    protected $trashId2;
-    
-    /**
-     * Migrate before start and rollback after work
+    /*
      *
-     *  @return void
-    */
-    public function runDatabaseMigrations()
+     * @var UserIngameInfo
+     */
+    protected $inGameInfo;
+   
+    public function setUp()
     {
-        $this->artisan('migrate --database=mysql_testing');
+        parent::setUp();
+        $this->inGameInfo=factory(UserIngameInfo::class)->create();
+    }
+    
+    public function testUserIngameInfoToGameTypes()
+    {
+        $inGameInfo=$this->inGameInfo;
         
-        $this->beforeApplicationDestroyed(function () {
-                $this->artisan('migrate:rollback --database=mysql_testing');
-        });
+        $this->assertEquals($inGameInfo->game_type_id, $inGameInfo->gameType->id);
+    }
+    
+    public function testUserIngameInfoToUsers()
+    {
+        $inGameInfo=$this->inGameInfo;
+        
+        $this->assertEquals($inGameInfo->user_id, $inGameInfo->user->id);
+    }
+    
+    public function testUsersToUserIngameInfoIsCollection()
+    {
+        $inGameInfo=$this->inGameInfo;
+        $user=$inGameInfo->user;
+        
+        $this->assertTrue($user->userIngameInfos instanceof Collection);
+    }
+    
+    /*
+     *
+     * @depends testUsersToUserIngameInfoIsCollection
+     */
+    public function testUsersToUserIngameInfoRelation()
+    {
+        $inGameInfo=$this->inGameInfo;
+        $user=$inGameInfo->user;
+        
+        $this->assertTrue($user->userIngameInfos->contains($inGameInfo));
+    }
+    
+    public function testGameTypesToUserIngameInfoIsCollection()
+    {
+        $inGameInfo=$this->inGameInfo;
+        $gameType=$inGameInfo->gameType;
+        
+        $this->assertTrue($gameType->userIngameInfos instanceof Collection);
+    }
+    
+    /*
+     *
+     * @depends testGameTypesToUserIngameInfoIsCollection
+     */
+    public function testGameTypesToUserIngameInfoRelation()
+    {
+        $inGameInfo=$this->inGameInfo;
+        $gameType=$inGameInfo->gameType;
+       
+        $this->assertTrue($gameType->userIngameInfos->contains($inGameInfo));
     }
    
-    /**
-     * Testing with links
-     *
-     *  @return void
-     */
-    public function testUserIngameInfoFirst()
+    public function tearDown()
     {
-        global $userId1, $gameTypesId1,$inGameInfo1Id,$trashId1,$trashId2;
-        
-        $gametype1 = factory(App\GameType::class)->create();
-        $gameTypesId1=$gametype1->id;
-        
-        $user1 = factory(App\User::class)->create();
-        $inGameInfo1= factory(App\UserIngameInfo::class)->make();
-        
-        $userId1=$user1->id;
-        $gameTypesId1=$gametype1->id;
-        
-        $trashId1=$inGameInfo1->user_id;
-        $trashId2=$inGameInfo1->game_type_id;
-        $inGameInfo1->user()->associate($userId1)
-            ->gameType()->associate($gameTypesId1);
-        $inGameInfo1->save();
-        
-        $inGameInfo1Id=$inGameInfo1->id;
-        $this->seeInDatabase(
-            'user_ingame_infos',
-            ['game_type_id'=> $gameTypesId1,'user_id'=> $userId1]
-        );
-        
-        //testing from one side
-        $this->assertEquals(
-            $inGameInfo1->user_id,
-            $inGameInfo1->user->id
-        );
-        $this->assertEquals(
-            $inGameInfo1->game_type_id,
-            $inGameInfo1->gameType->id
-        );
-        
-        //testing from other side
-        $this->assertEquals(
-            $user1->id,
-            $user1->userIngameInfos()->first()->user_id
-        );
-        $this->assertEquals(
-            $gametype1->id,
-            $gametype1->userIngameInfos()
-                ->first()->game_type_id
-        );
-    }
-    
-    /**
-     * Testing without links
-     *
-     *  @return void
-     */
-    public function testUserIngameInfoSecond()
-    {
-        global $inGameInfo3Id;
-        
-        $inGameInfo3= factory(App\UserIngameInfo::class)->create();
-        $inGameInfo3Id=$inGameInfo3->id;
-        
-         //testing from one side
-        $this->assertEquals(
-            $inGameInfo3->user_id,
-            $inGameInfo3->user->id
-        );
-        $this->assertEquals(
-            $inGameInfo3->game_type_id,
-            $inGameInfo3->gameType->id
-        );
-        
-        //testing from other side
-        $this->assertEquals(
-            App\User::find($inGameInfo3->user_id)->id,
-            App\User::find($inGameInfo3->user_id)->userIngameInfos()
-                ->first()->user_id
-        );
-        $this->assertEquals(
-            App\GameType::find($inGameInfo3->game_type_id)->id,
-            App\GameType::find($inGameInfo3->game_type_id)->userIngameInfos()
-                ->first()->game_type_id
-        );
-    }
-    
-    /**
-     * Delete data
-     *
-     * @return void
-     */
-    
-    public function testRemove()
-    {
-        global $userId1,$inGameInfo1Id,
-            $inGameInfo3Id, $gameTypesId1,
-            $trashId1,$trashId2;
-        
-        App\UserIngameInfo::find($inGameInfo1Id)->delete();
-        App\GameType::find($gameTypesId1)->delete();
-        App\User::find($userId1)->delete();
-        
-        App\GameType::find($trashId2)->delete();
-        App\User::find($trashId1)->delete();
-        
-        $info=App\UserIngameInfo::find($inGameInfo3Id);
+        $info=$this->inGameInfo;
         $info->delete();
-        /*
-        * Delete related autogenerated models also
-        */
         $info->user->delete();
         $info->gameType->delete();
+        
+        parent::tearDown();
     }
 }
