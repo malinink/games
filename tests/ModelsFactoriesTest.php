@@ -4,6 +4,8 @@
  * @author malinink
  */
 
+use App\UserIngameInfo;
+
 class ModelsFactoriesTest extends TestCase
 {
     /**
@@ -53,7 +55,7 @@ class ModelsFactoriesTest extends TestCase
      */
     public function testUserIngameInfoFactory()
     {
-        $user_ingame = factory(App\UserIngameInfo::class)->make();
+        $user_ingame = factory(UserIngameInfo::class)->make();
         $user_ingame->save();
         $user_ingame->delete();
         /*
