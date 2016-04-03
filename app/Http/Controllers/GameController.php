@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * @Ananaskelly
+ * @author Ananaskelly
  */
 namespace App\Http\Controllers;
 
@@ -9,18 +9,8 @@ use App\GameType;
 use App\Http\Requests;
 use Illuminate\Http\Request;
 
-class GameController extends Controller
+class GameController extends BaseController
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
     /**
      * Show the form for games params.
      *
