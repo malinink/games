@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * @Ananaskelly
+ * @author Ananaskelly
  */
 namespace App\Http\Controllers;
 
