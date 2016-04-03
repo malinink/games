@@ -8,6 +8,9 @@ use App\GameType;
 use App\Game;
 
 use App\UserIngameInfo;
+use App\BoardInfo;
+use App\TurnInfo;
+use App\UserGame;
 
 class ModelsFactoriesTest extends TestCase
 {
