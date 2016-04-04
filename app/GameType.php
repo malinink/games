@@ -59,6 +59,6 @@ class GameType extends Model
      */
     public function users()
     {
-        return $this->hasMany('App\GameType', 'id');
+        return $this->hasMany('App\User', 'id');
     }
 }
