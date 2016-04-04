@@ -6,7 +6,6 @@
 use App\User;
 use App\GameType;
 use App\Game;
-
 use App\UserIngameInfo;
 
 class ModelsFactoriesTest extends TestCase
@@ -20,8 +19,8 @@ class ModelsFactoriesTest extends TestCase
     {
         $user = factory(User::class)->create();
         $user->delete();
+        $user->gameType->delete();
     }
-
     /**
      * Test GameType Factory
      *
@@ -63,5 +62,6 @@ class ModelsFactoriesTest extends TestCase
          */
         $user_ingame->gameType->delete();
         $user_ingame->user->delete();
+        $user_ingame->user->gameType->delete();
     }
 }
