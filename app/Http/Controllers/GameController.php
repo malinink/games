@@ -5,9 +5,14 @@
  */
 namespace App\Http\Controllers;
 
-use App\GameType;
 use App\Http\Requests;
 use Illuminate\Http\Request;
+use App\Http\Requests\SearchGameFormRequest;
+use Carbon\Carbon;
+use Auth;
+use App\GameType;
+use App\Game;
+use App\UserGame;
 
 class GameController extends BaseController
 {
@@ -24,7 +29,7 @@ class GameController extends BaseController
     /**
      * Find game with params or create new game
      *
-     * @return void 
+     * @return void
      */
     public function create(SearchGameFormRequest $request)
     {
@@ -39,8 +44,7 @@ class GameController extends BaseController
         $game = Game::where(['private' => $request->status, 'game_type_id' => $request->type, 'time_started' => null])
                     ->whereNotIn('id', $userGames)->orderBy('id', 'ask')
                     ->first();
-        if (is_null($game))
-        {   
+        if (is_null($game)) {
             /*
              * Create new Game
              */
@@ -58,8 +62,7 @@ class GameController extends BaseController
             $userGame->user()->associate($user);
             $userGame->save();
            
-        }
-        else {
+        } else {
             /*
              * Create new UserGame
              */
@@ -72,6 +75,8 @@ class GameController extends BaseController
              * Update game
              */
             $game->update(['time_started' => Carbon::now()]);
+            return(GameType::all());
+        
         }
         return redirect('/home');
     }
