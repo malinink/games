@@ -61,7 +61,6 @@ class GameController extends BaseController
             $userGame->game()->associate($game);
             $userGame->user()->associate($user);
             $userGame->save();
-           
         } else {
             /*
              * Create new UserGame
@@ -75,7 +74,6 @@ class GameController extends BaseController
              * Update game
              */
             $game->update(['time_started' => Carbon::now()]);
-        
         }
         return redirect('/home');
     }
