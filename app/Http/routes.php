@@ -40,6 +40,6 @@ Route::group(['middleware' => 'web'], function () {
  */
 Route::group(['middleware' => ['web', 'admin']], function () {
     
-    Route::get('/home/admin', 'AdminController@index');
+    Route::get('/admin/home', 'Admin\AdminController@index');
     
 });

@@ -7,6 +7,15 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 class User extends Authenticatable
 {
     /**
+     * Constants for game status
+     *
+     * @var const int
+     */
+    const NO_GAME = 0;
+    const SEARCH_GAME = 1;
+    const LIVE_GAME = 2;
+    
+    /**
      * The attributes that are mass assignable.
      *
      * @var array
@@ -39,6 +48,30 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+    
+    /**
+     * Show if user $id has an active game:
+     * 0 - no game; 1 - searching for opponent; 2 - playing match
+     *
+     * @return int
+     */
+    public function getCurrentGameStatus()
+    {
+        $lastUserGame = $this->usergames->sortBy('id')->last();
+        if (is_null($lastUserGame)) {
+                return User::NO_GAME;
+        }
+        $game = $lastUserGame->game;
+        if (is_null($game->time_finished)) {
+            if (is_null($game->time_started)) {
+                return User::SEARCH_GAME;
+            } else {
+                return User::LIVE_GAME;
+            }
+        } else {
+            return User::NO_GAME;
+        }
+    }
 
     /**
      *
