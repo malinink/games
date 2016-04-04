@@ -93,9 +93,9 @@ class User extends Authenticatable
     
     /**
      *
-     * @return GameType[]
+     * @return GameType
      */
-    public function gameTypes()
+    public function gameType()
     {
         return $this->belongsTo('App\GameType');
     }
