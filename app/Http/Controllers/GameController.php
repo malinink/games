@@ -75,7 +75,6 @@ class GameController extends BaseController
              * Update game
              */
             $game->update(['time_started' => Carbon::now()]);
-            return(GameType::all());
         
         }
         return redirect('/home');
