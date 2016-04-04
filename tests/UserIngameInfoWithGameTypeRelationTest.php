@@ -13,6 +13,7 @@ class UserIngameInfoWithGameTypeRelationTest extends TestCase
      *
      * @var UserIngameInfo
      */
+    
     protected $userInGameInfo;
    
     public function setUp()
@@ -53,6 +54,7 @@ class UserIngameInfoWithGameTypeRelationTest extends TestCase
         $userInGameInfo=$this->userInGameInfo;
         $userInGameInfo->delete();
         $userInGameInfo->user->delete();
+        $userInGameInfo->user->gameType->delete();
         $userInGameInfo->gameType->delete();
         
         parent::tearDown();
