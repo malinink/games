@@ -9,7 +9,7 @@
         @if ($errors->any)
         <ul class='alert-warning'>
             @foreach ($errors->all() as $error)
-            <li> {!! $error !!}</li>
+            <li> Something went wrong, invalid parameter. Try again.</li>
             @endforeach
         </ul>
         @endif
