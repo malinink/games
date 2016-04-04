@@ -55,3 +55,41 @@ $factory->define(App\UserIngameInfo::class, function (Faker\Generator $faker) {
         'wins'=> rand(5, 20),
     ];
 });
+
+$factory->define(App\BoardInfo::class, function (Faker\Generator $faker) {
+    return [
+        'game_id' => function () {
+            return factory(App\Game::class)->create()->id;
+        },
+        'figure' => rand(0, 5),
+        'position' => rand(11, 18),
+        'color' => $faker->boolean(),
+        'turn_number' => rand(1, 100),
+        'special' => $faker->boolean(),
+    ];
+});
+
+$factory->define(App\TurnInfo::class, function (Faker\Generator $faker) {
+    return [
+        'game_id' => function () {
+            return factory(App\Game::class)->create()->id;
+        },
+        'move' => rand(1000, 2000),
+        'turn_number' => rand(1, 100),
+        'options' => rand(31, 35),
+        'turn_start_time' => $faker->dateTime(),
+        'user_turn' => $faker->boolean(),
+    ];
+});
+
+$factory->define(App\UserGame::class, function (Faker\Generator $faker) {
+    return [
+        'user_id' => function () {
+            return factory(App\User::class)->create()->id;
+        },
+        'game_id' => function () {
+            return factory(App\Game::class)->create()->id;
+        },
+        'color' => $faker->boolean(),
+    ];
+});
