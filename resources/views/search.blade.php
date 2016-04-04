@@ -6,15 +6,22 @@
         Choose what you want !
     </div>
     <div class='row'>
+        @if ($errors->any)
+        <ul class='alert-warning'>
+            @foreach ($errors->all() as $error)
+            <li> {!! $error !!}</li>
+            @endforeach
+        </ul>
+        @endif
         {!! Form::open() !!}
         <div>
-            {!! Form::label('Type:') !!}
-            {!! Form::select('type', ['0' => 'public', '1' => 'private'], null, ['class' => 'form-control']) !!}
+            {!! Form::label('Status:') !!}
+            {!! Form::select('status', ['0' => 'public', '1' => 'private'], null, ['class' => 'form-control']) !!}
         </div>
     
         <div>
-            {!! Form::label('Status:') !!}
-            {!! Form::select('status', $gameTypes, null, ['class' => 'form-control']) !!}
+            {!! Form::label('Type:') !!}
+            {!! Form::select('type', $gameTypes, null, ['class' => 'form-control']) !!}
         </div>
         
         <br>
