@@ -86,7 +86,7 @@ class Game extends Model
      */
     public function getLastUserTurn()
     {
-        if ($this->turnInfos->last()->user_turn == '0') {
+        if ($this->turnInfos->orderBy('id', 'desc')->last()->user_turn == '0') {
             return Game::WHITE;
         } else {
             return Game::BLACK;
