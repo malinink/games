@@ -13,7 +13,7 @@
             @endforeach
         </ul>
         @endif
-        {!! Form::open() !!}
+        {!! Form::open(['route' => 'create']) !!}
         <div>
             {!! Form::label('Status:') !!}
             {!! Form::select('status', ['0' => 'public', '1' => 'private'], null, ['class' => 'form-control']) !!}
