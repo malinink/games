@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * @Ananaskelly
+ * @author Ananaskelly
  */
 namespace App;
 
@@ -23,7 +23,7 @@ class Game extends Model
      */
     protected $fillable = array(
         'id',
-        'type_id',
+        'game_type_id',
         'private',
         'time_started',
         'time_finished',
