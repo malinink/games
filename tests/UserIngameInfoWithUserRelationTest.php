@@ -53,6 +53,7 @@ class UserIngameInfoWithUserRelationTest extends TestCase
         $userInGameInfo=$this->userInGameInfo;
         $userInGameInfo->delete();
         $userInGameInfo->user->delete();
+        $userInGameInfo->user->gameType->delete();
         $userInGameInfo->gameType->delete();
         
         parent::tearDown();

@@ -17,6 +17,9 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
         'email' => $faker->email,
         'password' => bcrypt(str_random(10)),
         'remember_token' => str_random(10),
+        'default_game_type_id' => function () {
+            return factory(App\GameType::class)->create()->id;
+        },
     ];
 });
 

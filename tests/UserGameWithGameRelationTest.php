@@ -54,6 +54,7 @@ class UserGameWithGameRelationTest extends TestCase
          */
         $game->delete();
         $userGame->user->delete();
+        $userGame->user->gameType->delete();
         $game->gameType->delete();
         parent::tearDown();
     }
