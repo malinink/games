@@ -11,7 +11,7 @@ class UserWithFriendRelationTest extends TestCase
 {
     /**
      *
-     * @var Game
+     * @var User
      */
     protected $user;
     protected $friend;
@@ -40,17 +40,6 @@ class UserWithFriendRelationTest extends TestCase
         $user = $this->user;
         $friend = $this->friend;
         $this->assertTrue($user->friends->contains($friend));
-    }
-    
-    /**
-     *
-     * @depends testUserToFriendsIsCollection
-     */
-    public function testFriendToUsersRelation()
-    {
-        $user = $this->user;
-        $friend = $this->friend;
-        $this->assertTrue($friend->friends->contains($user));
     }
    
     public function tearDown()
