@@ -14,6 +14,16 @@ class HomeController extends BaseController
      */
     public function index()
     {
-        return view('home');
+        return view('home.index');
+    }
+    
+    /**
+     * Show test websockets panel
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function websockets()
+    {
+        return view('home.websockets');
     }
 }

@@ -31,6 +31,7 @@ Route::group(['middleware' => 'web'], function () {
     Route::auth();
     
     Route::get('/home', 'HomeController@index');
+    Route::get('/home/websockets', 'HomeController@websockets');
     
     Route::get('/search', 'GameController@search');
 });
@@ -42,4 +43,13 @@ Route::group(['middleware' => ['web', 'admin']], function () {
     
     Route::get('/admin/home', 'Admin\AdminController@index');
     
+});
+
+
+/*
+ * For test purposes only, remove
+ */
+Route::get('/init-event', function () {
+    $data = 'server message;)';
+    \App\Sockets\PushServerSocket::setDataToServer($data);
 });
