@@ -10,7 +10,9 @@
         "barryvdh/laravel-ide-helper": "^2.1",
         "laravelcollective/html": "^5.2",
         "squizlabs/php_codesniffer": "^2.5",
-        "doctrine/dbal": "~2.5"
+        "doctrine/dbal": "~2.5",
+        "cboden/ratchet": "^0.3.4",
+        "react/zmq": "^0.3.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
