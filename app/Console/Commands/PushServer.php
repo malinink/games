@@ -1,5 +1,8 @@
 <?php
-
+/**
+ *
+ * @author malinink
+ */
 namespace App\Console\Commands;
 
 use ZMQ;
