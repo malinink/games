@@ -34,6 +34,7 @@ class GameController extends BaseController
      */
     public function create(SearchGameFormRequest $request)
     {
+        $gameTypes = GameType::where('type_name', '=', $request->type);
         Game::createGame($request->type, $request->status);
         return redirect('/home');
     }
