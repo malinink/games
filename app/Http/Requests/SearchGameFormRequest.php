@@ -27,11 +27,9 @@ class SearchGameFormRequest extends Request
      */
     public function rules()
     {
-        $min = GameType::all()->min('id');
-        $max = GameType::all()->max('id');
         return [
             'status' => 'required|boolean',
-            'type'   => "required|integer|between:$min,$max"
+            'type'   => "required"
         ];
     }
 }
