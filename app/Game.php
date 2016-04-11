@@ -7,6 +7,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\User;
+use Auth;
 
 class Game extends Model
 {
