@@ -23,7 +23,8 @@ class GameController extends BaseController
      */
     public function search()
     {
-        $gameTypes = GameType::lists('type_name', 'id');
+        $gameTypesColumn = array_column(GameType::all('type_name')->toArray(), 'type_name');
+        $gameTypes = array_combine($gameTypesColumn, $gameTypesColumn);
         return view('search', compact('gameTypes'));
     }
     /**
