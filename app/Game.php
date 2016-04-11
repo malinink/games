@@ -57,8 +57,7 @@ class Game extends Model
                     ->first();
                 if (is_null($game)) {
                     CreateNewGame();
-                }
-                else {
+                } else {
                     AddUserToGame($game);
                 }
                 break;
@@ -79,10 +78,9 @@ class Game extends Model
      */
     public function cancelGame()
     {
-        if (is_null($this->time_started))
-        {
+        if (is_null($this->time_started)) {
             $this->delete();
-        } 
+        }
     }
     /**
      *
