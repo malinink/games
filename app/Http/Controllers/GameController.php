@@ -25,7 +25,6 @@ class GameController extends BaseController
     {
         $gameTypesColumn = array_column(GameType::all('type_name')->toArray(), 'type_name');
         $gameTypes = array_combine($gameTypesColumn, $gameTypesColumn);
-        $gameType = GameType::all('type_name', 'id');
         return view('search', compact('gameTypes'));
     }
     /**
@@ -35,8 +34,7 @@ class GameController extends BaseController
      */
     public function create(SearchGameFormRequest $request)
     {
-        $gameType = GameType::where('type_name', '=', $request->type)->first();
-        Game::createGame($gameType, $request->status);
+        Game::createGame($request->type, $request->status);
         return redirect('/home');
     }
 }
