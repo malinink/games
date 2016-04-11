@@ -30,7 +30,13 @@ class Game extends Model
         'winner',
         'bonus'
     );
-    
+    /**
+     * Constant for user color
+     *
+     * @var const int
+     */
+    const WHITE = 0;
+    const BLACK = 1;
     /**
      * Disable Timestamps fields
      *
@@ -72,5 +78,18 @@ class Game extends Model
     public function gameType()
     {
         return $this->belongsTo('App\GameType');
+    }
+    /**
+     * Get last user turn (color)
+     *
+     * @return int
+     */
+    public function getLastUserTurn()
+    {
+        if ($this->turnInfos->orderBy('id', 'desc')->last()->user_turn == '0') {
+            return Game::WHITE;
+        } else {
+            return Game::BLACK;
+        }
     }
 }
