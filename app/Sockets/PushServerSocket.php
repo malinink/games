@@ -11,6 +11,12 @@ use Exception;
 use SplObjectStorage;
 use Ratchet\ConnectionInterface;
 use Ratchet\MessageComponentInterface;
+use App\Sockets\Protocol;
+use App\Sockets\Protocol\TokenProtocol;
+use App\Sockets\Protocol\AuthentificationProtocol;
+use App\Sockets\Protocol\SubscribeProtocol;
+use App\Sockets\Protocol\SynchronizeProtocol;
+use App\Sockets\Protocol\TurnProtocol;
 
 class PushServerSocket implements MessageComponentInterface
 {
@@ -56,14 +62,57 @@ class PushServerSocket implements MessageComponentInterface
         $this->clients->detach($conn);
         $conn->close();
     }
-
-    public function onMessage(ConnectionInterface $from, $msg)
+    
+    public function onMessage($data, $client)
     {
-        echo sprintf('client %s send message: %s' . PHP_EOL, $from->resourceId, $msg);
-        foreach ($this->clients as $client) {
-            if ($from !== $client) {
-                $client->send($msg);
+        try {
+            $data_js = json_decode($data, true);
+            if ($data_js === null) {
+                $err = "It is not json!";
+                throw new Exception($err);
             }
+            $name = $data_js['name'];
+            switch ($name) {
+                case "token":
+                    if (class_exists('TokenProtocol')) {
+                        $obj = new TokenProtocol($data, $client, $this);
+                    }
+                    break;
+                case "authentification":
+                    if (class_exists('AuthentificationProtocol')) {
+                        $obj = new AuthentificationProtocol($data, $client, $this);
+                    }
+                    break;
+                case "subscribe":
+                    if (class_exists('SubscribeProtocol')) {
+                        $obj = new SubscribeProtocol($data, $client, $this);
+                    }
+                    break;
+                case "synchronize":
+                    if (class_exists('SynchronizeProtocol')) {
+                        $obj = new SynchronizeProtocol($data, $client, $this);
+                    }
+                    break;
+                case "turn":
+                    if (class_exists('TurnProtocol')) {
+                        $obj = new TurnProtocol($data, $client, $this);
+                    }
+                    break;
+                default:
+                    $err = "Wrong name!";
+                    throw new Exception($err);
+            }
+            if (!($obj instanceof ProtocolInterface)) {
+                $err = "Wrong Interface!";
+                throw new Exception($err);
+            }
+            if (!(method_exists($obj, 'compile'))) {
+                $err = "There isnt such method!";
+                throw new Exception($err);
+            }
+            $obj->compile();
+        } catch (Exception $e) {
+            echo sprintf('something wrong!', $e->getMessage());
         }
     }
 }
