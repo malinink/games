@@ -9,7 +9,7 @@ namespace App\Sockets\Protocol;
 use Ratchet\ConnectionInterface;
 use App\Sockets\PushServerSocket;
 
-class TurnProtocol extends PushserverSocket implements ProtocolInterface
+class TurnProtocol extends PushServerSocket implements ProtocolInterface
 {
     /**
      * WS server.
