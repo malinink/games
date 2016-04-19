@@ -72,30 +72,31 @@ class PushServerSocket implements MessageComponentInterface
                 throw new Exception($err);
             }
             $name = $data_js['name'];
+            $dat= $data_js['data'];
             switch ($name) {
                 case "token":
                     if (class_exists('TokenProtocol')) {
-                        $obj = new TokenProtocol($data, $client, $this);
+                        $obj = new TokenProtocol($dat, $client, $this);
                     }
                     break;
                 case "authentification":
                     if (class_exists('AuthentificationProtocol')) {
-                        $obj = new AuthentificationProtocol($data, $client, $this);
+                        $obj = new AuthentificationProtocol($dat, $client, $this);
                     }
                     break;
                 case "subscribe":
                     if (class_exists('SubscribeProtocol')) {
-                        $obj = new SubscribeProtocol($data, $client, $this);
+                        $obj = new SubscribeProtocol($dat, $client, $this);
                     }
                     break;
                 case "synchronize":
                     if (class_exists('SynchronizeProtocol')) {
-                        $obj = new SynchronizeProtocol($data, $client, $this);
+                        $obj = new SynchronizeProtocol($dat, $client, $this);
                     }
                     break;
                 case "turn":
                     if (class_exists('TurnProtocol')) {
-                        $obj = new TurnProtocol($data, $client, $this);
+                        $obj = new TurnProtocol($dat, $client, $this);
                     }
                     break;
                 default:
