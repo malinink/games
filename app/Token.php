@@ -18,7 +18,7 @@ class Token extends Model
      */
     protected $table = "token";
     
-    const lifeTime = 30;
+    const LIFETIME = 30;
 
     /**
      * The attributes that are mass assignable.
@@ -32,7 +32,7 @@ class Token extends Model
     ];
     
     /**
-     * 
+     *
      * @return User
      */
     public function user()
