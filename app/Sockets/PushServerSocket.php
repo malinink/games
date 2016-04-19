@@ -11,7 +11,7 @@ use Exception;
 use SplObjectStorage;
 use Ratchet\ConnectionInterface;
 use Ratchet\MessageComponentInterface;
-use App\Sockets\Protocol;
+use App\Sockets\Protocol\ProtocolInterface;
 use App\Sockets\Protocol\TokenProtocol;
 use App\Sockets\Protocol\AuthentificationProtocol;
 use App\Sockets\Protocol\SubscribeProtocol;
