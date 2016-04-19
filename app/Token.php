@@ -32,7 +32,7 @@ class Token extends Model
     ];
     
     /**
-     * 
+     *
      * @return User
      */
     public function user()
