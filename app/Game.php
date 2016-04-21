@@ -8,6 +8,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use App\User;
 use Auth;
+use Carbon\Carbon;
 
 class Game extends Model
 {
@@ -44,32 +45,51 @@ class Game extends Model
      *
      * @return void
      */
-    public static function createGame(GameType $gameType, $private)
+    public static function init(Game $game)
     {
-        /**
-         *
-         * @var User
-         */
-        $user = Auth::user();
+        
+    }
+    /**
+     * Create or modified user game
+     *
+     * @return Game
+     */
+    public static function createGame(GameType $gameType, $private, User $user)
+    {
         $gameStatus = $user->getCurrentGameStatus();
         switch ($gameStatus) {
             case User::NO_GAME:
                 $game = Game::where(['private' => $private, 'game_type_id' => $gameType->id, 'time_started' => null])
                     ->orderBy('id', 'ask')
                     ->first();
-                if (is_null($game)) {
-                    CreateNewGame();
+                if ($game === null) {
+                    $game = new Game();
+                    $game->private = $private;
+                    $game->gameType()->associate($gameType);
+                    $game->save();
+                    $userGame = new UserGame();
+                    $userGame->user()->associate($user);
+                    $userGame->game()->asscociate($game);
+                    $userGame->color = '0';
+                    $userGame->save();
                 } else {
-                    AddUserToGame($game);
+                    $userGame->user()->associate($user);
+                    $userGame->game()->asscociate($game);
+                    $userGame->color = '1';
+                    $userGame->save();
+                    $game->update(['time_started' => Carbon::now()]);
+                    Game::init($game);
                 }
-                break;
+                return $game;
             case User::SEARCH_GAME:
                 $lastUserGame = $user->userGames->sortBy('id')->last();
                 $game = Game::find($lastUserGame->game_id);
                 $game->private = $private;
                 $game->gameType()->associate($gameType);
                 $game->save();
-                break;
+                return $game;
+            default:
+                return null;
         }
                         
     }
