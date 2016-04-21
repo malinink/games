@@ -63,57 +63,28 @@ class PushServerSocket implements MessageComponentInterface
         $conn->close();
     }
     
-    public function onMessage($data, $client)
+    public function onMessage(ConnectionInterface $client, $data)
     {
         try {
-            $data_js = json_decode($data, true);
-            if ($data_js === null) {
+            $dataJs = json_decode($data, true);
+            if ($dataJs === null) {
                 $err = "It is not json!";
                 throw new Exception($err);
             }
-            $name = $data_js['name'];
-            $dat= $data_js['data'];
-            switch ($name) {
-                case "token":
-                    if (class_exists('TokenProtocol')) {
-                        $obj = new TokenProtocol($dat, $client, $this);
-                    }
-                    break;
-                case "authentification":
-                    if (class_exists('AuthentificationProtocol')) {
-                        $obj = new AuthentificationProtocol($dat, $client, $this);
-                    }
-                    break;
-                case "subscribe":
-                    if (class_exists('SubscribeProtocol')) {
-                        $obj = new SubscribeProtocol($dat, $client, $this);
-                    }
-                    break;
-                case "synchronize":
-                    if (class_exists('SynchronizeProtocol')) {
-                        $obj = new SynchronizeProtocol($dat, $client, $this);
-                    }
-                    break;
-                case "turn":
-                    if (class_exists('TurnProtocol')) {
-                        $obj = new TurnProtocol($dat, $client, $this);
-                    }
-                    break;
-                default:
-                    $err = "Wrong name!";
-                    throw new Exception($err);
+            $name = $dataJs['name'];
+            $dat = $dataJs['data'];
+
+            $nameN = ucfirst($name);
+            $class = '\App\Socket\Protocol' . "\\" . $nameN . 'Protocol';
+            $interfaces = class_implements($class);
+
+            if (class_exists($class) && isset($interfaces['App\Sockets\Protocol\ProtocolInterface'])) {
+                $obj = new $class($dat, $client, $this);
+                $obj->compile();
             }
-            if (!($obj instanceof ProtocolInterface)) {
-                $err = "Wrong Interface!";
-                throw new Exception($err);
-            }
-            if (!(method_exists($obj, 'compile'))) {
-                $err = "There isnt such method!";
-                throw new Exception($err);
-            }
-            $obj->compile();
         } catch (Exception $e) {
             echo sprintf('something wrong!', $e->getMessage());
         }
     }
+
 }
