@@ -9,7 +9,7 @@ namespace App\Sockets\Protocol;
 use Ratchet\ConnectionInterface;
 use App\Sockets\PushServerSocket;
 
-class TurnProtocol extends PushServerSocket implements ProtocolInterface
+class TurnProtocol implements ProtocolInterface
 {
     /**
      * WS server.
@@ -47,10 +47,14 @@ class TurnProtocol extends PushServerSocket implements ProtocolInterface
      */
     public function compile()
     {
-        echo sprintf('send turn to all clients' . PHP_EOL);
-        array_unshift($this->data, ['name' => 'turn']);
-        $msg = json_encode($this->data);
-        foreach ($this->server->clients as $client) {
+        echo sprintf('send turn to all subscribed clients' . PHP_EOL);
+        $turn = [
+            'name' => 'turn',
+            'data' => $data,
+        ];
+        $msg = json_encode($turn);
+        
+        foreach ($this->server->getGameSubscribedClients($data['turn']) as $client) {
             $client->send($msg);
         }
     }
