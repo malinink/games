@@ -86,5 +86,4 @@ class PushServerSocket implements MessageComponentInterface
             echo sprintf('something wrong!', $e->getMessage());
         }
     }
-
 }
