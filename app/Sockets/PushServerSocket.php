@@ -75,10 +75,10 @@ class PushServerSocket implements MessageComponentInterface
             $dat = $dataJs['data'];
 
             $nameN = ucfirst($name);
-            $class = '\App\Socket\Protocol' . "\\" . $nameN . 'Protocol';
+            $class = "\App\Socket\Protocol\\". $nameN . "Protocol";
             $interfaces = class_implements($class);
 
-            if (class_exists($class) && isset($interfaces['App\Sockets\Protocol\ProtocolInterface'])) {
+            if (class_exists($class) && isset($interfaces["App\Sockets\Protocol\ProtocolInterface"])) {
                 $obj = new $class($dat, $client, $this);
                 $obj->compile();
             }
