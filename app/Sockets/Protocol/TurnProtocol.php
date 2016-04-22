@@ -54,7 +54,7 @@ class TurnProtocol implements ProtocolInterface
         ];
         $msg = json_encode($turn);
         
-        foreach ($this->server->getGameSubscribedClients($this->data['turn']) as $client) {
+        foreach ($this->server->getGameSubscribedClients($this->data['game']) as $client) {
             $client->send($msg);
         }
     }
