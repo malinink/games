@@ -75,13 +75,13 @@ class Game extends Model
                     $game->gameType()->associate($gameType);
                     $game->save();
                     $userGame->user()->associate($user);
-                    $userGame->game()->asscociate($game);
+                    $userGame->game()->associate($game);
                     $userGame->color = (bool)rand(0, 1);
                     $userGame->save();
                 } else {
                     $opposite = UserGame::where('game_id', $game->id)->first();
                     $userGame->user()->associate($user);
-                    $userGame->game()->asscociate($game);
+                    $userGame->game()->associate($game);
                     $userGame->color = !$opposite->color;
                     $userGame->save();
                     $game->update(['time_started' => Carbon::now()]);
