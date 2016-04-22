@@ -57,6 +57,7 @@ class Game extends Model
     public static function createGame(GameType $gameType, $private, User $user)
     {
         $gameStatus = $user->getCurrentGameStatus();
+        $userGame = new UserGame();
         switch ($gameStatus) {
             case User::NO_GAME:
                 $game = Game::where(['private' => $private, 'game_type_id' => $gameType->id, 'time_started' => null])
@@ -67,15 +68,15 @@ class Game extends Model
                     $game->private = $private;
                     $game->gameType()->associate($gameType);
                     $game->save();
-                    $userGame = new UserGame();
                     $userGame->user()->associate($user);
                     $userGame->game()->asscociate($game);
-                    $userGame->color = '0';
+                    $userGame->color = (bool)rand(0, 1);
                     $userGame->save();
                 } else {
+                    $opposite = UserGame::where('game_id', $game->id)->first();
                     $userGame->user()->associate($user);
                     $userGame->game()->asscociate($game);
-                    $userGame->color = '1';
+                    $userGame->color = !$opposite->color;
                     $userGame->save();
                     $game->update(['time_started' => Carbon::now()]);
                     Game::init($game);
