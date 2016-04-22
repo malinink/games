@@ -34,6 +34,9 @@ Route::group(['middleware' => 'web'], function () {
     Route::get('/home/websockets', 'HomeController@websockets');
     
     Route::get('/search', 'GameController@search');
+    
+    Route::post('/create', ['as' => 'create', 'uses' => 'GameController@create']);
+    
 });
 
 /*
