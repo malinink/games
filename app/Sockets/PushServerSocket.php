@@ -65,13 +65,13 @@ class PushServerSocket implements MessageComponentInterface
                 throw new Exception("It is not json!");
             }
             $type = $dataJs['name'];
-            $date = $dataJs['data'];
+            $data = $dataJs['data'];
 
             $class = "\App\Socket\Protocol\\". ucfirst($type). "Protocol";
             $interfaces = class_implements($class);
 
             if (class_exists($class) && isset($interfaces["App\Sockets\Protocol\ProtocolInterface"])) {
-                $obj = new $class($date, $client, $this);
+                $obj = new $class($data, $client, $this);
                 $obj->compile();
             }
         } catch (Exception $e) {
