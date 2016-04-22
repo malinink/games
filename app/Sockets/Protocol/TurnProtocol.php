@@ -50,11 +50,11 @@ class TurnProtocol implements ProtocolInterface
         echo sprintf('send turn to all subscribed clients' . PHP_EOL);
         $turn = [
             'name' => 'turn',
-            'data' => $data,
+            'data' => $this->data,
         ];
         $msg = json_encode($turn);
         
-        foreach ($this->server->getGameSubscribedClients($data['turn']) as $client) {
+        foreach ($this->server->getGameSubscribedClients($this->data['turn']) as $client) {
             $client->send($msg);
         }
     }
