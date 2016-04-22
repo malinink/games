@@ -57,12 +57,12 @@ class Game extends Model
     public static function createGame(GameType $gameType, $private, User $user)
     {
         $gameStatus = $user->getCurrentGameStatus();
-        $userGame = new UserGame();
         switch ($gameStatus) {
             case User::NO_GAME:
                 $game = Game::where(['private' => $private, 'game_type_id' => $gameType->id, 'time_started' => null])
                     ->orderBy('id', 'ask')
                     ->first();
+                $userGame = new UserGame();
                 if ($game === null) {
                     $game = new Game();
                     $game->private = $private;
