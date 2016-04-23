@@ -70,6 +70,8 @@ class AuthenticationProtocol implements ProtocolInterface
         }
         $msg = json_encode($response);
         $this->client->send($msg);
-        $token->delete();
+        if ($token !== null) {
+            $token->delete();
+        }
     }
 }
