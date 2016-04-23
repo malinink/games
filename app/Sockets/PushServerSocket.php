@@ -20,6 +20,7 @@ class PushServerSocket implements MessageComponentInterface
     public function __construct()
     {
         $this->clients = new SplObjectStorage();
+        $this->users = array();
     }
     
     public static function setDataToServer($data)
