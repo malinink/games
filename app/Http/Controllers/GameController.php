@@ -5,9 +5,14 @@
  */
 namespace App\Http\Controllers;
 
-use App\GameType;
 use App\Http\Requests;
 use Illuminate\Http\Request;
+use App\Http\Requests\SearchGameFormRequest;
+use Carbon\Carbon;
+use Auth;
+use App\GameType;
+use App\Game;
+use App\UserGame;
 
 class GameController extends BaseController
 {
@@ -18,7 +23,19 @@ class GameController extends BaseController
      */
     public function search()
     {
-        $gameTypes = GameType::lists('type_name', 'id');
+        $gameTypesColumn = array_column(GameType::all('type_name')->toArray(), 'type_name');
+        $gameTypes = array_combine($gameTypesColumn, $gameTypesColumn);
         return view('search', compact('gameTypes'));
+    }
+    /**
+     * Find game with params or create new game
+     *
+     * @return void
+     */
+    public function create(SearchGameFormRequest $request)
+    {
+        $gameType = GameType::where('type_name', '=', $request->type)->first();
+        Game::createGame($gameType, $request->status);
+        return redirect('/home');
     }
 }

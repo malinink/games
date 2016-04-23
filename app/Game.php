@@ -6,6 +6,9 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\User;
+use Auth;
+use Carbon\Carbon;
 
 class Game extends Model
 {
@@ -43,7 +46,71 @@ class Game extends Model
      * @var boolean
      */
     public $timestamps = false;
-
+    
+    /**
+     *
+     * @return void
+     */
+    public static function init(Game $game)
+    {
+        
+    }
+    /**
+     * Create or modified user game
+     *
+     * @return Game
+     */
+    public static function createGame(GameType $gameType, $private, User $user)
+    {
+        $gameStatus = $user->getCurrentGameStatus();
+        switch ($gameStatus) {
+            case User::NO_GAME:
+                $game = Game::where(['private' => $private, 'game_type_id' => $gameType->id, 'time_started' => null])
+                    ->orderBy('id', 'ask')
+                    ->first();
+                $userGame = new UserGame();
+                if ($game === null) {
+                    $game = new Game();
+                    $game->private = $private;
+                    $game->gameType()->associate($gameType);
+                    $game->save();
+                    $userGame->user()->associate($user);
+                    $userGame->game()->associate($game);
+                    $userGame->color = (bool)rand(0, 1);
+                    $userGame->save();
+                } else {
+                    $opposite = UserGame::where('game_id', $game->id)->first();
+                    $userGame->user()->associate($user);
+                    $userGame->game()->associate($game);
+                    $userGame->color = !$opposite->color;
+                    $userGame->save();
+                    $game->update(['time_started' => Carbon::now()]);
+                    Game::init($game);
+                }
+                return $game;
+            case User::SEARCH_GAME:
+                $lastUserGame = $user->userGames->sortBy('id')->last();
+                $game = Game::find($lastUserGame->game_id);
+                $game->private = $private;
+                $game->gameType()->associate($gameType);
+                $game->save();
+                return $game;
+            default:
+                return null;
+        }
+                        
+    }
+    
+    /**
+     *
+     * @return void
+     */
+    public function cancelGame()
+    {
+        if (is_null($this->time_started)) {
+            $this->delete();
+        }
+    }
     /**
      *
      * @return BoardInfo[]

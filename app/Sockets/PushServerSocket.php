@@ -56,14 +56,26 @@ class PushServerSocket implements MessageComponentInterface
         $this->clients->detach($conn);
         $conn->close();
     }
-
-    public function onMessage(ConnectionInterface $from, $msg)
+    
+    public function onMessage(ConnectionInterface $client, $msg)
     {
-        echo sprintf('client %s send message: %s' . PHP_EOL, $from->resourceId, $msg);
-        foreach ($this->clients as $client) {
-            if ($from !== $client) {
-                $client->send($msg);
+        try {
+            $dataJs = json_decode($msg, true);
+            if ($dataJs === null) {
+                throw new Exception("It is not json!");
             }
+            $type = $dataJs['name'];
+            $data = $dataJs['data'];
+
+            $class = "\App\Socket\Protocol\\". ucfirst($type). "Protocol";
+            $interfaces = class_implements($class);
+
+            if (class_exists($class) && isset($interfaces["App\Sockets\Protocol\ProtocolInterface"])) {
+                $obj = new $class($data, $client, $this);
+                $obj->compile();
+            }
+        } catch (Exception $e) {
+            echo sprintf('something wrong!', $e->getMessage());
         }
     }
 }
