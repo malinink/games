@@ -7,6 +7,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\User;
+use App\BoardInfo;
 use Auth;
 use Carbon\Carbon;
 
@@ -48,12 +49,28 @@ class Game extends Model
     public $timestamps = false;
     
     /**
+     * Create BoardInfo models for current game 
      *
      * @return void
      */
     public static function init(Game $game)
     {
-        
+        for ($i=1; $i<3; $i++) {
+            for ($j=1; $j<9; $j++) {
+                if ($j<6) {
+                    $figure = $j;
+                } else {
+                    $figure = 9 - $j;
+                };
+                BoardInfo::create([
+                    'game_id' => $game->id,
+                    'figure' => $figure,
+                    'color' => false,
+                    'special' => $special,
+                    'turn_number' => 0
+                ]);
+            }
+        }
     }
     /**
      * Create or modified user game
