@@ -31,18 +31,20 @@ class AuthenticationProtocol implements ProtocolInterface
     protected $server;
     
     /**
-     * 
+     *
      * @param array $data
      * @param ConnectionInterface $client
      * @param PushServerSocket $server
      * @return void
      */
-    public function __construct(array $data, ConnectionInterface $client, PushServerSocket $server) {
+    public function __construct(array $data, ConnectionInterface $client, PushServerSocket $server)
+    {
         $this->data = $data;
         $this->client = $client;
         $this->server = $server;
     }
-    public function compile() {
+    public function compile()
+    {
         $str = $this->data['token'];
         $token = Token::find($str);
         $response = [
@@ -51,7 +53,7 @@ class AuthenticationProtocol implements ProtocolInterface
                     'type' => 'response'
                 ]
             ];
-        if ($token === null){
+        if ($token === null) {
             $response['data']['result'] = 'failed';
         } else {
             $this->server->setUser($this->client->resourceId, $token->user_id);
@@ -61,4 +63,3 @@ class AuthenticationProtocol implements ProtocolInterface
         $this->client->send($msg);
     }
 }
-
