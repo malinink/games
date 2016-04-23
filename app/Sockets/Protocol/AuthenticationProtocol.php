@@ -8,7 +8,9 @@ namespace App\Sockets\Protocol;
 
 use App\Sockets\PushServerSocket;
 use Ratchet\ConnectionInterface;
+use Exception;
 use App\Token;
+use Carbon\Carbon;
 
 class AuthenticationProtocol implements ProtocolInterface
 {
@@ -45,7 +47,14 @@ class AuthenticationProtocol implements ProtocolInterface
     }
     public function compile()
     {
+        if ($this->data['type'] != 'request') {
+            throw new Exception("Invalid type");
+        };
         $str = $this->data['token'];
+        /**
+         *
+         * @var App\Token
+         */
         $token = Token::find($str);
         $response = [
                 'name' => 'authentication',
@@ -53,13 +62,14 @@ class AuthenticationProtocol implements ProtocolInterface
                     'type' => 'response'
                 ]
             ];
-        if ($token === null) {
+        if ($token === null || $token->expiration_date > Carbon::now()) {
             $response['data']['result'] = 'failed';
         } else {
-            $this->server->setUser($this->client->resourceId, $token->user_id);
+            $this->server->linkUserIdToClien($this->client, $token->user_id);
             $response['data']['result'] = 'success';
         }
         $msg = json_encode($response);
         $this->client->send($msg);
+        $token->delete();
     }
 }
