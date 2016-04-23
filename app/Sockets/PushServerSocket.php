@@ -42,7 +42,7 @@ class PushServerSocket implements MessageComponentInterface
     
     public function onOpen(ConnectionInterface $conn)
     {
-        echo sprintf('client %s connected' . PHP_EOL, $conn->resourseId);
+        echo sprintf('client %s connected' . PHP_EOL, $conn->resourceId);
         $this->clients->attach($conn);
     }
 
