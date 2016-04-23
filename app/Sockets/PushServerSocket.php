@@ -15,12 +15,19 @@ use Ratchet\MessageComponentInterface;
 class PushServerSocket implements MessageComponentInterface
 {
     protected $clients;
-    protected $users;
+    
+    /**
+     * Contain identified clients.
+     * Set up a correspondence between userId and clientId.
+     *
+     * @var array
+     */
+    protected $clientToUserIds;
     
     public function __construct()
     {
         $this->clients = new SplObjectStorage();
-        $this->users = array();
+        $this->clientToUserIds = array();
     }
     
     public static function setDataToServer($data)
@@ -81,8 +88,8 @@ class PushServerSocket implements MessageComponentInterface
         }
     }
     
-    public function setUser($clientId, $userId)
+    public function linkUserIdToClient(ConnectionInterface $client, $userId)
     {
-        $users[$clientId]['userId'] = $userId;
+        $this->clientToUserIds[$clientId->resourceId] = $userId;
     }
 }
