@@ -9,8 +9,6 @@ namespace App\Sockets\Protocol;
 use App\Sockets\PushServerSocket;
 use Ratchet\ConnectionInterface;
 use App\Token;
-use App\User;
-use Auth;
 
 class AuthenticationProtocol implements ProtocolInterface
 {
@@ -22,13 +20,13 @@ class AuthenticationProtocol implements ProtocolInterface
     
     /**
      *
-     * @var ConnectionInterface $client
+     * @var ConnectionInterface
      */
     protected $client;
     
     /**
      *
-     * @var PushServerSocket $server
+     * @var PushServerSocket
      */
     protected $server;
     
@@ -56,7 +54,7 @@ class AuthenticationProtocol implements ProtocolInterface
         if ($token === null){
             $response['data']['result'] = 'failed';
         } else {
-            $this->server->setUser($this->client, $token->user_id);
+            $this->server->setUser($this->client->resourceId, $token->user_id);
             $response['data']['result'] = 'success';
         }
         $msg = json_encode($response);
