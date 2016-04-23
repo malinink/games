@@ -49,27 +49,60 @@ class Game extends Model
     public $timestamps = false;
     
     /**
-     * Create BoardInfo models for current game 
+     * Create BoardInfo models for current game
      *
      * @return void
      */
     public static function init(Game $game)
     {
-        for ($i=1; $i<3; $i++) {
-            for ($j=1; $j<9; $j++) {
-                if ($j<6) {
-                    $figure = $j;
-                } else {
-                    $figure = 9 - $j;
-                };
-                BoardInfo::create([
-                    'game_id' => $game->id,
-                    'figure' => $figure,
-                    'color' => false,
-                    'special' => $special,
-                    'turn_number' => 0
-                ]);
+        for ($j=1; $j<9; $j++) {
+            $special = 0;
+            if ($j<6) {
+                $figure = $j;
+            } else {
+                $figure = 9 - $j;
+            };
+            if ($j == 1 || $j == 5) {
+                $special = 1;
             }
+            $position = '1'.(string)$j;
+            BoardInfo::create([
+                'game_id' => $game->id,
+                'figure' => $figure,
+                'position' => (int)$position,
+                'color' => false,
+                'special' => $special,
+                'turn_number' => 0
+            ]);
+            $position = '8'.(string)$j;
+            BoardInfo::create([
+                'game_id' => $game->id,
+                'figure' => $figure,
+                'position' => (int)$position,
+                'color' => true,
+                'special' => $special,
+                'turn_number' => 0
+            ]);
+        }
+        for ($j=1; $j<9; $j++) {
+            $position = '2'.(string)$j;
+            BoardInfo::create([
+                'game_id' => $game->id,
+                'figure' => 0,
+                'position' => (int)$position,
+                'color' => false,
+                'special' => 0,
+                'turn_number' => 0
+            ]);
+            $position = '7'.(string)$j;
+            BoardInfo::create([
+                'game_id' => $game->id,
+                'figure' => 0,
+                'position' => (int)$position,
+                'color' => true,
+                'special' => 0,
+                'turn_number' => 0
+            ]);
         }
     }
     /**
