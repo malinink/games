@@ -62,7 +62,7 @@ class Game extends Model
             } else {
                 $figure = 9 - $j;
             };
-            if ($j == 1 || $j == 5) {
+            if ($j == 1 || $j == 5 || $j == 8) {
                 $special = 1;
             }
             $position = '1'.(string)$j;
