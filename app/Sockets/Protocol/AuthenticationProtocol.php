@@ -65,7 +65,7 @@ class AuthenticationProtocol implements ProtocolInterface
         if ($token === null || $token->expiration_date > Carbon::now()) {
             $response['data']['result'] = 'failed';
         } else {
-            $this->server->linkUserIdToClien($this->client, $token->user_id);
+            $this->server->linkUserIdToClient($this->client, $token->user_id);
             $response['data']['result'] = 'success';
         }
         $msg = json_encode($response);
