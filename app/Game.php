@@ -74,7 +74,7 @@ class Game extends Model
     {
         for ($j=0; $j<8; $j++) {
             $special = 0;
-            if ($j<6) {
+            if ($j<5) {
                 $figure = $j+1;
             } else {
                 $figure = 8 - $j;
