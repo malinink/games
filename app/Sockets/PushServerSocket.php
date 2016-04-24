@@ -27,7 +27,7 @@ class PushServerSocket implements MessageComponentInterface
     public function __construct()
     {
         $this->clients = new SplObjectStorage();
-        $this->clientToUserIds = array();
+        $this->clientToUserIds = [];
     }
     
     public static function setDataToServer($data)
@@ -90,6 +90,6 @@ class PushServerSocket implements MessageComponentInterface
     
     public function linkUserIdToClient(ConnectionInterface $client, $userId)
     {
-        $this->clientToUserIds[$clientId->resourceId] = $userId;
+        $this->clientToUserIds[$client->resourceId] = $userId;
     }
 }
