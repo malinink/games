@@ -51,6 +51,7 @@ class Game extends Model
     /**
      * Create BoardInfo
      *
+     * @link https://github.com/malinink/games/wiki/Database#figure
      * @return void
      */
     protected function createBoardInfo($figure, $position, $special, $color)
