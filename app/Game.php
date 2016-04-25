@@ -82,12 +82,10 @@ class Game extends Model
             if ($j == 0 || $j == 4 || $j == 7) {
                 $special = 1;
             }
-            $game->createBoardInfo($figure, 11+$j, $special, false);
-            $game->createBoardInfo($figure, 81+$j, $special, true);
-        }
-        for ($j=0; $j<8; $j++) {
             $game->createBoardInfo(0, 21+$j, 0, false);
             $game->createBoardInfo(0, 71+$j, 0, true);
+            $game->createBoardInfo($figure, 11+$j, $special, false);
+            $game->createBoardInfo($figure, 81+$j, $special, true);
         }
     }
     /**
