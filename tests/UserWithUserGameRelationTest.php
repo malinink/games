@@ -28,16 +28,20 @@ class UserWithUserGameTest extends TestCase
         $this->assertTrue($user->userGames instanceof Collection);
     }
     
-    public function testUserGameToUserRelation()
-    {
-        $this->assertEquals($this->userGame->user->id, $this->userGame->user_id);
-    }
-    
+     /**
+     *
+     * @depends testUserToUserGameIsCollection
+     */
     public function testUserToUserGamesRelation()
     {
         $userGame = $this->userGame;
         $user = $userGame->user;
         $this->assertTrue($user->userGames->contains($userGame));
+    }
+    
+    public function testUserGameToUserRelation()
+    {
+        $this->assertEquals($this->userGame->user->id, $this->userGame->user_id);
     }
     
     public function tearDown()
