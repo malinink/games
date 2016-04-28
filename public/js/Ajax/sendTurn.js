@@ -10,9 +10,6 @@ define(function(){
             request.setRequestHeader('Content-Type', 'application/json');
             request.setRequestHeader('X-CSRF-Token', csrf_token);
             request.send(JSON.stringify(data));
-            request.onreadystatechange = function(){
-                alert(request.responseText);
-            }
         }
     }
 })
