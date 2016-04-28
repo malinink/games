@@ -16,9 +16,18 @@ class PushServerSocket implements MessageComponentInterface
 {
     protected $clients;
     
+    /**
+     * Contain identified clients.
+     * Set up a correspondence between userId and clientId.
+     *
+     * @var array
+     */
+    protected $clientToUserIds;
+    
     public function __construct()
     {
         $this->clients = new SplObjectStorage();
+        $this->clientToUserIds = [];
     }
     
     public static function setDataToServer($data)
@@ -77,5 +86,10 @@ class PushServerSocket implements MessageComponentInterface
         } catch (Exception $e) {
             echo sprintf('something wrong!', $e->getMessage());
         }
+    }
+    
+    public function linkUserIdToClient(ConnectionInterface $client, $userId)
+    {
+        $this->clientToUserIds[$client->resourceId] = $userId;
     }
 }

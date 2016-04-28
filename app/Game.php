@@ -7,6 +7,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\User;
+use App\BoardInfo;
 use Auth;
 use Carbon\Carbon;
 
@@ -48,12 +49,44 @@ class Game extends Model
     public $timestamps = false;
     
     /**
+     * Create BoardInfo
+     *
+     * @link https://github.com/malinink/games/wiki/Database#figure
+     * @return void
+     */
+    protected function createBoardInfo($figure, $position, $special, $color)
+    {
+        BoardInfo::create([
+            'game_id' => $this->id,
+            'figure' => $figure,
+            'position' => $position,
+            'color' => $color,
+            'special' => $special,
+            'turn_number' => 0
+        ]);
+    }
+    /**
+     * Create BoardInfo models for current game
      *
      * @return void
      */
     public static function init(Game $game)
     {
-        
+        for ($j=0; $j<8; $j++) {
+            $special = 0;
+            if ($j<5) {
+                $figure = $j+1;
+            } else {
+                $figure = 8 - $j;
+            };
+            if ($j == 0 || $j == 4 || $j == 7) {
+                $special = 1;
+            }
+            $game->createBoardInfo(0, 21+$j, 0, false);
+            $game->createBoardInfo(0, 71+$j, 0, true);
+            $game->createBoardInfo($figure, 11+$j, $special, false);
+            $game->createBoardInfo($figure, 81+$j, $special, true);
+        }
     }
     /**
      * Create or modified user game
