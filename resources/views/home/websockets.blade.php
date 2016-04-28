@@ -26,5 +26,6 @@
 
 @endsection
 @section('scripts')
+<script src="/js/reconnecting-websocket.js"></script>
 <script src="/js/websockets.js"></script>
 @endsection

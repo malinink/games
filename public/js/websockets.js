@@ -2,7 +2,7 @@
  *
  * @author malinink
  */
-var conn = new WebSocket('ws://games:8080');
+var conn = new ReconnectingWebSocket('ws://games:8080');
 conn.onopen = function(e) {
     console.log('connection established');
 }
