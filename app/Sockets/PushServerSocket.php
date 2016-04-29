@@ -92,4 +92,15 @@ class PushServerSocket implements MessageComponentInterface
     {
         $this->clientToUserIds[$client->resourceId] = $userId;
     }
+    
+    /**
+     * Get array of the game's subscribers.
+     * @param int $gameId
+     *
+     * @return array
+     */
+    public function getGameSubscribedClients($gameId)
+    {
+        return $this->clientToGameIds[$gameId];
+    }
 }
