@@ -115,6 +115,6 @@ class User extends Authenticatable
      */
     public function token()
     {
-        return $this->hasOne("App\Token");
+        return $this->hasMany("App\Token");
     }
 }
