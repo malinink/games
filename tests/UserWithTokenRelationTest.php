@@ -11,7 +11,7 @@ class UserWithTokenRelationTest extends TestCase
 {
     /**
      *
-     * @var $Token
+     * @var $token
      */
     protected $token;
     
