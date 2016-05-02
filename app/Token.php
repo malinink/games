@@ -10,11 +10,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Token extends Model
 {
-     /**
-      * in seconds
-      *
-      * @var const int
-      */
+    /**
+     * in seconds
+     *
+     * @var const int
+     */
     const LIFETIME = 30;
     
     /**
