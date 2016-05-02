@@ -111,9 +111,9 @@ class User extends Authenticatable
     
     /**
      *
-     * @return Token
+     * @return Token[]
      */
-    public function token()
+    public function tokens()
     {
         return $this->hasMany("App\Token");
     }
