@@ -55,10 +55,11 @@
         </div>
     </div>
     <div class="row content">
+        <input type="hidden" class="game-info" data-game="34">
         <div class="col-md-7 col-xs-12 board">
             <div class="row user1">
                 <div class="col-xs-offset-1 user col-md-3 col-xs-4">
-                    <img height="70%" class="user-info" src="img/Moderator%20Filled-50.png"> Darth Vader
+                    <img height="70%" src="img/Moderator%20Filled-50.png"> <i id="white-user-info"></i>
                 </div>
                 <div align="right" class="hit-white col-md-7 col-xs-6"></div>
             </div>
@@ -85,44 +86,20 @@
                     <div class="cell-side-left">8</div>
                 </div>
                 <div class="col-xs-1 cell light" id="11">
-                    <div id="b_rook1" class="figure black">
-                        <img src="figure/rook-black.png" data-type="rook" class="img-content">
-                    </div>
                 </div>
                 <div class="col-xs-1 cell dark" id="12">
-                    <div id="b_knight1" class="figure black">
-                        <img src="figure/knight-black.png" data-type="knight" class="img-content">
-                    </div>
                 </div>
                 <div class="col-xs-1 cell light" id="13">
-                    <div id="b_bishop1" class="figure black">
-                        <img src="figure/bishop-black.png" data-type="bishop" class="img-content">
-                    </div>
                 </div>
                 <div class="col-xs-1 cell dark" id="14">
-                    <div id="b_king" class="figure black">
-                        <img src="figure/king-black.png" data-type="king" class="img-content">
-                    </div>
                 </div>
                 <div class="col-xs-1 cell light" id="15">
-                    <div id="b_queen" class="figure black">
-                        <img src="figure/queen-black.png" data-type="queen" class="img-content">
-                    </div>
                 </div>
                 <div class="col-xs-1 cell dark" id="16">
-                    <div id="b_bishop2" class="figure black">
-                        <img src="figure/bishop-black.png" data-type="bishop" class="img-content">
-                    </div>
                 </div>
                 <div class="col-xs-1 cell light" id="17">
-                    <div id="b_knight2" class="figure black">
-                        <img src="figure/knight-black.png" data-type="knight" class="img-content">
-                    </div>
                 </div>
                 <div class="col-xs-1 cell dark" id="18">
-                    <div id="b_rook2" class="figure black">
-                        <img src="figure/rook-black.png" data-type="rook" class="img-content">
-                    </div>
                 </div>
                 <div class="col-xs-1 cell cell-parent">
                     <div class="cell-side-right">8</div>
@@ -133,44 +110,20 @@
                     <div class="cell-side-left">7</div>
                 </div>
                 <div class="col-xs-1 cell dark" id="21">
-                    <div id="b_pawn1" class="figure black">
-                        <img src="figure/pawn-black.png" data-type="pawn" class="img-content">
-                    </div>
                 </div>
                 <div class="col-xs-1 cell light" id="22">
-                    <div id="b_pawn2" class="figure black">
-                        <img src="figure/pawn-black.png" data-type="pawn" class="img-content">
-                    </div>
                 </div>
                 <div class="col-xs-1 cell dark" id="23">
-                    <div id="b_pawn3" class="figure black">
-                        <img src="figure/pawn-black.png" data-type="pawn" class="img-content">
-                    </div>
                 </div>
                 <div class="col-xs-1 cell light" id="24">
-                    <div id="b_pawn4" class="figure black">
-                        <img src="figure/pawn-black.png" data-type="pawn" class="img-content">
-                    </div>
                 </div>
                 <div class="col-xs-1 cell dark" id="25">
-                    <div id="b_pawn5" class="figure black">
-                        <img src="figure/pawn-black.png" data-type="pawn" class="img-content">
-                    </div>
                 </div>
                 <div class="col-xs-1 cell light" id="26">
-                    <div id="b_pawn6" class="figure black">
-                        <img src="figure/pawn-black.png" data-type="pawn" class="img-content">
-                    </div>
                 </div>
                 <div class="col-xs-1 cell dark" id="27">
-                    <div id="b_pawn7" class="figure black">
-                        <img src="figure/pawn-black.png" data-type="pawn" class="img-content">
-                    </div>
                 </div>
                 <div class="col-xs-1 cell light" id="28">
-                    <div id="b_pawn8" class="figure black">
-                        <img src="figure/pawn-black.png" data-type="pawn" class="img-content">
-                    </div>
                 </div>
                 <div class="col-xs-1 cell cell-parent">
                     <div class="cell-side-right">7</div>
@@ -245,44 +198,20 @@
                     <div class="cell-side-left">2</div>
                 </div>
                 <div class="col-xs-1 cell light" id="71">
-                    <div id="w_pawn1" class="figure white">
-                        <img src="figure/pawn-white.png" data-type="pawn" class="img-content">
-                    </div>
                 </div>
                 <div class="col-xs-1 cell dark" id="72">
-                    <div id="w_pawn2" class="figure white">
-                        <img src="figure/pawn-white.png" data-type="pawn" class="img-content">
-                    </div>
                 </div>
                 <div class="col-xs-1 cell light" id="73">
-                    <div id="w_pawn3" class="figure white">
-                        <img src="figure/pawn-white.png" data-type="pawn" class="img-content">
-                    </div>
                 </div>
                 <div class="col-xs-1 cell dark" id="74">
-                    <div id="w_pawn4" class="figure white">
-                        <img src="figure/pawn-white.png" data-type="pawn" class="img-content">
-                    </div>
                 </div>
                 <div class="col-xs-1 cell light" id="75">
-                    <div id="w_pawn5" class="figure white">
-                        <img src="figure/pawn-white.png" data-type="pawn" class="img-content">
-                    </div>
                 </div>
                 <div class="col-xs-1 cell dark" id="76">
-                    <div id="w_pawn6" class="figure white">
-                        <img src="figure/pawn-white.png" data-type="pawn" class="img-content">
-                    </div>
                 </div>
                 <div class="col-xs-1 cell light" id="77">
-                    <div id="w_pawn7" class="figure white">
-                        <img src="figure/pawn-white.png" data-type="pawn" class="img-content">
-                    </div>
                 </div>
                 <div class="col-xs-1 cell dark" id="78">
-                    <div id="w_pawn8" class="figure white">
-                        <img src="figure/pawn-white.png" data-type="pawn" class="img-content">
-                    </div>
                 </div>
                 <div class="col-xs-1 cell cell-parent">
                     <div class="cell-side-right">2</div>
@@ -293,44 +222,20 @@
                     <div class="cell-side-left">1</div>
                 </div>
                 <div class="col-xs-1 cell dark" id="81">
-                    <div id="w_rook1" class="figure white">
-                        <img src="figure/rook-white.png" data-type="rook" class="img-content">
-                    </div>
                 </div>
                 <div class="col-xs-1 cell light" id="82">
-                    <div id="w_knight1" class="figure white">
-                        <img src="figure/knight-white.png" data-type="knight" class="img-content">
-                    </div>
                 </div>
                 <div class="col-xs-1 cell dark" id="83">
-                    <div id="w_bishop1" class="figure white">
-                        <img src="figure/bishop-white.png" data-type="bishop" class="img-content">
-                    </div>
                 </div>
                 <div class="col-xs-1 cell light" id="84">
-                    <div id="w_king" class="figure white">
-                        <img src="figure/king-white.png" data-type="king" class="img-content">
-                    </div>
                 </div>
                 <div class="col-xs-1 cell dark" id="85">
-                    <div id="w_queen" class="figure white">
-                        <img src="figure/queen-white.png" data-type="queen" class="img-content">
-                    </div>
                 </div>
                 <div class="col-xs-1 cell light" id="86">
-                    <div id="w_bishop2" class="figure white">
-                        <img src="figure/bishop-white.png" data-type="bishop" class="img-content">
-                    </div>
                 </div>
                 <div class="col-xs-1 cell dark" id="87">
-                    <div id="w_knight2" class="figure white">
-                        <img src="figure/knight-white.png" data-type="knight" class="img-content">
-                    </div>
                 </div>
                 <div class="col-xs-1 cell light" id="88">
-                    <div id="w_rook2" class="figure white">
-                        <img src="figure/rook-white.png" data-type="rook" class="img-content">
-                    </div>
                 </div>
                 <div class="col-xs-1 cell cell-parent">
                     <div class="cell-side-right">1</div>
@@ -355,7 +260,7 @@
             <div class="user2 row">
                 <div class="col-md-7 col-xs-6 col-xs-offset-1 hit-black col-md-offset-1"></div>
                 <div align="right" class="col-md-3 col-xs-4 user">
-                    Jedi Council <img height="70%" src="img/Moderator-50.png" class="user-info">
+                    <i id="black-user-info"></i> <img height="70%" src="img/Moderator-50.png">
                 </div>
             </div>
         </div>
@@ -396,4 +301,6 @@
 @section('scripts')
 <link href="css/style.css" rel="stylesheet" type="text/css">
 <script src="js/app.js"></script>
+<script src="/js/reconnecting-websocket.min.js"></script>
+<script data-main="/js/main.js" src="/js/require.min.js"></script>
 @endsection
