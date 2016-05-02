@@ -1,6 +1,5 @@
 <?php
-
-/*
+/**
  *
  * @author learp
  */
@@ -11,6 +10,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Token extends Model
 {
+     /**
+      * in seconds
+      *
+      * @var const int
+      */
+    const LIFETIME = 30;
+    
     /**
      * Table Name
      *
@@ -18,7 +24,18 @@ class Token extends Model
      */
     protected $table = "tokens";
     
-    const LIFETIME = 30;
+    /**
+     * Disable Timestamps fields
+     *
+     * @var boolean
+     */
+    public $timestamps = false;
+    /**
+     * Primary Key
+     *
+     * @var string
+     */
+    protected $primaryKey = "token";
 
     /**
      * The attributes that are mass assignable.
