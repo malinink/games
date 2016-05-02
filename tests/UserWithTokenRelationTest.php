@@ -25,7 +25,7 @@ class UserWithTokenRelationTest extends TestCase
     {
         $token = $this->token;
         $user = $token->user;
-        $this->assertTrue($user->token instanceof Collection);
+        $this->assertTrue($user->tokens instanceof Collection);
     }
     
     /**
@@ -36,7 +36,7 @@ class UserWithTokenRelationTest extends TestCase
     {
         $token = $this->token;
         $user = $token->user;
-        $this->assertTrue($user->token->contains($token));
+        $this->assertTrue($user->tokens->contains($token));
     }
     
     public function testTokenToUserRelation()
