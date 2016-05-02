@@ -23,8 +23,8 @@ class UserWithTokenRelationTest extends TestCase
     
     public function testUserToTokenIsCollection()
     {
-        $Token = $this->token;
-        $user = $Token->user;
+        $token = $this->token;
+        $user = $token->user;
         $this->assertTrue($user->token instanceof Collection);
     }
     
