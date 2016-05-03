@@ -103,19 +103,24 @@ class PushServerSocket implements MessageComponentInterface
     
     /**
      * Set up a correspondence between gameId and clientId.
-     * @param \App\Sockets\ConnnectionInterface $client
+     * @param ConnectionInterface $client
      * @param int $gameId
      *
-     * @return void
+     * @return boolean
      */
-    public function linkClientIdToGame(ConnnectionInterface $client, $gameId)
+    public function linkClientIdToGame(ConnectionInterface $client, $gameId)
     {
-        if (array_key_exists($gameId, $this->clientToGameIds)) {
-            if (!in_array($client, $this->clientToGameIds[$gameId])) {
-                array_push($this->clientToGameIds[$gameId], $client);
+        if (isset($this->clientToUserIds[$client->resourceId])) {
+            if (isset($this->clientToGameIds[$gameId])) {
+                $this->clientToGameIds[$gameId]->attach($client);
+                return true;
+            } else {
+                $this->clientToGameIds[$gameId] = new SplObjectStorage();
+                $this->cleintToGameIds[$gameId]->attach($client);
+                return true;
             }
         } else {
-            $this->clientToGameIds[$gameId] = [$client];
+            return false;
         }
     }
 }
