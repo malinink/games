@@ -97,7 +97,7 @@ class PushServerSocket implements MessageComponentInterface
      * Get array of the game's subscribers.
      * @param int $gameId
      *
-     * @return array
+     * @return ConnectionInterface[]
      */
     public function getGameSubscribedClients($gameId)
     {
