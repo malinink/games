@@ -19,7 +19,7 @@ define(function() {
                     var $img = $('<img>');
                     $img.attr('src','figure/'+config[data[colors[j]][i].type]+'-'+colors[j]+'.png');
                     $img.attr('data-type', config[data[colors[j]][i].type]);
-                    $('<div class="figure '+colors[j]+'">').appendTo('#'+data[colors[j]][i].position).append($img);
+                    $('<div class="figure '+colors[j]+'" id="' + data[colors[j]][i].id +'">').appendTo('#'+data[colors[j]][i].position).append($img);
                     $img.addClass('img-content');
                 }
             }
