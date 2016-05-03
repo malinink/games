@@ -30,6 +30,14 @@ class Token extends Model
      * @var boolean
      */
     public $timestamps = false;
+    
+    /**
+     * Disable autoincrementing
+     *
+     * @var boolean
+     */
+    public $incrementing = false;
+    
     /**
      * Primary Key
      *
