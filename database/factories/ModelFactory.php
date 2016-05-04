@@ -93,3 +93,11 @@ $factory->define(App\UserGame::class, function (Faker\Generator $faker) {
         'color' => $faker->boolean(),
     ];
 });
+
+$factory->define(App\Token::class, function (Faker\Generator $faker) {
+    return [
+        'user_id' => factory(App\User::class)->create()->id,
+        'token' => str_random(100),
+        'expiration_date' => $faker->dateTimeThisYear,
+    ];
+});
