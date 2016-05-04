@@ -24,10 +24,18 @@ class PushServerSocket implements MessageComponentInterface
      */
     protected $clientToUserIds;
     
+    /**
+     * Contain arrays of a subscribed clients of every game.
+     *
+     * @var array
+     */
+    protected $clientToGameIds;
+    
     public function __construct()
     {
         $this->clients = new SplObjectStorage();
         $this->clientToUserIds = [];
+        $this->clientToGameIds = [];
     }
     
     public static function setDataToServer($data)
@@ -105,6 +113,29 @@ class PushServerSocket implements MessageComponentInterface
             return $this->clientToGameIds[$gameId];
         } else {
             return new SplObjectStorage();
+        }
+    }
+    /**
+     * Set up a correspondence between gameId and clientId.
+     * @param ConnectionInterface $client
+     * @param int $gameId
+     *
+     * @return boolean
+     */
+    
+    public function linkClientIdToGame(ConnectionInterface $client, $gameId)
+    {
+        if (isset($this->clientToUserIds[$client->resourceId])) {
+            if (isset($this->clientToGameIds[$gameId])) {
+                $this->clientToGameIds[$gameId]->attach($client);
+                return true;
+            } else {
+                $this->clientToGameIds[$gameId] = new SplObjectStorage();
+                $this->cleintToGameIds[$gameId]->attach($client);
+                return true;
+            }
+        } else {
+            return false;
         }
     }
 }

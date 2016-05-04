@@ -2,7 +2,10 @@
  *
  * @author malinink
  */
-var conn = new WebSocket('ws://games:8080');
+var conn = new ReconnectingWebSocket('ws://games:8080');
+conn.reconnectInterval = 5000;
+conn.maxReconnectAttempts=10;
+
 conn.onopen = function(e) {
     console.log('connection established');
 }
