@@ -115,6 +115,7 @@ class PushServerSocket implements MessageComponentInterface
             return new SplObjectStorage();
         }
     }
+    
     /**
      * Set up a correspondence between gameId and clientId.
      * @param ConnectionInterface $client
@@ -122,7 +123,6 @@ class PushServerSocket implements MessageComponentInterface
      *
      * @return boolean
      */
-    
     public function linkClientIdToGame(ConnectionInterface $client, $gameId)
     {
         if (isset($this->clientToUserIds[$client->resourceId])) {
