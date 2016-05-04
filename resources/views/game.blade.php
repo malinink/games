@@ -55,7 +55,7 @@
         </div>
     </div>
     <div class="row content">
-        <input type="hidden" class="game-info" data-game="34">
+        <input type="hidden" class="game-info" data-game="" data-turn="" data-user="">
         <div class="col-md-7 col-xs-12 board">
             <div class="row user1">
                 <div class="col-xs-offset-1 user col-md-3 col-xs-4">
