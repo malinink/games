@@ -6,6 +6,8 @@
 
 namespace App;
 
+use DB;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Token extends Model
@@ -63,5 +65,28 @@ class Token extends Model
     public function user()
     {
         return $this->belongsTo("App\User");
+    }
+    
+    /**
+     * Create and retrun identification token
+     *
+     * @param \App\User $user
+     * @return Token
+     */
+    public static function getIdentificationToken(User $user)
+    {
+        $tokenString = "";
+        do {
+            $tokenString = str_random(100);
+        } while (DB::table("tokens")->where("token", "=", $tokenString)->count());
+        $user_id = $user->id;
+        
+        $token = Token::create([
+            "token" => $tokenString,
+            "user_id" => $user_id,
+            "expiration_date" => Carbon::now()->addSecond(self::LIFETIME),
+        ]);
+        
+        return $token;
     }
 }
