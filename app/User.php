@@ -108,4 +108,13 @@ class User extends Authenticatable
     {
         return $this->belongsToMany('App\User', 'friends_users', 'friend_id', 'user_id');
     }
+    
+    /**
+     *
+     * @return Token[]
+     */
+    public function tokens()
+    {
+        return $this->hasMany("App\Token");
+    }
 }
