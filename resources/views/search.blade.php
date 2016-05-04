@@ -13,7 +13,7 @@
             @endforeach
         </ul>
         @endif
-        {!! Form::open(['route' => 'create']) !!}
+        {!! Form::open(['route' => 'create', 'onsubmit' => 'changeStatus()']) !!}
         <div>
             {!! Form::label('Status:') !!}
             {!! Form::select('status', ['0' => 'public', '1' => 'private'], null, ['class' => 'form-control']) !!}
@@ -31,5 +31,5 @@
     </div>
 </div>
 @endsection
-
-
+<script> var count=0;</script>
+<script src="/js/changeStatus.js"></script>
