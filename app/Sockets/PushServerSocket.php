@@ -97,10 +97,14 @@ class PushServerSocket implements MessageComponentInterface
      * Get array of the game's subscribers.
      * @param int $gameId
      *
-     * @return ConnectionInterface[]
+     * @return SplObjectStorage
      */
     public function getGameSubscribedClients($gameId)
     {
-        return $this->clientToGameIds[$gameId];
+        if (isset($this->clientToGameIds[$gameId])) {
+            return $this->clientToGameIds[$gameId];
+        } else {
+            return new SplObjectStorage();
+        }
     }
 }
