@@ -6,7 +6,6 @@
 
 namespace App;
 
-use DB;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
@@ -78,7 +77,7 @@ class Token extends Model
         $tokenString = "";
         do {
             $tokenString = str_random(100);
-        } while (DB::table("tokens")->where("token", "=", $tokenString)->count());
+        } while (self::find($tokenString));
         $user_id = $user->id;
         
         $token = Token::create([
