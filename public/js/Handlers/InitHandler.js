@@ -16,15 +16,14 @@ define(['GameControl/gameConfig'], function(gameConfig) {
                  (data.users[1].color === '0' && data.users[1].id === userId)) {
                 attr = 'data-revert-id'; 
                 gameConfig.setRevert(true);
-                $('#user1').attr('data-color','black');
-                $('#user2').attr('data-color','white');
                 $('#user1-img').attr('src', 'img/black.png');
                 $('#user2-img').attr('src', 'img/white.png');
             } else {
                 attr = 'data-id';
             }
             for (var k=0; k<data.users.length; k++){
-                $('[data-color='+colors[parseInt(data.users[k].color)]+']').attr('data-id', data.users[k].id);
+                var colorInd = parseInt(data.users[k].color);
+                $('.board').attr('data-player'+colors[colorInd], data.users[k].id);
                 $('[data-color='+colors[parseInt(data.users[k].color)]+']').text(data.users[k].login);
             }
             for (var j=0; j<colors.length; j++){
