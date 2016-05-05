@@ -31,5 +31,9 @@
     </div>
 </div>
 @endsection
-<script> var count=0;</script>
+@section('status')
+<div id="status" style="visibility: hidden">search</div>
+@endsection
+@section('scripts')
 <script src="/js/changeStatus.js"></script>
+@endsection
