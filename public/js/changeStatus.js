@@ -1,13 +1,6 @@
-function changeStatus() {
-
-        var element = document.getElementById('statusContent');
-        if(count===0){
-        element.innerHTML = "search";
-        count++;
-    }
-    else{
-        element.innerHTML = "live";
-    }
+function changeStatus(status) {
+    var element = document.getElementById('statusContent');
+    element.innerHTML = status;
 }
-window.onload = changeStatus;
+window.onload = changeStatus(document.getElementById('status').innerHTML);
 
