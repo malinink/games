@@ -55,8 +55,8 @@
         </div>
     </div>
     <div class="row content">
-        <input type="hidden" class="game-info" data-game="" data-turn="" data-user="">
-        <div class="col-md-7 col-xs-12 board">
+        <input type="hidden" class="game-info" data-game="{!! $gameId !!}" data-turn="">
+        <div class="col-md-7 col-xs-12 board" data-user="{!! $user !!}" data-player-white="{!! $playerWhite !!}" data-player-black="{!! $playerBlack !!}">
             <div class="row user1">
                 <div class="col-xs-offset-1 user col-md-3 col-xs-4">
                     <img id="user1-img" height="70%" src="img/white.png"> <i id="user1" data-color="white"></i>
