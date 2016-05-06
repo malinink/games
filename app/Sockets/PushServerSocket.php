@@ -123,4 +123,18 @@ class PushServerSocket implements MessageComponentInterface
             return false;
         }
     }
+    
+    /**
+     * Detach between gameId and clientId.
+     * @param ConnectionInterface $client
+     * @param int $gameId
+     *
+     * @return boolean
+     */
+    public function unlinkClientIdFromGame(ConnectionInterface $client, $gameId)
+    {
+        if (isset($this->clientToGameIds[$gameId])) {
+            $this->clientToGameIds[$gameId]->detach($client);
+        }
+    }
 }
