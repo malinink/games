@@ -87,26 +87,17 @@ body {
     -webkit-transform: rotate(180deg);
 }
 .cell-parent {
-    position: relative;
- }
-.cell-side-right, .cell-side-left {
-    position: absolute;
-    width: 50%;
-    height: 100%;
-
-    font-size: 15pt;
-    font-weight: 600;
-
     display: flex;
     justify-content: center;
     align-items: center;
+ }
+.cell-side-right, .cell-side-left {
+    font-size: 15pt;
+    font-weight: 600;  
 }
 
-.cell-side-left {
-    left: 50%;
-}
 .cell-side-right {
-    right: 50%;
+    
     -webkit-transform: rotate(180deg);
 }
 .cell-highlighted {

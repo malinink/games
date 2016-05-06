@@ -1,0 +1,42 @@
+/**
+ *
+ * @author Ananskelly
+ */
+define(['GameControl/gameConfig'], function(gameConfig) {
+    var config = ['pawn', 'rook', 'knight', 'bishop', 'queen', 'king'];
+    var colors = ['white', 'black']
+    return {
+        compile: function(data) {
+            if (data.game !== $('.game-info').attr('data-game'))
+                return;
+            $('.game-info').attr('data-turn', data.turn);
+            var userId = $('.game-info').attr('data-user');
+            var attr = '';
+            if ((data.users[0].color === '0' && data.users[0].id === userId) ||
+                 (data.users[1].color === '0' && data.users[1].id === userId)) {
+                attr = 'data-revert-id'; 
+                gameConfig.setRevert(true);
+                $('#user1-img').attr('src', 'img/black.png');
+                $('#user2-img').attr('src', 'img/white.png');
+            } else {
+                attr = 'data-id';
+            }
+            for (var k=0; k<data.users.length; k++){
+                var colorInd = parseInt(data.users[k].color);
+                $('.board').attr('data-player'+colors[colorInd], data.users[k].id);
+                $('[data-color='+colors[parseInt(data.users[k].color)]+']').text(data.users[k].login);
+            }
+            for (var j=0; j<colors.length; j++){
+                for (var i=0; i<data[colors[j]].length; i++){
+                    var $img = $('<img>');
+                    $img.attr('src','figure/'+config[parseInt(data[colors[j]][i].type)]+'-'+colors[j]+'.png');
+                    $img.attr('data-type', config[parseInt(data[colors[j]][i].type)]);
+                    $('<div class="figure '+colors[j]+'" id="' + data[colors[j]][i].id +'">').appendTo('['+attr+'='+data[colors[j]][i].position+']').append($img);
+                    $img.addClass('img-content');
+                    $('['+attr+'='+data[colors[j]][i].position+']').addClass('busy');
+                }
+            }
+        }
+    };
+});
+
