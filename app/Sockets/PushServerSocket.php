@@ -64,6 +64,8 @@ class PushServerSocket implements MessageComponentInterface
     public function onClose(ConnectionInterface $conn)
     {
         echo sprintf('client %s disconnected' . PHP_EOL, $conn->resourceId);
+       // $this->unlinkClientIdFromGame($conn, $gameId);
+        $this->unlinkUserIdFromClient($conn);
         $this->clients->detach($conn);
     }
 
@@ -117,6 +119,16 @@ class PushServerSocket implements MessageComponentInterface
     }
     
     /**
+     *
+     * @param ConnectionInterface $client
+     */
+    public function unlinkUserIdFromClient(ConnectionInterface $client) {
+        if (isset($this->clientToUserIds[$client->resourceId])) {
+            unset($this->clientToUserIds[$client->resourceId]);
+        }
+    }
+    
+    /**
      * Set up a correspondence between gameId and clientId.
      * @param ConnectionInterface $client
      * @param int $gameId
@@ -150,6 +162,16 @@ class PushServerSocket implements MessageComponentInterface
     {
         if (isset($this->clientToGameIds[$gameId])) {
             $this->clientToGameIds[$gameId]->detach($client);
+        }
+    }
+    
+    /**
+     * Delete all connections of game
+     * @param int $gameId
+     */
+    public function unlinkGameClients($gameId) {
+        if (isset($this->clientToGameIds[$gameId])) {
+            unset($this->clientToGameIds[$gameId]);
         }
     }
 }
