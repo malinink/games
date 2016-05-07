@@ -2,12 +2,10 @@
  *
  * @author Ananskelly
  */
-define(function() {
-    console.log('this');
+define(['/GameControl/turnContorl'], function(turnControl) {
     return {
         compile: function(data) {
-            console.log('You are in TurnHandle module!');
-            // do staff
+            turnControl.apply(data);
         }
     };
 });
