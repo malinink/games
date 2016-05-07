@@ -43,7 +43,7 @@
             </div>
         </div>
         <div class="col-xs-6" style="position: absolute;top: 40%; left: 40%;">
-            <img src="img/stars.png" width="70%">
+            <img src="/img/stars.png" width="70%">
         </div>
         <div class="accept-figure"><button class="accept btn btn-default">change</button></div>
     </div>
@@ -59,7 +59,7 @@
         <div class="col-md-7 col-xs-12 board" data-user="{!! $userId !!}" data-player-white="{!! $playerWhiteId !!}" data-player-black="{!! $playerBlackId !!}">
             <div class="row user1">
                 <div class="col-xs-offset-1 user col-md-3 col-xs-4">
-                    <img id="user1-img" height="70%" src="img/white.png"> <i id="user1" data-color="white"></i>
+                    <img id="user1-img" height="70%" src="/img/white.png"> <i id="user1" data-color="white"></i>
                 </div>
                 <div align="right" class="hit-white col-md-7 col-xs-6"></div>
             </div>
@@ -260,7 +260,7 @@
             <div class="user2 row">
                 <div class="col-md-7 col-xs-6 col-xs-offset-1 hit-black col-md-offset-1"></div>
                 <div align="right" class="col-md-3 col-xs-4 user">
-                    <i id="user2" data-color="black"></i> <img id="user2-img" height="70%" src="img/black.png">
+                    <i id="user2" data-color="black"></i> <img id="user2-img" height="70%" src="/img/black.png">
                 </div>
             </div>
         </div>
@@ -299,6 +299,8 @@
 </div>
 @endsection
 @section('scripts')
-<link href="css/style.css" rel="stylesheet" type="text/css">
+<link href="/css/style.css" rel="stylesheet" type="text/css">
 <script src="/js/app.js"></script>
+<script src="/js/reconnecting-websocket.min.js"></script>
+<script data-main="/js/main.js" src="/js/require.min.js"></script>
 @endsection

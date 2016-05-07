@@ -7,8 +7,10 @@ define(['GameControl/gameConfig'], function(gameConfig) {
     var colors = ['white', 'black']
     return {
         compile: function(data) {
-            if (data.game !== $('.game-info').attr('data-game'))
+            if (data.game !== parseInt($('.game-info').attr('data-game'))) {
                 return;
+            }
+            //console.log('inithandler');
             $('.game-info').attr('data-turn', data.turn);
             var userId = $('.game-info').attr('data-user');
             var attr = '';
@@ -16,8 +18,8 @@ define(['GameControl/gameConfig'], function(gameConfig) {
                  (data.users[1].color === '0' && data.users[1].id === userId)) {
                 attr = 'data-revert-id'; 
                 gameConfig.setRevert(true);
-                $('#user1-img').attr('src', 'img/black.png');
-                $('#user2-img').attr('src', 'img/white.png');
+                $('#user1-img').attr('src', '/img/black.png');
+                $('#user2-img').attr('src', '/img/white.png');
             } else {
                 attr = 'data-id';
             }
@@ -29,7 +31,7 @@ define(['GameControl/gameConfig'], function(gameConfig) {
             for (var j=0; j<colors.length; j++){
                 for (var i=0; i<data[colors[j]].length; i++){
                     var $img = $('<img>');
-                    $img.attr('src','figure/'+config[parseInt(data[colors[j]][i].type)]+'-'+colors[j]+'.png');
+                    $img.attr('src','/figure/'+config[parseInt(data[colors[j]][i].type)]+'-'+colors[j]+'.png');
                     $img.attr('data-type', config[parseInt(data[colors[j]][i].type)]);
                     $('<div class="figure '+colors[j]+'" id="' + data[colors[j]][i].id +'">').appendTo('['+attr+'='+data[colors[j]][i].position+']').append($img);
                     $img.addClass('img-content');

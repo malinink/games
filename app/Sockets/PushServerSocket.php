@@ -48,7 +48,10 @@ class PushServerSocket implements MessageComponentInterface
     
     public function __invoke($data)
     {
-        $data = json_decode($data, true);
+        /**
+         * logic must be the same as in onMessage
+         */
+        //$data = json_decode($data, true);
         echo sprintf('invoked with data' . PHP_EOL);
         foreach ($this->clients as $client) {
             $client->send($data);

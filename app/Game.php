@@ -10,6 +10,7 @@ use App\User;
 use App\BoardInfo;
 use Auth;
 use Carbon\Carbon;
+use App\Sockets\PushServerSocket;
 
 class Game extends Model
 {
@@ -87,6 +88,47 @@ class Game extends Model
             $game->createBoardInfo($figure, 11+$j, $special, false);
             $game->createBoardInfo($figure, 81+$j, $special, true);
         }
+        /*
+         * add players
+         */
+        $players = [];
+        foreach ($game->userGames as $userGame) {
+            $players[] = [
+                'login' => $userGame->user->name,
+                'id'    => $userGame->user->id,
+                'color'  => $userGame->color
+            ];
+        }
+        /**
+         * add board infos
+         */
+        $white = [];
+        $black = [];
+        foreach ($game->boardInfos as $boradInfo) {
+            $boradInfoData = [
+                'type'     => $boradInfo->figure,
+                'position' => $boradInfo->position,
+                'id'       => $boradInfo->id,
+            ];
+            if ($boradInfo->color) {
+                $black[] = $boradInfoData;
+            } else {
+                $white[] = $boradInfoData;
+            }
+        }
+        /*
+         * send init to ZMQ
+         */
+        PushServerSocket::setDataToServer([
+            'name' => 'init',
+            'data' => [
+               'game' => $game->id,
+               'turn' => 0,
+               'users' => $players,
+               'black' => $black,
+               'white' => $white,
+            ]
+        ]);
     }
     /**
      * Create or modified user game
