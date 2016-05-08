@@ -31,5 +31,9 @@
     </div>
 </div>
 @endsection
-
-
+@section('status')
+<input class="state" type="hidden" value="search">
+@endsection
+@section('scripts')
+<script src="/js/changeStatus.js"></script>
+@endsection
