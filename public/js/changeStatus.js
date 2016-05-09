@@ -1,9 +1,9 @@
 
-function changeStatus(status,ids) {
+function changeStatus(status,userId,playersId) {
     var element = document.getElementById('statusContent');
     //check what page we have
-    if (typeof ids[0] !== "undefined") {
-        if (parseInt(ids[0]) === parseInt(ids[1]) || parseInt(ids[0]) === parseInt(ids[2])) {
+    if (typeof userId !== "undefined") {
+        if (playersId.indexOf(parseInt(userId))>=0) {
             //if gamer
             element.innerHTML = status;
         }
@@ -17,23 +17,23 @@ function changeStatus(status,ids) {
     }
 }
 $(document).ready(function () {
-    if (typeof $('.inf').attr('data-user') !== "undefined"){
-    changeStatus($('.stateGame').attr('value'),
-            [
-                $('.inf').attr('data-user'),
-                $('.inf').attr('data-player-white'),
-                $('.inf').attr('data-player-black')
-            ]
-            );
-    }else{
+    if (typeof $('.board').attr('data-user') !== "undefined") {
+        changeStatus($('.stateGame').attr('value'),
+                $('.board').attr('data-user'),
+                [
+                    parseInt($('.board').attr('data-player-white')),
+                    parseInt($('.board').attr('data-player-black'))
+                ]
+                );
+    } else {
         changeStatus($('.state').attr('value'),
-            [
-                $('.inf').attr('data-user'),
-                $('.inf').attr('data-player-white'),
-                $('.inf').attr('data-player-black')
-            ]
-            );
-        
+                $('.board').attr('data-user'),
+                [
+                    parseInt($('.board').attr('data-player-white')),
+                    parseInt($('.board').attr('data-player-black'))
+                ]
+                );
+
     }
 });
 
