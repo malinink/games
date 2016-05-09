@@ -300,11 +300,6 @@
 @endsection
 
 @section('status')
-<div style="visibility: hidden"class="inf" 
-    data-user="{!! $userId !!}" 
-    data-player-white="{!! $playerWhiteId !!}" 
-    data-player-black="{!! $playerBlackId !!}">
-</div>
 <div style="visibility: hidden" class="stateGame" value="live"></div>
 @endsection
 
