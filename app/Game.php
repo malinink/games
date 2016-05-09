@@ -234,4 +234,14 @@ class Game extends Model
             return Game::BLACK;
         }
     }
+    /**
+     * Check turn
+     *
+     * @return [boolean, $dataTurn]
+     */
+    public function validateTurn($data)
+    {
+        $dataTurn=$data;
+        return [true, $dataTurn];
+    }
 }
