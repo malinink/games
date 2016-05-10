@@ -7,10 +7,6 @@ function changeStatus(status,userId,playersId) {
             //if gamer
             element.innerHTML = status;
         }
-        else {
-            //if viewer
-            element.innerHTML = "nogame";
-        }
     }
     else {
             element.innerHTML = status;
