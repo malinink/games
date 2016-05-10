@@ -2,10 +2,11 @@
  *
  * @author Ananskelly
  */
-require(['./MessageHandler'/*, './Ajax/sendTurn'*/], function(messageHandler, sendTurn) {
-
-    var conn = new ReconnectingWebSocket('ws://games:8080', null,
-            {reconnectInterval: 5000, reconnectDecay: 1, maxReconnectAttempts: 10});
+var conn;
+require(['./MessageHandler', './WSQueries/sync'], function(messageHandler, sync) {
+    
+    conn = new ReconnectingWebSocket('ws://games:8080', null,
+            {reconnectInterval: 5000, reconnectDecay: 1, maxReconnectAttempts: 10})
     conn.onopen = function (e) {
         console.log('connection established');
     };
