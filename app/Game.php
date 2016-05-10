@@ -237,11 +237,24 @@ class Game extends Model
     /**
      * Check turn
      *
-     * @return [boolean, $dataTurn]
+     * @return boolean
      */
     public function validateTurn($data)
     {
-        $dataTurn=$data;
-        return [true, $dataTurn];
+
+        $turnValidatedSuccessfully = false;
+        $resData=$data;
+        
+        // code
+        
+        if ($turnValidatedSuccessfully === true) {
+            PushServerSocket::setDataToServer([
+                'name' => 'turn',
+                'data' => $resData
+            ]);
+            return true;
+        } else {
+            return false;
+        }
     }
 }
