@@ -12,7 +12,7 @@ define(['GameControl/gameConfig'], function(gameConfig) {
             }
             //console.log('inithandler');
             $('.game-info').attr('data-turn', data.turn);
-            var userId = $('.game-info').attr('data-user');
+            var userId = $('.board').attr('data-user');
             var attr = '';
             if ((data.users[0].color === '0' && data.users[0].id === userId) ||
                  (data.users[1].color === '0' && data.users[1].id === userId)) {
