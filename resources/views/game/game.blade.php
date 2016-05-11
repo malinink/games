@@ -308,5 +308,4 @@
 <script src="/js/app.js"></script>
 <script src="/js/reconnecting-websocket.min.js"></script>
 <script data-main="/js/main.js" src="/js/require.min.js"></script>
-<script src="/js/changeStatus.js"></script>
 @endsection
