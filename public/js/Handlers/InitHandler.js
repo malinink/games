@@ -18,6 +18,8 @@ define(['GameControl/gameConfig'], function(gameConfig) {
                  (data.users[1].color === '0' && data.users[1].id === userId)) {
                 attr = 'data-revert-id'; 
                 gameConfig.setRevert(true);
+                $('#user1').attr('data-color', 'black');
+                $('#user2').attr('data-color', 'white');
                 $('#user1-img').attr('src', '/img/black.png');
                 $('#user2-img').attr('src', '/img/white.png');
             } else {
