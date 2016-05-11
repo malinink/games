@@ -2,7 +2,7 @@
  *
  * @author Ananskelly
  */
-define(['GameControl/gameConfig'], function(gameConfig) {
+define(['GameControl/gameConfig', 'changeStatus'], function(gameConfig, changeStatus) {
     var config = ['pawn', 'rook', 'knight', 'bishop', 'queen', 'king'];
     var colors = ['white', 'black']
     return {
@@ -10,6 +10,7 @@ define(['GameControl/gameConfig'], function(gameConfig) {
             if (data.game !== parseInt($('.game-info').attr('data-game'))) {
                 return;
             }
+            changeStatus.changeStatus();
             //console.log('inithandler');
             $('.game-info').attr('data-turn', data.turn);
             var userId = $('.game-info').attr('data-user');

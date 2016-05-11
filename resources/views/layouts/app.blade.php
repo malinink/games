@@ -49,18 +49,23 @@
                 <ul class="nav navbar-nav">
                     <li><a href="{{ url('/home') }}">Home</a></li>
                 </ul>
+                <ul class="nav navbar-nav" >
+                    <li><a href="{{ url('/search') }}">Search</a></li>
+                </ul>
 
                 <!-- Right Side Of Navbar -->
                 <ul class="nav navbar-nav navbar-right">
                     @if ( Auth::check() )
                         <li><a>
-                        @if ($currentGameStatus ===  App\User::NO_GAME )
+                            <div id="statusContent">
+                                @if ($currentGameStatus ===  App\User::NO_GAME )
                                 nogame
-                        @elseif ($currentGameStatus === App\User::SEARCH_GAME)
+                                @elseif ($currentGameStatus === App\User::SEARCH_GAME)
                                 search
-                        @elseif ($currentGameStatus === App\User::LIVE_GAME)
+                                @elseif ($currentGameStatus === App\User::LIVE_GAME)
                                 live
-                        @endif
+                                @endif
+                            </div>
                         </a></li>
                     @endif
                     <!-- Authentication Links -->
@@ -84,7 +89,7 @@
     </nav>
 
     @yield('content')
-
+    @yield('status')
     <!-- JavaScripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
