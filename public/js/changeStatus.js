@@ -1,36 +1,21 @@
-
-function changeStatus(status,userId,playersId) {
-    var element = document.getElementById('statusContent');
-    //check what page we have
-    if (typeof userId !== "undefined") {
+/**
+ *
+ * @author IrenJones
+ */
+define(function(){
+    return {
+        changeStatus : function(){
+        var element = document.getElementById('statusContent');
+        var status=$('.stateGame').attr('value');
+        var userId = $('.board').attr('data-user');
+        var playersId = [
+            parseInt($('.board').attr('data-player-white')),
+            parseInt($('.board').attr('data-player-black'))
+        ];
         if (playersId.indexOf(parseInt(userId))>=0) {
             //if gamer
             element.innerHTML = status;
         }
+        }
     }
-    else {
-            element.innerHTML = status;
-    }
-}
-$(document).ready(function () {
-    if (typeof $('.board').attr('data-user') !== "undefined") {
-        changeStatus($('.stateGame').attr('value'),
-                $('.board').attr('data-user'),
-                [
-                    parseInt($('.board').attr('data-player-white')),
-                    parseInt($('.board').attr('data-player-black'))
-                ]
-                );
-    } else {
-        changeStatus($('.state').attr('value'),
-                $('.board').attr('data-user'),
-                [
-                    parseInt($('.board').attr('data-player-white')),
-                    parseInt($('.board').attr('data-player-black'))
-                ]
-                );
-
-    }
-});
-
-
+})
