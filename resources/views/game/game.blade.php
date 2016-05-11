@@ -298,6 +298,11 @@
     </div>
 </div>
 @endsection
+
+@section('status')
+<div style="visibility: hidden" class="stateGame" value="live"></div>
+@endsection
+
 @section('scripts')
 <link href="/css/style.css" rel="stylesheet" type="text/css">
 <script src="/js/app.js"></script>
