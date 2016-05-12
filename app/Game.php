@@ -237,7 +237,7 @@ class Game extends Model
     /**
      * Check turn
      *
-     * @return boolean
+     * @return json
      */
     public function turn($game, $figure, $x, $y, $typeId = null)
     {
