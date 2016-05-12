@@ -11,13 +11,12 @@ class TurnController extends BaseController
     /**
      * Make turn or not
      *
-     * @return boolean
+     * @return json
      */
     public function turn(TurnRequest $msg)
     {
         $dataJs = json_decode($msg, true);
         $data = $dataJs['data'];
-
-        return Game::validateTurn($data);
+        return Game::turn($data['game'], $data['figure'], $data['x'], $data['y'], $data['typeId']);
     }
 }
