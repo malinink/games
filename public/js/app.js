@@ -35,8 +35,12 @@ require(['./GameControl/highlight', './GameControl/gameConfig', './Ajax/sendTurn
         
         
         var currentFigure = '';
-        
+        var current;
+        var colors = ['white', 'black']
         $(document).on('click', '.figure', function(){
+            current = gameConfig.getCurrent();
+            if ($('.board').attr('data-user') !== $('.board').attr('data-player-'+colors[current]))
+                return;
             currentFigure = this;
             $(this).parent().addClass('cell-key');
         });
@@ -44,7 +48,8 @@ require(['./GameControl/highlight', './GameControl/gameConfig', './Ajax/sendTurn
             highlight.compile(this);
         });
         $cellObj.click(function(){
-            
+            if ($('.board').attr('data-user') !== $('.board').attr('data-player-'+colors[current]))
+                return;
             $cellObj.removeClass('cell-highlighted')
             var attr;
             if (gameConfig.getRevert()) {
