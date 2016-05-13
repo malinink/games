@@ -28,6 +28,13 @@ class SubscribeProtocol implements ProtocolInterface
     protected $client;
     
     /**
+     * WS server.
+     *
+     * @var PushServerSocket
+     */
+    protected $server;
+    
+    /**
      *
      * @param array $data
      * @param ConnectionInterface $client
@@ -37,6 +44,7 @@ class SubscribeProtocol implements ProtocolInterface
     public function __construct(array $data, ConnectionInterface $client, PushServerSocket $server)
     {
         $this->data = $data;
+        $this->server = $server;
         $this->client = $client;
     }
     
@@ -62,16 +70,16 @@ class SubscribeProtocol implements ProtocolInterface
             ];
         $game = Game::find($gameId);
             
-        if ($game === null) {
+        if (($game === null) || !isset($this->server->clientToUserIds[$this->client->resourceId])) {
             $response["data"]["state"] = "failed";
         } elseif ($game->time_finished === null) {
             $response["data"]["state"] = "unavailable";
-        }
-        
-        if ($response["data"]["state"] == "success") {
+        } else {
             $turns = $game->turnInfos();
             $response["data"]["turn"] = $turns->sortBy("turn_number")->last()->turn_number;
+            $this->server->linkClientIdToGame($this->client, $gameId);
         }
+        
         $msg = json_encode($response);
         $this->client->send($msg);
     }
