@@ -234,46 +234,107 @@ class Game extends Model
             return Game::BLACK;
         }
     }
+     /**
+     * Send message
+     *
+     * @return void
+     */
+    public function sendMes($event, $eat, $change, $gameId, $userId, $turn, $prevTurn, $figureId, $x, $y, $eatenFigureId, $typeId)
+    {
+        $sendingData = [
+            'game' => $gameId,
+            'user' => $userId,
+            'turn' => $turn,
+            'prev' => $prevTurn,
+            'move' => [
+                        'figureId' => $figureId,
+                        'x'        => $x,
+                        'y'        => $y,
+                    ]
+            ];
+        if ($event!='none') {
+            $sendingData['event'] = $event;
+        }
+        if ($eat) {
+            $sendingData['remove'] = ['figureId' => $eatenFigureId];
+        }
+        if ($change) {
+            $sendingData['change'] = [
+                        'figureId' => $figureId,
+                        'typeId'   => $typeId
+                    ];
+        }
+        PushServerSocket::setDataToServer([
+            'name' => 'turn',
+            'data' => $sendingData
+        ]);
+    }
     /**
      * Check turn
      *
-     * @return json
+     * @return boolean
      */
-    public function turn($game, $figure, $x, $y, $typeId = null)
+    public function turn($user, $game, $figureId, $x, $y, $typeId = null)
     {
+        try {
+            $event = 'none';
+            $eat = 0;
+            $change = 0;
+            $gameId = $game->id;
+            $userId = $user->id;
+            $turn = $game->getLastUserTurn();
+            if ($turn) {
+                $prevTurn=0;
+            } else {
+                $prevTurn=1;
+            }
+            $boardTurn = $game->boardInfos->find($gameId);
+            $figureGet = BoardInfo::find($figureId);
+            $figureColor = $figureGet->color;
+            $haveEatenFigure = BoardInfo::where('x', $x, 'y', $y)->count();
+            
+            // check if game is live
+            if (!is_null($game->time_finished)) {
+                throw new Exception("Game have finished already");
+            }
+            
+            // check if user has this game
+            if (!is_null($user->usergames->find($gameId))) {
+                throw new Exception("User hasn't got this game");
+            }
+            
+            // check if it's user's turn
+            if (!($turn=== $boardTurn->turn_number)) {
+                throw new Exception("Not user turn");
+            }
+            
+            // check color
+            if (!($figureColor=== $boardTurn->turn_number)) {
+                throw new Exception("Not user's figure");
+            }
+            
+            // check coordinates
+            if (!(($x>0 && $x<9) && ($y>0 && $y<9))) {
+                throw new Exception("Figure isn't on board");
+            }
+            
+            //check if we eat something
+            if ($haveEatenFigure > 1) {
+                $eatenFigure = BoardInfo::where('x', $x, 'y', $y, 'game_id', '!=', $gameId);
+                $eatenFigureId = $eatenFigure->id;
+                $eat = 1;
+            }
+            
+            $turnValidatedSuccessfully = true;
+            if ($turnValidatedSuccessfully === true) {
+                Game::sendMes($event, $eat, $change, $gameId, $userId, $turn, $prevTurn, $figureId, $x, $y, $eatenFigureId, $typeId);
+            }
 
-        $turnValidatedSuccessfully = false;
-
-        // code
-
-        if ($turnValidatedSuccessfully === true) {
-            PushServerSocket::setDataToServer([
-                'name' => 'turn',
-                'data' => [
-                    'game'   => $game,
-                    'figure' => $figure,
-                    'x'      => $x,
-                    'y'      => $y,
-                    'typeId' => $typeId
-                ]
-            ]);
-
-            $answer = json_encode([
-                'name' => 'turn',
-                'data' =>
-                [
-                    'state' => 'success'
-                ]
-            ]);
-        } else {
-            $answer = json_encode([
-                'name' => 'turn',
-                'data' =>
-                [
-                    'state' => 'failed'
-                ]
-            ]);
+            return $turnValidatedSuccessfully;
+        } catch (Exception $e) {
+            //can see $e if want
+            $turnValidatedSuccessfully = false;
+            return $turnValidatedSuccessfully;
         }
-        return $answer;
     }
 }
