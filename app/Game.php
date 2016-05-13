@@ -8,6 +8,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use App\User;
 use App\BoardInfo;
+use App\TurnInfo;
 use Auth;
 use Carbon\Carbon;
 use App\Sockets\PushServerSocket;
@@ -237,26 +238,31 @@ class Game extends Model
      /**
      * Send message
      *
+     * @param bool $event
+     * @param bool $eat
+     * @param bool $change
+     * @param array $data
+     *
      * @return void
      */
-    public function sendMes($event, $eat, $change, $data)
+    protected function sendMessage($event, $eat, $change, $data)
     {
-        $gameId = $data['gameId'];
-        $userId = $data['userId'];
+        $game = $data['game'];
+        $user = $data['user'];
         $turn = $data['turn'];
         $prevTurn = $data['prevTurn'];
-        $figureId = $data['figureId'];
+        $figureId = $data['figure'];
         $x = $data['x'];
         $y = $data['y'];
         $eatenFigureId = $data['eatenFigureId'];
         $typeId = $data['typeId'];
         $sendingData = [
-            'game' => $gameId,
-            'user' => $userId,
+            'game' => $game->id,
+            'user' => $user->id,
             'turn' => $turn,
             'prev' => $prevTurn,
             'move' => [
-                        'figureId' => $figureId,
+                        'figure' => $figureId,
                         'x'        => $x,
                         'y'        => $y,
                     ]
@@ -265,11 +271,11 @@ class Game extends Model
             $sendingData['event'] = $event;
         }
         if ($eat) {
-            $sendingData['remove'] = ['figureId' => $eatenFigureId];
+            $sendingData['remove'] = ['figure' => $eatenFigureId];
         }
         if ($change) {
             $sendingData['change'] = [
-                        'figureId' => $figureId,
+                        'figure' => $figureId,
                         'typeId'   => $typeId
                     ];
         }
@@ -281,7 +287,14 @@ class Game extends Model
     /**
      * Check turn
      *
-     * @return boolean
+     * @param \App\User $user
+     * @param \App\Game $game
+     * @param int $figureId
+     * @param int $x
+     * @param int $y
+     * @param int $typeId
+     *
+     * @return bool
      */
     public function turn($user, $game, $figureId, $x, $y, $typeId = null)
     {
@@ -308,7 +321,7 @@ class Game extends Model
             }
             
             // check if user has this game
-            if (!is_null($user->usergames->find($gameId))) {
+            if (!is_null($game->usergames->find($userId))) {
                 throw new Exception("User hasn't got this game");
             }
             
@@ -331,30 +344,26 @@ class Game extends Model
             if ($haveEatenFigure > 1) {
                 $eatenFigure = BoardInfo::where('x', $x, 'y', $y, 'game_id', '!=', $gameId);
                 $eatenFigureId = $eatenFigure->id;
-                $eat = 1;
+                if ($eatenFigure->color != $figureColor) {
+                    $eat = 1;
+                }
             }
-            
-            $turnValidatedSuccessfully = true;
-            if ($turnValidatedSuccessfully === true) {
-                $data=[
-                    'gameId'        => $gameId,
-                    'userId'        => $userId,
-                    'turn'          => $turn,
-                    'prevTurn'      => $prevTurn,
-                    'figureId'      => $figureId,
-                    'x'             => $x,
-                    'y'             => $y,
-                    'eatenFigureId' => $eatenFigureId,
-                    'typeId'        => $typeId
-                ];
-                Game::sendMes($event, $eat, $change, $data);
-            }
-
-            return $turnValidatedSuccessfully;
+            $data = [
+                'game' => $game,
+                'user' => $user,
+                'turn' => $turn,
+                'prevTurn' => $prevTurn,
+                'figure' => $figureId,
+                'x' => $x,
+                'y' => $y,
+                'eatenFigureId' => $eatenFigureId,
+                'typeId' => $typeId
+            ];
+            Game::sendMessage($event, $eat, $change, $data);
+            return true;
         } catch (Exception $e) {
             //can see $e if want
-            $turnValidatedSuccessfully = false;
-            return $turnValidatedSuccessfully;
+            return false;
         }
     }
 }
