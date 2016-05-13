@@ -239,8 +239,17 @@ class Game extends Model
      *
      * @return void
      */
-    public function sendMes($event, $eat, $change, $gameId, $userId, $turn, $prevTurn, $figureId, $x, $y, $eatenFigureId, $typeId)
+    public function sendMes($event, $eat, $change, $data)
     {
+        $gameId = $data['gameId'];
+        $userId = $data['userId'];
+        $turn = $data['turn'];
+        $prevTurn = $data['prevTurn'];
+        $figureId = $data['figureId'];
+        $x = $data['x'];
+        $y = $data['y'];
+        $eatenFigureId = $data['eatenFigureId'];
+        $typeId = $data['typeId'];
         $sendingData = [
             'game' => $gameId,
             'user' => $userId,
@@ -327,7 +336,18 @@ class Game extends Model
             
             $turnValidatedSuccessfully = true;
             if ($turnValidatedSuccessfully === true) {
-                Game::sendMes($event, $eat, $change, $gameId, $userId, $turn, $prevTurn, $figureId, $x, $y, $eatenFigureId, $typeId);
+                $data=[
+                    'gameId'        => $gameId,
+                    'userId'        => $userId,
+                    'turn'          => $turn,
+                    'prevTurn'      => $prevTurn,
+                    'figureId'      => $figureId,
+                    'x'             => $x,
+                    'y'             => $y,
+                    'eatenFigureId' => $eatenFigureId,
+                    'typeId'        => $typeId
+                ];
+                Game::sendMes($event, $eat, $change, $data);
             }
 
             return $turnValidatedSuccessfully;
