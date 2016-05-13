@@ -78,7 +78,7 @@ define(['./gameConfig', '/WSQueries/sync'], function(gameConfig, sync){
                 var $img = $('<img>');
                 $img.attr('src','/figure/'+turnParameters.change[0].type+'-'+current+'.png');
                 $img.attr('data-type', turnParameters.change[0].type);
-                $('<div class="figure '+current+'" id="' + turnParameters.change[0].id +'">').appendTo('['+attr+'='+turnParameters.move.y+turnParameters.move.x+']').append($img);
+                $('<div class="figure '+current+'" id="' + turnParameters.change[0].figure +'">').appendTo('['+attr+'='+turnParameters.move.y+turnParameters.move.x+']').append($img);
                 $img.addClass('img-content');
                 $('['+attr+'='+turnParameters.move.y+turnParameters.move.x+']').addClass('busy');
             }
