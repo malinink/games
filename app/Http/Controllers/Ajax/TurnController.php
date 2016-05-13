@@ -17,6 +17,33 @@ class TurnController extends BaseController
     {
         $dataJs = json_decode($msg, true);
         $data = $dataJs['data'];
-        return Game::turn($data['game'], $data['figure'], $data['x'], $data['y'], $data['typeId']);
+        $user=  Auth::user();
+        $turnValidatedSuccessfully = Game::turn(
+            $user,
+            $data['game'],
+            $data['figureId'],
+            $data['x'],
+            $data['y'],
+            $data['typeId']
+        );
+
+        if ($turnValidatedSuccessfully === true) {
+            $answer = json_encode([
+                'name' => 'turn',
+                'data' =>
+                [
+                    'state' => 'success'
+                ]
+            ]);
+        } else {
+            $answer = json_encode([
+                'name' => 'turn',
+                'data' =>
+                [
+                    'state' => 'failed'
+                ]
+            ]);
+        }
+        return $answer;
     }
 }
