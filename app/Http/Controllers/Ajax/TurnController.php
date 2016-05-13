@@ -21,7 +21,7 @@ class TurnController extends BaseController
         $turnValidatedSuccessfully = Game::turn(
             $user,
             $data['game'],
-            $data['figureId'],
+            $data['figure'],
             $data['x'],
             $data['y'],
             $data['typeId']
