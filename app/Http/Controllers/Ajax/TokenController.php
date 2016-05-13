@@ -3,7 +3,9 @@
  *
  * @author Ananaskelly
  */
+
 namespace App\Http\Controllers\Ajax;
+
 use App\Http\Controllers\BaseController;
 
 use Illuminate\Http\Request;
@@ -25,7 +27,7 @@ class TokenController extends BaseController
         $msg = [
             'name' => 'token'
         ];
-        if ($token !== null){
+        if ($token !== null) {
             $data = [
                 'state' => 'success',
                 'token' => $token->token
