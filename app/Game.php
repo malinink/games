@@ -8,6 +8,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use App\User;
 use App\BoardInfo;
+use App\TurnInfo;
 use Auth;
 use Carbon\Carbon;
 use App\Sockets\PushServerSocket;
@@ -232,6 +233,152 @@ class Game extends Model
             return Game::WHITE;
         } else {
             return Game::BLACK;
+        }
+    }
+          /**
+     * Send message
+     *
+     * @param bool $event
+     * @param bool $eat
+     * @param bool $change
+     * @param array $data
+     *
+     * @return void
+     */
+    protected function sendMessage($event, $eat, $change, $data)
+    {
+        $game = $data['game'];
+        $user = $data['user'];
+        $turn = $data['turn'];
+        $figureId = $data['figure'];
+        $x = $data['x'];
+        $y = $data['y'];
+        $eatenFigureId = $data['eatenFigureId'];
+        $typeId = $data['typeId'];
+        $options = $data['options'];
+        
+        $gameId=GameType::find($game->id);
+        $number_turn=$game->turn_number;
+        
+        $sendingData = [
+            'game' => $game->id,
+            'user' => $user->id,
+            'turn' => $number_turn+1,
+            'prev' => $number_turn,
+            'move' => [
+                        'figure' => $figureId,
+                        'x'        => $x,
+                        'y'        => $y,
+                    ]
+            ];
+        if ($event!='none') {
+            $sendingData['event'] = $event;
+        }
+        if ($eat) {
+            $sendingData['remove'] = ['figure' => $eatenFigureId];
+        }
+        if ($change) {
+            $sendingData['change'] = [
+                        'figure' => $figureId,
+                        'typeId'   => $typeId
+                    ];
+        }
+        PushServerSocket::setDataToServer([
+            'name' => 'turn',
+            'data' => $sendingData
+        ]);
+        
+        $turnInfo = new TurnInfo();
+        $turnInfo->game_id = $game->id;
+        $turnInfo->turn_number = $number_turn+1;
+        $turnInfo->move = intval($figureId.$x.$y);
+        $turnInfo->options=intval($options);
+        $turnInfo->turn_start_time = ($gameId->time_on_turn)*($number_turn+1);
+        $turnInfo->user_turn = $turn;
+        $turnInfo->save();
+    }
+    /**
+     * Check turn
+     *
+     * @param \App\User $user
+     * @param \App\Game $game
+     * @param int $figureId
+     * @param int $x
+     * @param int $y
+     * @param int $typeId
+     *
+     * @return bool
+     */
+    public function turn($user, $game, $figureId, $x, $y, $typeId = null)
+    {
+        try {
+            $event = 'none';
+            $options='00';
+            $eat = 0;
+            $change = 0;
+            $gameId = $game->id;
+            $userId = $user->id;
+            $prevTurn = $game->getLastUserTurn();
+            if ($prevTurn) {
+                $turn=0;
+            } else {
+                $turn=1;
+            }
+            $boardTurn = $game->boardInfos->find($gameId);
+            $figureGet = BoardInfo::find($figureId);
+            $figureColor = $figureGet->color;
+            $haveEatenFigure = BoardInfo::where('x', $x, 'y', $y)->count();
+            
+            // check if game is live
+            if (!is_null($game->time_finished)) {
+                throw new Exception("Game have finished already");
+            }
+            
+            // check if user has this game
+            if (!is_null($game->usergames->find($userId))) {
+                throw new Exception("User hasn't got this game");
+            }
+            
+            // check if it's user's turn
+            if (!($game->turn_number+1 === $boardTurn->turn_number)) {
+                throw new Exception("Not user turn");
+            }
+            
+            // check color
+            if (!($figureColor=== $turn)) {
+                throw new Exception("Not user's figure");
+            }
+            
+            // check coordinates
+            if (!(($x>0 && $x<9) && ($y>0 && $y<9))) {
+                throw new Exception("Figure isn't on board");
+            }
+            
+            //check if we eat something
+            if ($haveEatenFigure > 1) {
+                $eatenFigure = BoardInfo::where('x', $x, 'y', $y, 'game_id', '!=', $gameId);
+                $eatenFigureId = $eatenFigure->id;
+                if ($eatenFigure->color != $figureColor) {
+                    $eat = 1;
+                    $options='0'.$eatenFigureId;
+                }
+            }
+            $data = [
+                'game' => $game,
+                'user' => $user,
+                'turn' => $turn,
+                'figure' => $figureId,
+                'x' => $x,
+                'y' => $y,
+                'eatenFigureId' => $eatenFigureId,
+                'typeId' => $typeId,
+                'options' => $options
+            ];
+            Game::sendMessage($event, $eat, $change, $data);
+            return true;
+        } catch (Exception $e) {
+            //can see $e if want
+            return false;
         }
     }
 }
