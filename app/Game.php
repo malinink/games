@@ -235,7 +235,7 @@ class Game extends Model
             return Game::BLACK;
         }
     }
-     /**
+          /**
      * Send message
      *
      * @param bool $event
@@ -250,17 +250,21 @@ class Game extends Model
         $game = $data['game'];
         $user = $data['user'];
         $turn = $data['turn'];
-        $prevTurn = $data['prevTurn'];
         $figureId = $data['figure'];
         $x = $data['x'];
         $y = $data['y'];
         $eatenFigureId = $data['eatenFigureId'];
         $typeId = $data['typeId'];
+        $options = $data['options'];
+        
+        $gameId=GameType::find($game->id);
+        $number_turn=$game->turn_number;
+        
         $sendingData = [
             'game' => $game->id,
             'user' => $user->id,
-            'turn' => $turn,
-            'prev' => $prevTurn,
+            'turn' => $number_turn+1,
+            'prev' => $number_turn,
             'move' => [
                         'figure' => $figureId,
                         'x'        => $x,
@@ -283,6 +287,15 @@ class Game extends Model
             'name' => 'turn',
             'data' => $sendingData
         ]);
+        
+        $turnInfo = new TurnInfo();
+        $turnInfo->game_id = $game->id;
+        $turnInfo->turn_number = $number_turn+1;
+        $turnInfo->move = intval($figureId.$x.$y);
+        $turnInfo->options=intval($options);
+        $turnInfo->turn_start_time = ($gameId->time_on_turn)*($number_turn+1);
+        $turnInfo->user_turn = $turn;
+        $turnInfo->save();
     }
     /**
      * Check turn
@@ -300,15 +313,16 @@ class Game extends Model
     {
         try {
             $event = 'none';
+            $options='00';
             $eat = 0;
             $change = 0;
             $gameId = $game->id;
             $userId = $user->id;
-            $turn = $game->getLastUserTurn();
-            if ($turn) {
-                $prevTurn=0;
+            $prevTurn = $game->getLastUserTurn();
+            if ($prevTurn) {
+                $turn=0;
             } else {
-                $prevTurn=1;
+                $turn=1;
             }
             $boardTurn = $game->boardInfos->find($gameId);
             $figureGet = BoardInfo::find($figureId);
@@ -326,12 +340,12 @@ class Game extends Model
             }
             
             // check if it's user's turn
-            if (!($turn=== $boardTurn->turn_number)) {
+            if (!($game->turn_number+1 === $boardTurn->turn_number)) {
                 throw new Exception("Not user turn");
             }
             
             // check color
-            if (!($figureColor=== $boardTurn->turn_number)) {
+            if (!($figureColor=== $turn)) {
                 throw new Exception("Not user's figure");
             }
             
@@ -346,18 +360,19 @@ class Game extends Model
                 $eatenFigureId = $eatenFigure->id;
                 if ($eatenFigure->color != $figureColor) {
                     $eat = 1;
+                    $options='0'.$eatenFigureId;
                 }
             }
             $data = [
                 'game' => $game,
                 'user' => $user,
                 'turn' => $turn,
-                'prevTurn' => $prevTurn,
                 'figure' => $figureId,
                 'x' => $x,
                 'y' => $y,
                 'eatenFigureId' => $eatenFigureId,
-                'typeId' => $typeId
+                'typeId' => $typeId,
+                'options' => $options
             ];
             Game::sendMessage($event, $eat, $change, $data);
             return true;
