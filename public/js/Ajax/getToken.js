@@ -10,7 +10,7 @@ define(function(){
                 var request = new XMLHttpRequest();
                 request.onload = function(){
                     if (this.status !== 200)
-                        reject(new Error('Error with some status code'));
+                        reject(new Error('Error with '+this.status+' status code'));
                     try {
                         var message = JSON.parse(this.responseText);
                         if (!message.hasOwnProperty('name') || !message.hasOwnProperty('data'))
