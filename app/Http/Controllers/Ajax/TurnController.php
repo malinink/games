@@ -1,6 +1,6 @@
 <?php
 /**
- * 
+ *
  * @author IrenJones
  */
 namespace App\Http\Controllers\Ajax;
