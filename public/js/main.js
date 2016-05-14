@@ -9,6 +9,7 @@ require(['./MessageHandler', './WSQueries/sendToken', './Ajax/getToken', './app'
     conn.onopen = function (e) {
         console.log('connection established');
         getToken.get(0).then(function(response){
+            console.log(response.data);
             sendToken.send(response.data);
         }, function(err){
             console.log(err);

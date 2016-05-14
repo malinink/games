@@ -60,7 +60,7 @@ require(['./GameControl/highlight', './GameControl/gameConfig', './Ajax/sendTurn
             var newFigure = null;
             if (currentFigure!=='' && currentFigure!==$(this).children()) {
                 $(this).addClass('cell-highlight-aim');
-                var position = $(currentFigure).parent().attr(attr);
+                var position = $(this).attr(attr);
                 var gameId = $('.game-info').attr('data-game');
                 var y = $(this).attr(attr)[0];
                 if ($(currentFigure).children().attr('data-type') === 'pawn' && (y === '1' || y === '8')){

@@ -12,6 +12,7 @@ define(function(){
                     'token': data.token,
                 }
             }
+            console.log(msg);
             conn.send(JSON.stringify(msg));
         }
     }

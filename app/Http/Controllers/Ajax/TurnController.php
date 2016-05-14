@@ -1,10 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Ajax;
 
 use App\Http\Requests;
 use Illuminate\Http\Request;
-use App\Http\Game;
+use App\Game;
+use App\Http\Controllers\BaseController;
+use Auth;
 
 class TurnController extends BaseController
 {
@@ -13,14 +15,15 @@ class TurnController extends BaseController
      *
      * @return json
      */
-    public function turn(TurnRequest $msg)
+    public function turn(Request $msg)
     {
-        $dataJs = json_decode($msg, true);
-        $data = $dataJs['data'];
+        $data = json_decode($msg->getContent(), true);
         $user=  Auth::user();
-        $turnValidatedSuccessfully = Game::turn(
+        
+        $game = Game::find($data['game']);
+        
+        $turnValidatedSuccessfully = $game->turn(
             $user,
-            $data['game'],
             $data['figure'],
             $data['x'],
             $data['y'],
@@ -44,6 +47,6 @@ class TurnController extends BaseController
                 ]
             ]);
         }
-        return $answer;
+        return response()->json($answer);
     }
 }

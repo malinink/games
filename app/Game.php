@@ -12,6 +12,7 @@ use App\TurnInfo;
 use Auth;
 use Carbon\Carbon;
 use App\Sockets\PushServerSocket;
+use Exception;
 
 class Game extends Model
 {
@@ -229,10 +230,12 @@ class Game extends Model
      */
     public function getLastUserTurn()
     {
-        if ($this->turnInfos->orderBy('id', 'desc')->last()->user_turn == '0') {
-            return Game::WHITE;
-        } else {
+        $turnInfo = $this->turnInfos->sortBy('id')->last();
+        
+        if ($turnInfo === null || $turnInfo->user_turn == '1') {
             return Game::BLACK;
+        } else {
+            return Game::WHITE;
         }
     }
           /**
@@ -297,11 +300,22 @@ class Game extends Model
         $turnInfo->user_turn = $turn;
         $turnInfo->save();
     }
+    
+    /**
+     *
+     * @param BoardInfo $figure
+     * @param type $x
+     * @param type $y
+     */
+    protected function checkGameRulesOnFigureMove(BoardInfo $figure, $x, $y)
+    {
+        
+    }
+    
     /**
      * Check turn
      *
      * @param \App\User $user
-     * @param \App\Game $game
      * @param int $figureId
      * @param int $x
      * @param int $y
@@ -309,43 +323,44 @@ class Game extends Model
      *
      * @return bool
      */
-    public function turn($user, $game, $figureId, $x, $y, $typeId = null)
+    public function turn(User $user, $figureId, $x, $y, $typeId = null)
     {
         try {
             $event = 'none';
             $options='00';
             $eat = 0;
             $change = 0;
-            $gameId = $game->id;
+            $gameId = $this->id;
             $userId = $user->id;
-            $prevTurn = $game->getLastUserTurn();
+            $prevTurn = $this->getLastUserTurn();
             if ($prevTurn) {
-                $turn=0;
+                $turn=false;
             } else {
-                $turn=1;
+                $turn=true;
             }
-            $boardTurn = $game->boardInfos->find($gameId);
+            //$boardInfos = $this->boardInfos;
             $figureGet = BoardInfo::find($figureId);
-            $figureColor = $figureGet->color;
-            $haveEatenFigure = BoardInfo::where('x', $x, 'y', $y)->count();
+            $figureColor = (boolean)$figureGet->color;
+            //$haveEatenFigure = BoardInfo::where('x', $x, 'y', $y)->count();
+            $haveEatenFigure = 0;
             
             // check if game is live
-            if (!is_null($game->time_finished)) {
+            if (!is_null($this->time_finished)) {
                 throw new Exception("Game have finished already");
             }
             
             // check if user has this game
-            if (!is_null($game->usergames->find($userId))) {
+            if (!is_null($this->usergames->find($userId))) {
                 throw new Exception("User hasn't got this game");
             }
             
             // check if it's user's turn
-            if (!($game->turn_number+1 === $boardTurn->turn_number)) {
-                throw new Exception("Not user turn");
-            }
+//            if (!($this->turn_number+1 === $boardTurn->turn_number)) {
+//                throw new Exception("Not user turn");
+//            }
             
             // check color
-            if (!($figureColor=== $turn)) {
+            if (!($figureColor === $turn)) {
                 throw new Exception("Not user's figure");
             }
             
@@ -354,6 +369,9 @@ class Game extends Model
                 throw new Exception("Figure isn't on board");
             }
             
+            $this->checkGameRulesOnFigureMove($figureGet, $x, $y);
+            
+            $eatenFigureId = null;
             //check if we eat something
             if ($haveEatenFigure > 1) {
                 $eatenFigure = BoardInfo::where('x', $x, 'y', $y, 'game_id', '!=', $gameId);
@@ -364,7 +382,7 @@ class Game extends Model
                 }
             }
             $data = [
-                'game' => $game,
+                'game' => $this,
                 'user' => $user,
                 'turn' => $turn,
                 'figure' => $figureId,
@@ -378,6 +396,7 @@ class Game extends Model
             return true;
         } catch (Exception $e) {
             //can see $e if want
+            echo $e->getMessage();
             return false;
         }
     }

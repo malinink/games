@@ -70,7 +70,7 @@ class SubscribeProtocol implements ProtocolInterface
             ];
         $game = Game::find($gameId);
             
-        if (($game === null) || !isset($this->server->clientToUserIds[$this->client->resourceId])) {
+        if (($game === null)/* || !isset($this->server->clientToUserIds[$this->client->resourceId])*/) {
             $response["data"]["state"] = "failed";
         } elseif ($game->time_finished === null) {
             $response["data"]["state"] = "unavailable";

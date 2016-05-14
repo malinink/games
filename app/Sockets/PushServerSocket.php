@@ -95,7 +95,7 @@ class PushServerSocket implements MessageComponentInterface
                 $obj->compile();
             }
         } catch (Exception $e) {
-            echo sprintf('something wrong!', $e->getMessage());
+            echo sprintf('something wrong! error: %s %s', $e->getMessage(), $e->getTraceAsString());
         }
     }
     
