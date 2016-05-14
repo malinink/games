@@ -8,8 +8,11 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use App\User;
 use App\BoardInfo;
+use App\TurnInfo;
 use Auth;
 use Carbon\Carbon;
+use App\Sockets\PushServerSocket;
+use Exception;
 
 class Game extends Model
 {
@@ -87,6 +90,47 @@ class Game extends Model
             $game->createBoardInfo($figure, 11+$j, $special, false);
             $game->createBoardInfo($figure, 81+$j, $special, true);
         }
+        /*
+         * add players
+         */
+        $players = [];
+        foreach ($game->userGames as $userGame) {
+            $players[] = [
+                'login' => $userGame->user->name,
+                'id'    => $userGame->user->id,
+                'color'  => $userGame->color
+            ];
+        }
+        /**
+         * add board infos
+         */
+        $white = [];
+        $black = [];
+        foreach ($game->boardInfos as $boradInfo) {
+            $boradInfoData = [
+                'type'     => $boradInfo->figure,
+                'position' => $boradInfo->position,
+                'id'       => $boradInfo->id,
+            ];
+            if ($boradInfo->color) {
+                $black[] = $boradInfoData;
+            } else {
+                $white[] = $boradInfoData;
+            }
+        }
+        /*
+         * send init to ZMQ
+         */
+        PushServerSocket::setDataToServer([
+            'name' => 'init',
+            'data' => [
+               'game' => $game->id,
+               'turn' => 0,
+               'users' => $players,
+               'black' => $black,
+               'white' => $white,
+            ]
+        ]);
     }
     /**
      * Create or modified user game
@@ -186,10 +230,174 @@ class Game extends Model
      */
     public function getLastUserTurn()
     {
-        if ($this->turnInfos->orderBy('id', 'desc')->last()->user_turn == '0') {
-            return Game::WHITE;
-        } else {
+        $turnInfo = $this->turnInfos->sortBy('id')->last();
+        
+        if ($turnInfo === null || $turnInfo->user_turn == '1') {
             return Game::BLACK;
+        } else {
+            return Game::WHITE;
+        }
+    }
+          /**
+     * Send message
+     *
+     * @param bool $event
+     * @param bool $eat
+     * @param bool $change
+     * @param array $data
+     *
+     * @return void
+     */
+    protected function sendMessage($event, $eat, $change, $data)
+    {
+        $game = $data['game'];
+        $user = $data['user'];
+        $turn = $data['turn'];
+        $figureId = $data['figure'];
+        $x = $data['x'];
+        $y = $data['y'];
+        $eatenFigureId = $data['eatenFigureId'];
+        $typeId = $data['typeId'];
+        $options = $data['options'];
+        
+        $gameId=GameType::find($game->id);
+        $number_turn=$game->turn_number;
+        
+        $sendingData = [
+            'game' => $game->id,
+            'user' => $user->id,
+            'turn' => $number_turn+1,
+            'prev' => $number_turn,
+            'move' => [
+                        'figure' => $figureId,
+                        'x'        => $x,
+                        'y'        => $y,
+                    ]
+            ];
+        if ($event!='none') {
+            $sendingData['event'] = $event;
+        }
+        if ($eat) {
+            $sendingData['remove'] = ['figure' => $eatenFigureId];
+        }
+        if ($change) {
+            $sendingData['change'] = [
+                        'figure' => $figureId,
+                        'typeId'   => $typeId
+                    ];
+        }
+        PushServerSocket::setDataToServer([
+            'name' => 'turn',
+            'data' => $sendingData
+        ]);
+        
+        $turnInfo = new TurnInfo();
+        $turnInfo->game_id = $game->id;
+        $turnInfo->turn_number = $number_turn+1;
+        $turnInfo->move = intval($figureId.$x.$y);
+        $turnInfo->options=intval($options);
+        $turnInfo->turn_start_time = ($gameId->time_on_turn)*($number_turn+1);
+        $turnInfo->user_turn = $turn;
+        $turnInfo->save();
+    }
+    
+    /**
+     *
+     * @param BoardInfo $figure
+     * @param type $x
+     * @param type $y
+     */
+    protected function checkGameRulesOnFigureMove(BoardInfo $figure, $x, $y)
+    {
+        
+    }
+    
+    /**
+     * Check turn
+     *
+     * @param \App\User $user
+     * @param int $figureId
+     * @param int $x
+     * @param int $y
+     * @param int $typeId
+     *
+     * @return bool
+     */
+    public function turn(User $user, $figureId, $x, $y, $typeId = null)
+    {
+        try {
+            $event = 'none';
+            $options='00';
+            $eat = 0;
+            $change = 0;
+            $gameId = $this->id;
+            $userId = $user->id;
+            $prevTurn = $this->getLastUserTurn();
+            if ($prevTurn) {
+                $turn=false;
+            } else {
+                $turn=true;
+            }
+            //$boardInfos = $this->boardInfos;
+            $figureGet = BoardInfo::find($figureId);
+            $figureColor = (boolean)$figureGet->color;
+            //$haveEatenFigure = BoardInfo::where('x', $x, 'y', $y)->count();
+            $haveEatenFigure = 0;
+            
+            // check if game is live
+            if (!is_null($this->time_finished)) {
+                throw new Exception("Game have finished already");
+            }
+            
+            // check if user has this game
+            if (!is_null($this->usergames->find($userId))) {
+                throw new Exception("User hasn't got this game");
+            }
+            
+            // check if it's user's turn
+//            if (!($this->turn_number+1 === $boardTurn->turn_number)) {
+//                throw new Exception("Not user turn");
+//            }
+            
+            // check color
+            if (!($figureColor === $turn)) {
+                throw new Exception("Not user's figure");
+            }
+            
+            // check coordinates
+            if (!(($x>0 && $x<9) && ($y>0 && $y<9))) {
+                throw new Exception("Figure isn't on board");
+            }
+            
+            $this->checkGameRulesOnFigureMove($figureGet, $x, $y);
+            
+            $eatenFigureId = null;
+            //check if we eat something
+            if ($haveEatenFigure > 1) {
+                $eatenFigure = BoardInfo::where('x', $x, 'y', $y, 'game_id', '!=', $gameId);
+                $eatenFigureId = $eatenFigure->id;
+                if ($eatenFigure->color != $figureColor) {
+                    $eat = 1;
+                    $options='0'.$eatenFigureId;
+                }
+            }
+            $data = [
+                'game' => $this,
+                'user' => $user,
+                'turn' => $turn,
+                'figure' => $figureId,
+                'x' => $x,
+                'y' => $y,
+                'eatenFigureId' => $eatenFigureId,
+                'typeId' => $typeId,
+                'options' => $options
+            ];
+            Game::sendMessage($event, $eat, $change, $data);
+            return true;
+        } catch (Exception $e) {
+            //can see $e if want
+            echo $e->getMessage();
+            return false;
         }
     }
 }

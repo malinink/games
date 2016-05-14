@@ -48,7 +48,10 @@ class PushServerSocket implements MessageComponentInterface
     
     public function __invoke($data)
     {
-        $data = json_decode($data, true);
+        /**
+         * logic must be the same as in onMessage
+         */
+        //$data = json_decode($data, true);
         echo sprintf('invoked with data' . PHP_EOL);
         foreach ($this->clients as $client) {
             $client->send($data);
@@ -86,7 +89,7 @@ class PushServerSocket implements MessageComponentInterface
             $type = $dataJs['name'];
             $data = $dataJs['data'];
 
-            $class = "\App\Socket\Protocol\\". ucfirst($type). "Protocol";
+            $class = "App\Sockets\Protocol\\". ucfirst($type). "Protocol";
             $interfaces = class_implements($class);
 
             if (class_exists($class) && isset($interfaces["App\Sockets\Protocol\ProtocolInterface"])) {
@@ -94,7 +97,7 @@ class PushServerSocket implements MessageComponentInterface
                 $obj->compile();
             }
         } catch (Exception $e) {
-            echo sprintf('something wrong!', $e->getMessage());
+            echo sprintf('something wrong! error: %s %s', $e->getMessage(), $e->getTraceAsString());
         }
     }
     

@@ -25,7 +25,7 @@ class GameController extends BaseController
     {
         $gameTypesColumn = array_column(GameType::all('type_name')->toArray(), 'type_name');
         $gameTypes = array_combine($gameTypesColumn, $gameTypesColumn);
-        return view('search', compact('gameTypes'));
+        return view('game.search', compact('gameTypes'));
     }
     /**
      * Find game with params or create new game
@@ -35,7 +35,34 @@ class GameController extends BaseController
     public function create(SearchGameFormRequest $request)
     {
         $gameType = GameType::where('type_name', '=', $request->type)->first();
-        Game::createGame($gameType, $request->status);
+        $game = Game::createGame($gameType, $request->status, Auth::user());
+        if ($game instanceof Game) {
+            return redirect()->route('game', ['gameId' => $game->id]);
+        }
+        /*
+         * throw error via flash
+         */
         return redirect('/home');
+    }
+    
+    public function game($gameId)
+    {
+        $user = Auth::user();
+        $game = Game::find($gameId);
+        /*
+         * check permissions
+         */
+        $players = [null, null];
+        /* @var $game Game */
+        foreach ($game->userGames as $userGame) {
+            /* @var $userGame UserGame */
+            $players[(int)$userGame->color] = $userGame->user->id;
+        }
+        return view('game.game', [
+            'gameId' => $game->id,
+            'userId' => $user->id,
+            'playerWhiteId' => $players[0],
+            'playerBlackId' => $players[1],
+        ]);
     }
 }
