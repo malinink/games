@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\User;
 use App\BoardInfo;
 use App\TurnInfo;
+use App\UserGame;
 use Auth;
 use Carbon\Carbon;
 use App\Sockets\PushServerSocket;
@@ -231,7 +232,6 @@ class Game extends Model
     public function getLastUserTurn()
     {
         $turnInfo = $this->turnInfos->sortBy('id')->last();
-        
         if ($turnInfo === null || $turnInfo->user_turn == '1') {
             return Game::BLACK;
         } else {
@@ -252,22 +252,28 @@ class Game extends Model
     {
         $game = $data['game'];
         $user = $data['user'];
-        $turn = $data['turn'];
+        $turn_number = $data['turn'];
         $figureId = $data['figure'];
         $x = $data['x'];
         $y = $data['y'];
         $eatenFigureId = $data['eatenFigureId'];
         $typeId = $data['typeId'];
         $options = $data['options'];
+        echo ($options);
+        $prevTurn = $game->getLastUserTurn();
         
-        $gameId=GameType::find($game->id);
-        $number_turn=$game->turn_number;
-        
+        //supposed turn
+        if ($prevTurn) {
+            $turn = false;
+        } else {
+            $turn = true;
+        }
+
         $sendingData = [
             'game' => $game->id,
             'user' => $user->id,
-            'turn' => $number_turn+1,
-            'prev' => $number_turn,
+            'turn' => $turn_number,
+            'prev' => $turn_number-1,
             'move' => [
                         'figure' => $figureId,
                         'x'        => $x,
@@ -290,13 +296,13 @@ class Game extends Model
             'name' => 'turn',
             'data' => $sendingData
         ]);
-        
+
         $turnInfo = new TurnInfo();
         $turnInfo->game_id = $game->id;
-        $turnInfo->turn_number = $number_turn+1;
-        $turnInfo->move = intval($figureId.$x.$y);
-        $turnInfo->options=intval($options);
-        $turnInfo->turn_start_time = ($gameId->time_on_turn)*($number_turn+1);
+        $turnInfo->turn_number = $turn_number;
+        $turnInfo->move = (int)$figureId.$x.$y;
+        $turnInfo->options= (int)$options;
+        $turnInfo->turn_start_time = Carbon::now();
         $turnInfo->user_turn = $turn;
         $turnInfo->save();
     }
@@ -311,7 +317,7 @@ class Game extends Model
     {
         
     }
-    
+
     /**
      * Check turn
      *
@@ -327,64 +333,81 @@ class Game extends Model
     {
         try {
             $event = 'none';
-            $options='00';
+            $options = '0';
             $eat = 0;
             $change = 0;
+            $eatenFigureId = null;
             $gameId = $this->id;
             $userId = $user->id;
-            $prevTurn = $this->getLastUserTurn();
-            if ($prevTurn) {
-                $turn=false;
-            } else {
-                $turn=true;
+            $turnNumber = 1;
+            $turn = Game::WHITE;
+
+            $turnInfo = $this->turnInfos->sortBy('id')->last();
+            if ($turnInfo != null) {
+                $turnNumber = $turnInfo->turn_number;
             }
-            //$boardInfos = $this->boardInfos;
+            //current color
+            $userGameGet = UserGame::where(['user_id' => $userId, 'game_id' => $gameId])->first();
+            $userColor = (int) $userGameGet->color;
+
+            $prevTurn = $this->getLastUserTurn();
+            //supposed turn
+            if ($prevTurn === Game::WHITE) {
+                $turn = Game::BLACK;
+            } else {
+                $turn = Game::WHITE;
+            }
+
+            //current figure and its color
             $figureGet = BoardInfo::find($figureId);
-            $figureColor = (boolean)$figureGet->color;
-            //$haveEatenFigure = BoardInfo::where('x', $x, 'y', $y)->count();
-            $haveEatenFigure = 0;
+            $figureColor = (int) $figureGet->color;
             
+            $eatenFigure = BoardInfo::where(['position' => $x . $y, 'game_id' => $gameId])->count();
+            
+
             // check if game is live
             if (!is_null($this->time_finished)) {
                 throw new Exception("Game have finished already");
             }
-            
+
             // check if user has this game
             if (!is_null($this->usergames->find($userId))) {
                 throw new Exception("User hasn't got this game");
             }
-            
+
             // check if it's user's turn
-//            if (!($this->turn_number+1 === $boardTurn->turn_number)) {
-//                throw new Exception("Not user turn");
-//            }
-            
+            if (!($userColor === $turn)) {
+                throw new Exception("Not user's turn");
+            }
+
             // check color
-            if (!($figureColor === $turn)) {
+            if (!($figureColor === $userColor)) {
                 throw new Exception("Not user's figure");
             }
-            
+
             // check coordinates
-            if (!(($x>0 && $x<9) && ($y>0 && $y<9))) {
+            if (!(($x > 0 && $x < 9) && ($y > 0 && $y < 9))) {
                 throw new Exception("Figure isn't on board");
             }
-            
+
             $this->checkGameRulesOnFigureMove($figureGet, $x, $y);
-            
-            $eatenFigureId = null;
+
+
             //check if we eat something
-            if ($haveEatenFigure > 1) {
-                $eatenFigure = BoardInfo::where('x', $x, 'y', $y, 'game_id', '!=', $gameId);
-                $eatenFigureId = $eatenFigure->id;
+            if ($eatenFigure === 1) {
                 if ($eatenFigure->color != $figureColor) {
+                    $eatenFigureId = $eatenFigure->id;
                     $eat = 1;
-                    $options='0'.$eatenFigureId;
+                    $options = '0' . $eatenFigureId;
+                } else {
+                    throw new Exception("Can't eat :(");
                 }
             }
+
             $data = [
                 'game' => $this,
                 'user' => $user,
-                'turn' => $turn,
+                'turn' => $turnNumber,
                 'figure' => $figureId,
                 'x' => $x,
                 'y' => $y,
