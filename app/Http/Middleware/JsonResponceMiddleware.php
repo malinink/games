@@ -18,8 +18,8 @@ class JsonResponceMiddleware
      */
     public function handle($request, Closure $next)
     {
-        if ($request->method() == METHOD) {
-            $request->replace(json_decode($request->getContent(), true));
+        if ($request->method() == self::METHOD) {
+            $request->merge(json_decode($request->getContent(), true));
         }
         
         return $next($request);
