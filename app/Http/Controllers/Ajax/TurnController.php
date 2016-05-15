@@ -5,7 +5,7 @@
  */
 namespace App\Http\Controllers\Ajax;
 
-use App\Http\Requests;
+use App\Http\Requests\TurnRequest;
 use Illuminate\Http\Request;
 use App\Game;
 use App\Http\Controllers\BaseController;
