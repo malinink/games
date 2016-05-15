@@ -40,7 +40,7 @@ Route::group(['middleware' => 'web'], function () {
     Route::get('/ajax/get/token', 'Ajax\TokenController@sendToken');
 });
 
-Route::group(['middleware' => ['web', 'json']], function () {
+Route::group(['middleware' => ['web']], function () {
     Route::post('/ajax/send/turn', 'Ajax\TurnController@turn');
 });
 
