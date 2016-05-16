@@ -333,7 +333,7 @@ class Game extends Model
     {
         try {
             $event = 'none';
-            $options = '0';
+            $options = '100';
             $eat = 0;
             $change = 0;
             $eatenFigureId = null;
