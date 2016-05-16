@@ -59,10 +59,10 @@ define(['./gameConfig', 'WSQueries/sync'], function(gameConfig, sync){
             var turn = parseInt($('.game-info').attr('data-turn'));
             if (turnParameters.game !== game)
                 return;
-            /**if (turnParameters.prev !== turn) {
+            if (turnParameters.prev !== turn) {
                 sync.send(game, turn);
                 return;
-            }*/
+            }
             move(turnParameters.move.figure, turnParameters.move.x, turnParameters.move.y );
             var figureType = $('#'+turnParameters.move.figure).children().attr('data-type');
             if (figureType === 'pawn' && ((turnParameters.move.y === 5 && current === 'white')||
