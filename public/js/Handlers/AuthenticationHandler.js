@@ -1,6 +1,6 @@
 /**
  *
- * @authorAnanskelly
+ * @author Ananskelly
  */
 define([], function() {
     return {
