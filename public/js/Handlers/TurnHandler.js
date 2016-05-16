@@ -3,9 +3,10 @@
  * @author Ananskelly
  */
 
-define(/*['/GameControl/turnContorl'], */function(turnControl) {
+define(['GameControl/turnControl'], function(turnControl) {
     return {
         compile: function(data) {
+            console.log(data);
             turnControl.apply(data);
         }
     };
