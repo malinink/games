@@ -23,7 +23,9 @@ define(['./gameConfig', 'WSQueries/sync'], function(gameConfig, sync){
     }
     function changeState() {
         $('.state').text(opposite.toUpperCase()+' IN GAME');
-        gameConfig.setConfig(colors.indexOf(opposite));
+        gameConfig.setConfig('current', colors.indexOf(opposite));
+        gameConfig.setConfig('opposite', colors.indexOf(opposite));
+        gameConfig.setConfig('activeState', true);
         setIntervalTimes(function(color){$('.status').css({'background-color': color});},300,6,['yellow','#ffffff']);
     }
     function abroad(figureId){
@@ -57,10 +59,10 @@ define(['./gameConfig', 'WSQueries/sync'], function(gameConfig, sync){
             var turn = parseInt($('.game-info').attr('data-turn'));
             if (turnParameters.game !== game)
                 return;
-            if (turnParameters.prev !== turn) {
+            /**if (turnParameters.prev !== turn) {
                 sync.send(game, turn);
                 return;
-            }
+            }*/
             move(turnParameters.move.figure, turnParameters.move.x, turnParameters.move.y );
             var figureType = $('#'+turnParameters.move.figure).children().attr('data-type');
             if (figureType === 'pawn' && ((turnParameters.move.y === 5 && current === 'white')||
