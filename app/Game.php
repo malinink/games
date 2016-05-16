@@ -252,7 +252,7 @@ class Game extends Model
     {
         $game = $data['game'];
         $user = $data['user'];
-        $turn_number = $data['turn'];
+        $turnNumber = $data['turn'];
         $figureId = $data['figure'];
         $x = $data['x'];
         $y = $data['y'];
@@ -268,12 +268,12 @@ class Game extends Model
         } else {
             $turn = true;
         }
-
+        
         $sendingData = [
             'game' => $game->id,
             'user' => $user->id,
-            'turn' => $turn_number,
-            'prev' => $turn_number-1,
+            'turn' => $turnNumber,
+            'prev' => $turnNumber-1,
             'move' => [
                         'figure' => $figureId,
                         'x'        => $x,
@@ -299,7 +299,7 @@ class Game extends Model
 
         $turnInfo = new TurnInfo();
         $turnInfo->game_id = $game->id;
-        $turnInfo->turn_number = $turn_number;
+        $turnInfo->turn_number = $turnNumber;
         $turnInfo->move = (int)$figureId.$x.$y;
         $turnInfo->options= (int)$options;
         $turnInfo->turn_start_time = Carbon::now();
