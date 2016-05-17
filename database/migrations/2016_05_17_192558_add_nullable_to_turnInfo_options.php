@@ -22,7 +22,7 @@ class AddNullableToTurnInfoOptions extends Migration
      */
     public function down()
     {
-         Schema::table('turnInfo', function (Blueprint $table) {
+        Schema::table('turnInfo', function (Blueprint $table) {
             $table->tinyInteger('options')->change();
         });
     }
