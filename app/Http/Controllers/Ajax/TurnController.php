@@ -20,7 +20,7 @@ class TurnController extends BaseController
      */
     public function turn(TurnRequest $msg)
     {
-        $data = $msg; //json_decode($msg->getContent(), true);
+        $data = json_decode($msg->getContent(), true);
         $user=  Auth::user();
         
         $game = Game::find($data['game']);
