@@ -300,8 +300,8 @@ class Game extends Model
         $turnInfo->game_id = $game->id;
         $turnInfo->turn_number = $turnNumber;
         $turnInfo->move = (int)$figureId.$x.$y;
-        if($options!= 'null'){
-            $turnInfo->options=(int)$options;
+        if ($options != 'null') {
+            $turnInfo->options = (int) $options;
         }
         $turnInfo->turn_start_time = Carbon::now();
         $turnInfo->user_turn = $turn;
