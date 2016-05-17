@@ -259,9 +259,8 @@ class Game extends Model
         $eatenFigureId = $data['eatenFigureId'];
         $typeId = $data['typeId'];
         $options = $data['options'];
-        echo ($options);
         $prevTurn = $game->getLastUserTurn();
-        
+
         //supposed turn
         if ($prevTurn) {
             $turn = false;
@@ -301,7 +300,9 @@ class Game extends Model
         $turnInfo->game_id = $game->id;
         $turnInfo->turn_number = $turnNumber;
         $turnInfo->move = (int)$figureId.$x.$y;
-        $turnInfo->options= (int)$options;
+        if($options!= 'null'){
+            $turnInfo->options=(int)$options;
+        }
         $turnInfo->turn_start_time = Carbon::now();
         $turnInfo->user_turn = $turn;
         $turnInfo->save();
@@ -333,7 +334,7 @@ class Game extends Model
     {
         try {
             $event = 'none';
-            $options = '100';
+            $options = 'null';
             $eat = 0;
             $change = 0;
             $eatenFigureId = null;
