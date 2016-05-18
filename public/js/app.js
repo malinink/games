@@ -18,7 +18,7 @@ require(['./GameControl/highlight', './GameControl/gameConfig', './Ajax/sendTurn
         */
         var $cellObj = $('.cell');
         var cellSize = $cellObj.width();
-        gameConfig.setFigureSize(cellSize);
+        gameConfig.setConfig('figureSize', cellSize);
         $cellObj.css({height: cellSize});
         $('.cell-corner').css({height: ($('.cell-bottom').height()*1.15) });
         $('.user1,.user2').css({height: cellSize});
@@ -32,38 +32,53 @@ require(['./GameControl/highlight', './GameControl/gameConfig', './Ajax/sendTurn
             $cellObj.css({height: $cellObj.width()});
             $('.cell-corner').css({height: ($('.cell-bottom').height()*1.15) });
         });
-        
-        
+        /*
+         *
+         * false if user is waiting
+         */
+        var activeState;
+        var userStatus;
         var currentFigure = '';
         var current;
         var colors = ['white', 'black']
         $(document).on('click', '.figure', function(){
-            current = gameConfig.getCurrent();
-            if ($('.board').attr('data-user') !== $('.board').attr('data-player-'+colors[current]))
+            activeState = gameConfig.getConfig('activeState');
+            current = colors[gameConfig.getConfig('current')];
+            userStatus = gameConfig.getConfig('userState');
+            if (userStatus !== current || !activeState )
                 return;
-            currentFigure = this;
+            if ($(this).hasClass(current))
+                $cellObj.removeClass('cell-key');
+            else 
+                return;
+            currentFigure = $(this).attr('id');
             $(this).parent().addClass('cell-key');
         });
         $(document).on('mouseenter', '.figure', function() {
             highlight.compile(this);
         });
+        $(document).on('mouseleave', '.figure', function() {
+            $cellObj.removeClass('cell-highlighted');
+        });
         $cellObj.click(function(){
-            if ($('.board').attr('data-user') !== $('.board').attr('data-player-'+colors[current]))
+            current = colors[gameConfig.getConfig('current')];
+            activeState = gameConfig.getConfig('activeState');
+            if (userStatus !== current || !activeState)
                 return;
             $cellObj.removeClass('cell-highlighted')
             var attr;
-            if (gameConfig.getRevert()) {
+            if (gameConfig.getConfig('revert')) {
                 attr = 'data-revert-id'
             } else {
                 attr = 'data-id'
             }
             var newFigure = null;
-            if (currentFigure!=='' && currentFigure!==$(this).children()) {
+            if (currentFigure!=='' && currentFigure!==$(this).children().attr('id')) {
                 $(this).addClass('cell-highlight-aim');
                 var position = $(this).attr(attr);
                 var gameId = $('.game-info').attr('data-game');
                 var y = $(this).attr(attr)[0];
-                if ($(currentFigure).children().attr('data-type') === 'pawn' && (y === '1' || y === '8')){
+                if ($('#'+currentFigure).children().attr('data-type') === 'pawn' && (y === '1' || y === '8')){
                     $('input[type=checkbox').change(function(){
                         if ($(this).is(':checked')){
                             newFigure = config.indexOf($(this).attr('id'));
@@ -78,15 +93,16 @@ require(['./GameControl/highlight', './GameControl/gameConfig', './Ajax/sendTurn
                 var token = $('meta[name=csrf-token]').attr('content');
                 var data = {
                     'game': gameId,
-                    'figure': $(currentFigure).attr('id'),
+                    'figure': currentFigure,
                     'y': position[0],
                     'x': position[1],
                     'typeId': newFigure
                 }
                 sendTurn.send(data, token);
+                gameConfig.setConfig('activeState', false);
+                currentFigure = '';
             }
-            $(currentFigure).parent().removeClass('cell-key');
-            currentFigure = '';
+            $('#'+currentFigure).parent().removeClass('cell-key');
         });
         $('.giveUp').click(function(){
             $('.winner').text(opposite + ' are win!!!');

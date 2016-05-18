@@ -2,9 +2,10 @@
  *
  * @author Ananaskelly
  */
-define(['./gameConfig', '/WSQueries/sync'], function(gameConfig, sync){
-    var figureSize = gameConfig.getFigureConfig().size;
-    var coeff = gameConfig.getFigureConfig().coeff;
+define(['./gameConfig', 'WSQueries/sync'], function(gameConfig, sync){
+    var figureSize = gameConfig.getConfig('figureSize');
+    var coeff = gameConfig.getConfig('coeff');
+    var colors = ['white', 'black'];
     var opposite;
     var current;
     var revert;
@@ -22,7 +23,9 @@ define(['./gameConfig', '/WSQueries/sync'], function(gameConfig, sync){
     }
     function changeState() {
         $('.state').text(opposite.toUpperCase()+' IN GAME');
-        gameConfig.changeColor(opposite);
+        gameConfig.setConfig('current', colors.indexOf(opposite));
+        gameConfig.setConfig('opposite', colors.indexOf(opposite));
+        gameConfig.setConfig('activeState', true);
         setIntervalTimes(function(color){$('.status').css({'background-color': color});},300,6,['yellow','#ffffff']);
     }
     function abroad(figureId){
@@ -33,26 +36,27 @@ define(['./gameConfig', '/WSQueries/sync'], function(gameConfig, sync){
         }).appendTo('.hit-'+current);
     }
     function move(figureId, x, y) {
+        var last = $('#'+figureId).parent().attr(attr);
         $('#'+figureId).appendTo('['+attr+'='+y+x+']');
-        var last = $('#'+figureId).parent().attr('id');
         $('['+attr+'='+last+']').removeClass('busy');
         $('['+attr+'='+last+']').removeClass(current);
         $('['+attr+'='+y+x+']').addClass(current);
+        $('['+attr+'='+y+x+']').addClass('busy');
         changeState();
     }
     return {
         apply: function(turnParameters) {
-            opposite = gameConfig.getOpposite();
-            current = gameConfig.getCurrent();
-            revert = gameConfig.getRevert();
+            opposite = colors[gameConfig.getConfig('opposite')];
+            current = colors[gameConfig.getConfig('current')];
+            revert = gameConfig.getConfig('revert');
             attr = '';
             if (revert) {
                 attr = 'data-revert-id';
             } else {
                 attr = 'data-id';
             }
-            var game = $('.game-info').attr('data-game');
-            var turn = $('.game-info').attr('data-turn');
+            var game = parseInt($('.game-info').attr('data-game'));
+            var turn = parseInt($('.game-info').attr('data-turn'));
             if (turnParameters.game !== game)
                 return;
             if (turnParameters.prev !== turn) {
@@ -63,14 +67,16 @@ define(['./gameConfig', '/WSQueries/sync'], function(gameConfig, sync){
             var figureType = $('#'+turnParameters.move.figure).children().attr('data-type');
             if (figureType === 'pawn' && ((turnParameters.move.y === 5 && current === 'white')||
                     (turnParameters.move.y === 4 && current === 'black'))) {
-                gameConfig.setPawnSpecial(turnParameters.move.y.toString()+turnParameters.move.x);
+                gameConfig.setConfig('pawnSpecial', turnParameters.move.y.toString()+turnParameters.move.x);
+            }
+            else {
+                gameConfig.setConfig('pawnSpecial', null)
             }
             if (turnParameters.hasOwnProperty('remove') && turnParameters.remove.length !== 0) {
                 abroad(turnParameters.remove[0].figure);
                 var newPosition = turnParameters.move.x + turnParameters.move.y;
                 var oldPosition =  $('#'+turnParameters.remove[0].figure).parent().attr('id');
                 if (newPosition !== oldPosition) {
-                    $('['+attr+'='+newPosition+']').addClass('busy');
                     $('['+attr+'='+oldPosition+']').removeClass('busy');
                 }
             }
