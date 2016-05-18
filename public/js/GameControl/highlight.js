@@ -5,7 +5,7 @@
 define(['./gameConfig'], function(gameConfig){
     var $cellObj = $('.cell');
     var colors = ['white', 'black'];
-    var pawnSpecial = gameConfig.getPawnSpecial();
+    var pawnSpecial = gameConfig.getConfig('pawnSpecial');
     var current;
     var opposite;
     var attr;
@@ -52,8 +52,9 @@ define(['./gameConfig'], function(gameConfig){
             x += direction_x;
         }
         checkEnemy(y,x);
-        }
-        function parall(y,x,direction,flag) {
+    }
+    function parall(y,x,direction,flag) {
+        
         if (flag === true) {
             x += direction;
             while (!$('['+attr+'='+y+x+']').hasClass('busy') && x < 9 && x > 0) {
@@ -76,7 +77,7 @@ define(['./gameConfig'], function(gameConfig){
             /*
              * get initial param
              */
-            current = colors[gameConfig.getCurrent()];
+            current = colors[gameConfig.getConfig('current')];
             if (current === 0) {
                 opposite = colors[1];
             } else {
@@ -84,7 +85,7 @@ define(['./gameConfig'], function(gameConfig){
             }
             if (!$(currentObj).hasClass(current))
                 return;
-            if (gameConfig.getRevert()) {
+            if (gameConfig.getConfig('revert')) {
                 attr = 'data-revert-id';
             } else {
                 attr = 'data-id';
@@ -103,6 +104,7 @@ define(['./gameConfig'], function(gameConfig){
             else {
                 direction = 1;
             }
+            
             var cell_y = cell[0];
             var cell_x = cell[1];
 
