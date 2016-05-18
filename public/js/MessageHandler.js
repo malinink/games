@@ -8,7 +8,7 @@ define(['./Handlers/TurnHandler', './Handlers/InitHandler', './Handlers/Synchron
         'InitHandler' : InitHandler,
         'SynchronizeHandler': SynchronizeHandler,
         'AuthenticationHandler': AuthenticationHandler
-    }    
+    }
     return {
         handle: function(data) {
             try {
