@@ -363,7 +363,7 @@ class Game extends Model
             $figureGet = BoardInfo::find($figureId);
             $figureColor = (int) $figureGet->color;
             
-            $eatenFigure = BoardInfo::where(['position' => $x . $y, 'game_id' => $gameId])->count();
+            $eatenFigure = BoardInfo::where(['position' => $y . $x, 'game_id' => $gameId])->count();
             
 
             // check if game is live
@@ -372,7 +372,7 @@ class Game extends Model
             }
 
             // check if user has this game
-            if (!is_null($this->usergames->find($userId))) {
+            if (is_null($this->usergames->find($userId))) {
                 throw new Exception("User hasn't got this game");
             }
 
