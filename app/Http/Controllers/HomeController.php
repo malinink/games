@@ -24,8 +24,8 @@ class HomeController extends BaseController
      */
     public function websockets()
     {
-        /*
-        $game = \App\Game::find(4);
+        
+        $game = \App\Game::find(5);
         $players = [];
         foreach ($game->userGames as $userGame) {
             $players[] = [
@@ -58,7 +58,7 @@ class HomeController extends BaseController
                'white' => $white,
             ]
         ]);
-         */
+         
         return view('home.websockets');
     }
 }

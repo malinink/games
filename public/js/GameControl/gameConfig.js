@@ -3,14 +3,22 @@
  * @author Ananaskelly
  */
 define(function(){
-    var revert = false;
+    var config = {
+        'userState': 'none',
+        'activeState': true,
+        'revert': false,
+        'current': 0,
+        'opposite': 1,
+        'figureSize': 0,
+        'coeff': 0.4,
+        'pawnSpecial': null
+    }
     return {
-        setRevert : function(value){
-            revert = value;
+        setConfig: function(param, value){
+            config[param] = value;
         },
-        getRevert : function(){
-            return revert;
+        getConfig: function(param){
+            return config[param];
         }
     }
 })
-

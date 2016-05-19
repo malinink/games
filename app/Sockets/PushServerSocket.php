@@ -26,15 +26,24 @@ class PushServerSocket implements MessageComponentInterface
     
     /**
      * Contain arrays of a subscribed clients of every game.
+     * [ gameId => list of clients]
      *
      * @var array
      */
     protected $clientToGameIds;
     
+    /**
+     * Contain pairs client + his subscribed game.
+     *
+     * @var SplObjectStorage
+     */
+    protected $gameOfClientIds;
+    
     public function __construct()
     {
         $this->clients = new SplObjectStorage();
         $this->clientToUserIds = [];
+        $this->gameOfClientIds = new SplObjectStorage();
         $this->clientToGameIds = [];
     }
     
@@ -67,6 +76,8 @@ class PushServerSocket implements MessageComponentInterface
     public function onClose(ConnectionInterface $conn)
     {
         echo sprintf('client %s disconnected' . PHP_EOL, $conn->resourceId);
+        $this->unlinkClientIdFromGame($conn, $this->gameOfClientIds[$conn]);
+        $this->unlinkUserIdFromClient($conn);
         $this->clients->detach($conn);
     }
 
@@ -87,7 +98,7 @@ class PushServerSocket implements MessageComponentInterface
             $type = $dataJs['name'];
             $data = $dataJs['data'];
 
-            $class = "\App\Socket\Protocol\\". ucfirst($type). "Protocol";
+            $class = "App\Sockets\Protocol\\". ucfirst($type). "Protocol";
             $interfaces = class_implements($class);
 
             if (class_exists($class) && isset($interfaces["App\Sockets\Protocol\ProtocolInterface"])) {
@@ -95,7 +106,7 @@ class PushServerSocket implements MessageComponentInterface
                 $obj->compile();
             }
         } catch (Exception $e) {
-            echo sprintf('something wrong!', $e->getMessage());
+            echo sprintf('something wrong! error: %s %s', $e->getMessage(), $e->getTraceAsString());
         }
     }
     
@@ -120,6 +131,17 @@ class PushServerSocket implements MessageComponentInterface
     }
     
     /**
+     * Deathentication of client as user.
+     * @param ConnectionInterface $client
+     */
+    public function unlinkUserIdFromClient(ConnectionInterface $client)
+    {
+        if (isset($this->clientToUserIds[$client->resourceId])) {
+            unset($this->clientToUserIds[$client->resourceId]);
+        }
+    }
+    
+    /**
      * Set up a correspondence between gameId and clientId.
      * @param ConnectionInterface $client
      * @param int $gameId
@@ -131,10 +153,12 @@ class PushServerSocket implements MessageComponentInterface
         if (isset($this->clientToUserIds[$client->resourceId])) {
             if (isset($this->clientToGameIds[$gameId])) {
                 $this->clientToGameIds[$gameId]->attach($client);
+                $this->gameOfClientIds[$client]->attach($gameId);
                 return true;
             } else {
                 $this->clientToGameIds[$gameId] = new SplObjectStorage();
                 $this->cleintToGameIds[$gameId]->attach($client);
+                $this->gameOfClientIds[$client]->attach($gameId);
                 return true;
             }
         } else {
@@ -151,5 +175,34 @@ class PushServerSocket implements MessageComponentInterface
     public function checkIsSetClientToUserId($client)
     {
         return isset($this->clientToUserIds[$client->resourceId]);
+    }
+    
+    /**
+     * Detach between gameId and clientId.
+     * @param ConnectionInterface $client
+     * @param int $gameId
+     *
+     * @return boolean
+     */
+    public function unlinkClientFromGameId(ConnectionInterface $client, $gameId)
+    {
+        if (isset($this->clientToGameIds[$gameId])) {
+            $this->clientToGameIds[$gameId]->detach($client);
+        }
+        $this->gameOfClientIds->detach($client);
+    }
+    
+    /**
+     * Delete all connections of game
+     * @param int $gameId
+     */
+    public function unlinkGameClients($gameId)
+    {
+        if (isset($this->clientToGameIds[$gameId])) {
+            foreach ($this->clientToGameIds[$gameId] as $client) {
+                $this->gameOfClientIds->detach($client);
+            }
+            unset($this->clientToGameIds[$gameId]);
+        }
     }
 }

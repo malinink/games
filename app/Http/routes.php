@@ -37,7 +37,8 @@ Route::group(['middleware' => 'web'], function () {
     
     Route::post('/create', ['as' => 'create', 'uses' => 'GameController@create']);
     Route::get('/game/{gameId}', ['as' => 'game', 'uses' => 'GameController@game']);
-    
+    Route::get('/ajax/get/token', 'Ajax\TokenController@sendToken');
+    Route::post('/ajax/send/turn', 'Ajax\TurnController@turn');
 });
 
 /*
