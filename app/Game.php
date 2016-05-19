@@ -508,9 +508,7 @@ class Game extends Model
                 throw new Exception("Figure isn't on board");
             }
             
-            if (!$this->checkGameRulesOnFigureMove($figureGet, $x, $y, $eatenFigure)) {
-                throw new Exception("Can't move figure");
-            }
+            $this->checkGameRulesOnFigureMove($figureGet, $x, $y);
             
             $eatenFigureId = null;
             //check if we eat something
