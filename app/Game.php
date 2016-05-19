@@ -229,7 +229,7 @@ class Game extends Model
      *
      * @return int
      */
-    public function getLastUserTurn()
+    public function getLastUserColor()
     {
         $turnInfo = $this->turnInfos->sortBy('id')->last();
         if ($turnInfo === null || $turnInfo->user_turn == '1') {
@@ -259,14 +259,23 @@ class Game extends Model
         $eatenFigureId = $data['eatenFigureId'];
         $typeId = $data['typeId'];
         $options = $data['options'];
-        $prevTurn = $game->getLastUserTurn();
+        $prevColor = $game->getLastUserColor();
 
         //supposed turn
-        if ($prevTurn) {
-            $turn = false;
+        if ($prevColor) {
+            $currentColor = false;
         } else {
-            $turn = true;
+            $currentColor = true;
         }
+        
+        $turnInfo = new TurnInfo();
+        $turnInfo->game_id = $game->id;
+        $turnInfo->turn_number = $turnNumber;
+        $turnInfo->move = (int)$figureId.$x.$y;
+        $turnInfo->options = (int) $options;
+        $turnInfo->turn_start_time = Carbon::now();
+        $turnInfo->user_turn = $currentColor;
+        $turnInfo->save();
         
         $sendingData = [
             'game' => $game->id,
@@ -295,17 +304,6 @@ class Game extends Model
             'name' => 'turn',
             'data' => $sendingData
         ]);
-
-        $turnInfo = new TurnInfo();
-        $turnInfo->game_id = $game->id;
-        $turnInfo->turn_number = $turnNumber;
-        $turnInfo->move = (int)$figureId.$x.$y;
-        if ($options != 'null') {
-            $turnInfo->options = (int) $options;
-        }
-        $turnInfo->turn_start_time = Carbon::now();
-        $turnInfo->user_turn = $turn;
-        $turnInfo->save();
     }
     
     /**
@@ -334,29 +332,31 @@ class Game extends Model
     {
         try {
             $event = 'none';
-            $options = 'null';
+            $options = null;
             $eat = 0;
             $change = 0;
             $eatenFigureId = null;
             $gameId = $this->id;
             $userId = $user->id;
-            $turnNumber = 1;
-            $turn = Game::WHITE;
+            $turnNumber = 0;
+            $currentColor = Game::WHITE;
 
             $turnInfo = $this->turnInfos->sortBy('id')->last();
             if ($turnInfo != null) {
                 $turnNumber = $turnInfo->turn_number;
             }
-            //current color
+            $turnNumber=$turnNumber+1;
+            
+            //current color of user
             $userGameGet = UserGame::where(['user_id' => $userId, 'game_id' => $gameId])->first();
             $userColor = (int) $userGameGet->color;
 
-            $prevTurn = $this->getLastUserTurn();
+            $prevColor = $this->getLastUserColor();
             //supposed turn
-            if ($prevTurn === Game::WHITE) {
-                $turn = Game::BLACK;
+            if ($prevColor === Game::WHITE) {
+                $currentColor = Game::BLACK;
             } else {
-                $turn = Game::WHITE;
+                $currentColor = Game::WHITE;
             }
 
             //current figure and its color
@@ -377,7 +377,7 @@ class Game extends Model
             }
 
             // check if it's user's turn
-            if (!($userColor === $turn)) {
+            if (!($userColor === $currentColor)) {
                 throw new Exception("Not user's turn");
             }
 
