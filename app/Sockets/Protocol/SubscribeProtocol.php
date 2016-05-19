@@ -9,8 +9,7 @@ namespace App\Sockets\Protocol;
 use App\Sockets\PushServerSocket;
 use Ratchet\ConnectionInterface;
 use Exception;
-use App\Games;
-use App\TurnInfo;
+use App\Game;
 
 class SubscribeProtocol implements ProtocolInterface
 {
@@ -70,7 +69,11 @@ class SubscribeProtocol implements ProtocolInterface
             ];
         $game = Game::find($gameId);
             
+<<<<<<< HEAD
+        if (($game === null) || !$this->server->CheckIsSetClientToUserId($this->client)) {
+=======
         if (($game === null)/* || !isset($this->server->clientToUserIds[$this->client->resourceId])*/) {
+>>>>>>> a24cf1e3e3c1b2a8c7943ad713b56b660660e1f0
             $response["data"]["state"] = "failed";
         } elseif ($game->time_finished === null) {
             $response["data"]["state"] = "unavailable";

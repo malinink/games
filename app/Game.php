@@ -301,17 +301,156 @@ class Game extends Model
         $turnInfo->save();
     }
     
-    /**
+    /*
+     * @param int $fromX
+     * @param int $fromY
+     * @param int $toX
+     * @param int $toY
      *
-     * @param BoardInfo $figure
-     * @param type $x
-     * @param type $y
+     * @return boolean
      */
-    protected function checkGameRulesOnFigureMove(BoardInfo $figure, $x, $y)
+    private function tryMovePawn($fromX, $fromY, $toX, $toY, $eatenFigure)
     {
+        if ($fromX != $toX) {
+            if (($eatenFigure == 1) && (abs($fromX - $toX) == 1) && ($fromY + 1 == $toY)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
         
+        if ($fromY + 1 != $toY) {
+            if ($fromX == 2) {
+                return $fromY + 2 == $toY;
+            } else {
+                return false;
+            }
+        }
+        
+        return true;
     }
     
+    /*
+     * @param int $fromX
+     * @param int $fromY
+     * @param int $toX
+     * @param int $toY
+     *
+     * @return boolean
+     */
+    private function tryMoveRook($fromX, $fromY, $toX, $toY)
+    {
+        if ($fromX == $toX || $fromY == $toY) {
+            return true;
+        }
+        
+        return false;
+    }
+    
+    /*
+     * @param int $fromX
+     * @param int $fromY
+     * @param int $toX
+     * @param int $toY
+     *
+     * @return boolean
+     */
+    private function tryMoveKnight($fromX, $fromY, $toX, $toY)
+    {
+        if (abs($toX - $fromX) == 2 && abs($toY - $fromY) == 1) {
+            return true;
+        }
+        
+        if (abs($toX - $fromX) == 1 && abs($toY - $fromY) == 2) {
+            return true;
+        }
+        
+        return false;
+    }
+    
+    /*
+     * @param int $fromX
+     * @param int $fromY
+     * @param int $toX
+     * @param int $toY
+     *
+     * @return boolean
+     */
+    private function tryMoveBishop($fromX, $fromY, $toX, $toY)
+    {
+        if (abs($fromX - $toX) == abs($fromY - $toY)) {
+            return true;
+        }
+        
+        return false;
+    }
+    
+    /*
+     * @param int $fromX
+     * @param int $fromY
+     * @param int $toX
+     * @param int $toY
+     *
+     * @return boolean
+     */
+    private function tryMoveQueen($fromX, $fromY, $toX, $toY)
+    {
+        return tryMoveBishop($fromX, $fromY, $toX, $toY) ||
+               tryMoveRook($fromX, $fromY, $toX, $toY);
+    }
+    
+    /*
+     * @param int $fromX
+     * @param int $fromY
+     * @param int $toX
+     * @param int $toY
+     *
+     * @return boolean
+     */
+    private function tryMoveKing($fromX, $fromY, $toX, $toY)
+    {
+        $delta = abs($fromX - $toX) + abs($fromY - $toY);
+        if ($delta == 1 || $delta == 2) {
+            return true;
+        }
+        
+        return false;
+    }
+    
+    /**
+     * Check turn
+     *
+     * @param BoardInfo $figure
+     * @param int $x
+     * @param int $y
+     * @param int $eatenFigure
+     *
+     * @return boolean
+     * true means that we can move figure, false means contrary
+     */
+    protected function checkGameRulesOnFigureMove(BoardInfo $figure, $x, $y, $eatenFigure)
+    {
+        $fromX = $figure->position % 10;
+        $fromY = ($figure->position - $fromX) / 10;
+        
+        switch ($figure->figure) {
+            case 0:
+                return tryMovePawn($fromX, $fromY, $x, $y, $eatenFigure);
+            case 1:
+                return tryMoveRook($fromX, $fromY, $x, $y);
+            case 2:
+                return tryMoveKnight($fromX, $fromY, $x, $y);
+            case 3:
+                return tryMoveBishop($fromX, $fromY, $x, $y);
+            case 4:
+                return tryMoveQueen($fromX, $fromY, $x, $y);
+            case 5:
+                return tryMoveKing($fromX, $fromY, $x, $y);
+        }
+        
+        return false;
+    }
+
     /**
      * Check turn
      *

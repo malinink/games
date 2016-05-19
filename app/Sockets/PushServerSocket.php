@@ -166,6 +166,17 @@ class PushServerSocket implements MessageComponentInterface
         }
     }
     
+<<<<<<< HEAD
+    /*
+     * Check the client is identified.
+     * @param ConnectionInterface $client
+     *
+     * @return boolean
+     */
+    public function checkIsSetClientToUserId($client)
+    {
+        return isset($this->clientToUserIds[$client->resourceId]);
+=======
     /**
      * Detach between gameId and clientId.
      * @param ConnectionInterface $client
@@ -193,5 +204,6 @@ class PushServerSocket implements MessageComponentInterface
             }
             unset($this->clientToGameIds[$gameId]);
         }
+>>>>>>> a24cf1e3e3c1b2a8c7943ad713b56b660660e1f0
     }
 }
