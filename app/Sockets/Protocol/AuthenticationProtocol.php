@@ -11,6 +11,7 @@ use Ratchet\ConnectionInterface;
 use Exception;
 use App\Token;
 use Carbon\Carbon;
+use DateTime;
 
 class AuthenticationProtocol implements ProtocolInterface
 {
@@ -62,7 +63,7 @@ class AuthenticationProtocol implements ProtocolInterface
                     'type' => 'response'
                 ]
             ];
-        if ($token === null || $token->expiration_date > Carbon::now()) {
+        if ($token === null || (new DateTime($token->expiration_date)) < Carbon::now()) {
             $response['data']['result'] = 'failed';
         } else {
             $this->server->linkUserIdToClient($this->client, $token->user_id);
