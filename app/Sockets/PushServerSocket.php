@@ -141,4 +141,15 @@ class PushServerSocket implements MessageComponentInterface
             return false;
         }
     }
+    
+    /*
+     * Check the client is identified.
+     * @param ConnectionInterface $client
+     *
+     * @return boolean
+     */
+    public function checkIsSetClientToUserId($client)
+    {
+        return isset($this->clientToUserIds[$client->resourceId]);
+    }
 }
