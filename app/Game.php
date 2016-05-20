@@ -272,7 +272,7 @@ class Game extends Model
         $turnInfo->game_id = $game->id;
         $turnInfo->turn_number = $turnNumber;
         $turnInfo->move = (int)$figureId.$x.$y;
-        $turnInfo->options = (int) $options;
+        $turnInfo->options = $options;
         $turnInfo->turn_start_time = Carbon::now();
         $turnInfo->user_turn = $currentColor;
         $turnInfo->save();
@@ -370,9 +370,9 @@ class Game extends Model
             if (!is_null($this->time_finished)) {
                 throw new Exception("Game have finished already");
             }
-
+            
             // check if user has this game
-            if (is_null($this->usergames->find($userId))) {
+            if (is_null($this->usergames->where('user_id',$userId))) {
                 throw new Exception("User hasn't got this game");
             }
 
@@ -399,7 +399,7 @@ class Game extends Model
                 if ($eatenFigure->color != $figureColor) {
                     $eatenFigureId = $eatenFigure->id;
                     $eat = 1;
-                    $options = '0' . $eatenFigureId;
+                    $options = $eatenFigureId;
                 } else {
                     throw new Exception("Can't eat :(");
                 }
