@@ -372,7 +372,7 @@ class Game extends Model
             }
             
             // check if user has this game
-            if (is_null($this->usergames->where('user_id',$userId))) {
+            if (is_null($this->usergames->where('user_id', $userId))) {
                 throw new Exception("User hasn't got this game");
             }
 
