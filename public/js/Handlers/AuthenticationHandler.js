@@ -2,10 +2,14 @@
  *
  * @author Ananskelly
  */
-define([], function() {
+define(['WSQueries/subscribe'], function(subscribe) {
     return {
         compile: function(data) {
-            //do staff
+            if (data.type !== 'response')
+                return;
+            if (data.result === 'success'){
+                subscribe.sendQuery();
+            }
         }
     }
 });
