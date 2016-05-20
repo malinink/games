@@ -417,7 +417,8 @@ class Game extends Model
      * 
      * @return boolean
      */
-    private function tryRoque($fromX, $fromY, $toX, $toY) {
+    private function tryRoque($fromX, $fromY, $toX, $toY)
+    {
         return false;
     }
 
