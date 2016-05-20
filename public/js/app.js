@@ -59,6 +59,7 @@ require(['./GameControl/highlight', './GameControl/gameConfig', './Ajax/sendTurn
         });
         $(document).on('mouseleave', '.figure', function() {
             $cellObj.removeClass('cell-highlighted');
+             $cellObj.removeClass('cell-highlight-enemy');
         });
         $cellObj.click(function(){
             current = colors[gameConfig.getConfig('current')];
