@@ -27,7 +27,6 @@ define(['./gameConfig'], function(gameConfig){
         }
     }
     function checkEnemy(y,x){
-        console.log(x);
         if ($('['+attr+'='+y+x+']').hasClass(opposite)) {
             $('['+attr+'='+y+x+']').addClass('cell-highlight-enemy');
         }
