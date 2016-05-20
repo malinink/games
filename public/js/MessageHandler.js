@@ -2,10 +2,11 @@
  *
  * @author Ananskelly
  */
-define(['./Handlers/TurnHandler', './Handlers/InitHandler', './Handlers/AuthenticationHandler'], function(TurnHandler, InitHandler, AuthenticationHandler){
+define(['./Handlers/TurnHandler', './Handlers/InitHandler', './Handlers/SynchronizeHandler', './Handlers/AuthenticationHandler'], function(TurnHandler, InitHandler, SynchronizeHandler, AuthenticationHandler){
     var scope = {
         'TurnHandler' : TurnHandler,
         'InitHandler' : InitHandler,
+        'SynchronizeHandler': SynchronizeHandler,
         'AuthenticationHandler': AuthenticationHandler
     }
     return {

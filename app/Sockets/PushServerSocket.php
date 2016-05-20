@@ -166,6 +166,17 @@ class PushServerSocket implements MessageComponentInterface
         }
     }
     
+    /*
+     * Check the client is identified.
+     * @param ConnectionInterface $client
+     *
+     * @return boolean
+     */
+    public function checkIsSetClientToUserId($client)
+    {
+        return isset($this->clientToUserIds[$client->resourceId]);
+    }
+    
     /**
      * Detach between gameId and clientId.
      * @param ConnectionInterface $client
@@ -173,7 +184,8 @@ class PushServerSocket implements MessageComponentInterface
      *
      * @return boolean
      */
-    public function unlinkClientFromGameId(ConnectionInterface $client, $gameId)
+    
+    public function unlinkClientIdFromGame(ConnectionInterface $client, $gameId)
     {
         if (isset($this->clientToGameIds[$gameId])) {
             $this->clientToGameIds[$gameId]->detach($client);
