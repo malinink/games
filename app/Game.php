@@ -314,19 +314,24 @@ class Game extends Model
      *
      * @return boolean
      */
-    private function tryMovePawn($fromX, $fromY, $toX, $toY, $eatenFigure)
+    private function tryMovePawn($fromX, $fromY, $toX, $toY, $eatenFigure, $color)
     {
+        $delta = 1;
+        if ($color) {
+            $delta = -1;
+        }
+        
         if ($fromX != $toX) {
-            if (($eatenFigure == 1) && (abs($fromX - $toX) == 1) && ($fromY + 1 == $toY)) {
+            if (($eatenFigure == 1) && (abs($fromX - $toX) == 1) && ($fromY + $delta == $toY)) {
                 return true;
             } else {
                 return false;
             }
         }
         
-        if ($fromY + 1 != $toY) {
-            if ($fromX == 2) {
-                return $fromY + 2 == $toY;
+        if ($fromY + $delta != $toY) {
+            if ($fromY == 2 || $fromY == 7) {
+                return $fromY + 2*$delta == $toY;
             } else {
                 return false;
             }
@@ -409,6 +414,19 @@ class Game extends Model
      * @param int $fromY
      * @param int $toX
      * @param int $toY
+     * 
+     * @return boolean
+     */
+    private function tryRoque($fromX, $fromY, $toX, $toY) {
+        return false;
+    }
+
+
+    /*
+     * @param int $fromX
+     * @param int $fromY
+     * @param int $toX
+     * @param int $toY
      *
      * @return boolean
      */
@@ -424,36 +442,48 @@ class Game extends Model
     
     /**
      * Check turn
+     * throw Exception if we can't move figure
      *
      * @param BoardInfo $figure
      * @param int $x
      * @param int $y
      * @param int $eatenFigure
      *
-     * @return boolean
-     * true means that we can move figure, false means contrary
+     * @return void
      */
     protected function checkGameRulesOnFigureMove(BoardInfo $figure, $x, $y, $eatenFigure)
     {
         $fromX = $figure->position % 10;
         $fromY = ($figure->position - $fromX) / 10;
-        
-        switch ($figure->figure) {
-            case 0:
-                return tryMovePawn($fromX, $fromY, $x, $y, $eatenFigure);
-            case 1:
-                return tryMoveRook($fromX, $fromY, $x, $y);
-            case 2:
-                return tryMoveKnight($fromX, $fromY, $x, $y);
-            case 3:
-                return tryMoveBishop($fromX, $fromY, $x, $y);
-            case 4:
-                return tryMoveQueen($fromX, $fromY, $x, $y);
-            case 5:
-                return tryMoveKing($fromX, $fromY, $x, $y);
+        if ($fromX == 0 || $fromY == 0) {
+            throw new Exception("Can't move eaten figure");
         }
         
-        return false;
+        $result = false;
+        switch ($figure->figure) {
+            case 0:
+                $result = $this->tryMovePawn($fromX, $fromY, $x, $y, $eatenFigure, $figure->color);
+                break;
+            case 1:
+                $result = $this->tryMoveRook($fromX, $fromY, $x, $y);
+                break;
+            case 2:
+                $result = $this->tryMoveKnight($fromX, $fromY, $x, $y);
+                break;
+            case 3:
+                $result = $this->tryMoveBishop($fromX, $fromY, $x, $y);
+                break;
+            case 4:
+                $result = $this->tryMoveQueen($fromX, $fromY, $x, $y);
+                break;
+            case 5:
+                $result = $this->tryMoveKing($fromX, $fromY, $x, $y);
+                break;
+        }
+        
+        if (!$result) {
+            throw new Exception("Can't move figure");
+        }
     }
 
     /**
@@ -530,7 +560,7 @@ class Game extends Model
                 throw new Exception("Figure isn't on board");
             }
 
-            $this->checkGameRulesOnFigureMove($figureGet, $x, $y);
+            $this->checkGameRulesOnFigureMove($figureGet, $x, $y, $eatenFigure);
 
 
             //check if we eat something
