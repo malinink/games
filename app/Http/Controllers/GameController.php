@@ -49,6 +49,11 @@ class GameController extends BaseController
     {
         $user = Auth::user();
         $game = Game::find($gameId);
+        $secondPlayerInGame = null;
+        $colorOfGamer = Game::BLACK;
+        $board=[];
+        $newPos=[];
+        $state=0;
         /*
          * check permissions
          */
@@ -56,13 +61,76 @@ class GameController extends BaseController
         /* @var $game Game */
         foreach ($game->userGames as $userGame) {
             /* @var $userGame UserGame */
-            $players[(int)$userGame->color] = $userGame->user->id;
+            $players[(int) $userGame->color] = $userGame->user->id;
+            if ($userGame->user->id === $user->id) {
+                $colorOfGamer = (int) $userGame->color;
+            }
         }
-        return view('game.game', [
-            'gameId' => $game->id,
-            'userId' => $user->id,
-            'playerWhiteId' => $players[0],
-            'playerBlackId' => $players[1],
-        ]);
+
+        if ($players[0] != null && $players[1] != null) {
+            $secondPlayerInGame = 1;
+
+            foreach ($game->boardInfos as $boardInfo) {
+                $typeNumber = $boardInfo->figure;
+                $diffTypes = ['pawn', 'rook', 'knight', 'bishop', 'queen', 'king'];
+                $type = $diffTypes[$typeNumber];
+
+                if ($boardInfo->color == (int)Game::BLACK) {
+                    $colorFigure = 'black';
+                } else {
+                    $colorFigure = 'white';
+                }
+
+                $pos = $boardInfo->position;
+
+                $boardInfoData = [
+                    'type' => $type,
+                    'position' => $pos,
+                    'id' => $boardInfo->id,
+                    'color' => $colorFigure,
+                ];
+                $board[] = $boardInfoData;
+            }
+        }
+
+        if (!is_null($secondPlayerInGame) && $colorOfGamer === (int)Game::WHITE) {
+            foreach ($board as $figureOne) {
+                for ($i = 1; $i < 9; $i++) {
+                    for ($j = 1; $j < 9; $j++) {
+                        if ($i * 10 + $j === (int) $figureOne['position']) {
+                            $state=1;
+                            $info= [
+                                'type' => $figureOne['type'],
+                                'position' => (9 - $i) * 10 + $j,
+                                'id' => $figureOne['id'],
+                                'color' => $figureOne['color'],
+                            ];
+                            $newPos[] = $info;
+                        }
+                    }
+                }
+            }
+        }
+        if ($state === 0) {
+            return view('game.game', [
+                'gameId' => $game->id,
+                'userId' => $user->id,
+                'playerWhiteId' => $players[0],
+                'playerBlackId' => $players[1],
+                'boards' => $board,
+                'colorOfGamer' => $colorOfGamer,
+                'secondPlayerInGame' => $secondPlayerInGame,
+            ]);
+        } else {
+            return view('game.game', [
+                'gameId' => $game->id,
+                'userId' => $user->id,
+                'playerWhiteId' => $players[0],
+                'playerBlackId' => $players[1],
+                'boards' => $newPos,
+                'colorOfGamer' => $colorOfGamer,
+                'secondPlayerInGame' => $secondPlayerInGame,
+            ]);
+        }
     }
 }
