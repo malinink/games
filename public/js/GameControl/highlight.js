@@ -78,11 +78,8 @@ define(['./gameConfig'], function(gameConfig){
              * get initial param
              */
             current = colors[gameConfig.getConfig('current')];
-            if (current === 0) {
-                opposite = colors[1];
-            } else {
-                opposite = colors[0];
-            }
+            console.log(current);
+            opposite = colors[gameConfig.getConfig('opposite')];
             if (!$(currentObj).hasClass(current))
                 return;
             if (gameConfig.getConfig('revert')) {

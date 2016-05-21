@@ -24,7 +24,7 @@ define(['./gameConfig', 'WSQueries/sync'], function(gameConfig, sync){
     function changeState() {
         $('.state').text(opposite.toUpperCase()+' IN GAME');
         gameConfig.setConfig('current', colors.indexOf(opposite));
-        gameConfig.setConfig('opposite', colors.indexOf(opposite));
+        gameConfig.setConfig('opposite', colors.indexOf(current));
         gameConfig.setConfig('activeState', true);
         setIntervalTimes(function(color){$('.status').css({'background-color': color});},300,6,['yellow','#ffffff']);
     }
@@ -63,7 +63,10 @@ define(['./gameConfig', 'WSQueries/sync'], function(gameConfig, sync){
                 sync.send(game, turn);
                 return;
             }
-            move(turnParameters.move.figure, turnParameters.move.x, turnParameters.move.y );
+            move(turnParameters.move.figure, turnParameters.move.x, turnParameters.move.y);
+            /**for (var i=0; i<turnParameters.move.length; i++ ){
+                move(turnParameters.move[i].figure, turnParameters.move[i].x, turnParameters.move[i].y );
+            }*/
             var figureType = $('#'+turnParameters.move.figure).children().attr('data-type');
             if (figureType === 'pawn' && ((turnParameters.move.y === 5 && current === 'white')||
                     (turnParameters.move.y === 4 && current === 'black'))) {
