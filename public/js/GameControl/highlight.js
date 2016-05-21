@@ -78,7 +78,7 @@ define(['./gameConfig'], function (gameConfig) {
              * get initial param
              */
             current = colors[gameConfig.getConfig('current')];
-            console.log(current);
+            
             opposite = colors[gameConfig.getConfig('opposite')];
             if (!$(currentObj).hasClass(current)) {
                 return; }
@@ -87,7 +87,6 @@ define(['./gameConfig'], function (gameConfig) {
             } else {
                 attr = 'data-id';
             }
-                
             $cellObj.removeClass('cell-highlight-enemy');
             $cellObj.removeClass('cell-highlighted');
             

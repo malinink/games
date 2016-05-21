@@ -2,11 +2,11 @@
  *
  * @Ananaskelly
  */
-require(['./GameControl/highlight', './GameControl/gameConfig', './Ajax/sendTurn'], function (highlight, gameConfig, sendTurn) {
+require(['./GameControl/highlight', './GameControl/gameConfig', './GameControl/setInitial', './Ajax/sendTurn'], function (highlight, gameConfig, setInitial, sendTurn) {
     $(document).ready(function () {
         $('.user-info').popover({
             title: 'User info',
-            content: '<img class="img-user" width="48px" src="alien.png">maybe rating or something else',
+            content: '<img class="img-user" width="48px" src="/alien.png">maybe rating or something else',
             template: '<div class="popover" role="tooltip"><div class="arrow"></div>' +
             '<h3 class="center font popover-title"></h3><div class="font center popover-content"></div></div>',
             html: true,
@@ -24,6 +24,13 @@ require(['./GameControl/highlight', './GameControl/gameConfig', './Ajax/sendTurn
         $('.user1,.user2').css({height: cellSize});
         var border = $(window).height() * 0.04;
         var config = ['pawn', 'rook', 'knight', 'bishop', 'queen', 'king'];
+        var colors = ['white', 'black'];
+        /**
+         *
+         * Set config
+         */
+        if (!gameConfig.getConfig('init')) {
+            setInitial.compile(); }
         /*
         *
         * DO RESIZE
@@ -40,7 +47,6 @@ require(['./GameControl/highlight', './GameControl/gameConfig', './Ajax/sendTurn
         var userStatus;
         var currentFigure = '';
         var current;
-        var colors = ['white', 'black']
         $(document).on('click', '.figure', function () {
             activeState = gameConfig.getConfig('activeState');
             current = colors[gameConfig.getConfig('current')];

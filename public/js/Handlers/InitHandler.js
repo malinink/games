@@ -12,6 +12,7 @@ define(['GameControl/gameConfig', 'changeStatus'], function (gameConfig, changeS
             }
             changeStatus.changeStatus();
             $('.game-info').attr('data-turn', data.turn);
+            gameConfig.setConfig('init', true);
             var userId = parseInt($('.board').attr('data-user'));
             var attr = '';
             switch (userId) {
@@ -25,8 +26,8 @@ define(['GameControl/gameConfig', 'changeStatus'], function (gameConfig, changeS
                     gameConfig.setConfig('userState', 'none');
                     break;
             }
-            if ((data.users[0].color === 0 && data.users[0].id === userId) ||
-                 (data.users[1].color === 0 && data.users[1].id === userId)) {
+            if ((parseInt(data.users[0].color) === 0 && data.users[0].id === userId) ||
+                 (parseInt(data.users[1].color) === 0 && data.users[1].id === userId)) {
                 attr = 'data-revert-id';
                 gameConfig.setConfig('revert', true);
                 $('#user1').attr('data-color', 'black');

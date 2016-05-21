@@ -55,8 +55,8 @@
         </div>
     </div>
     <div class="row content">
-        <input type="hidden" class="game-info" data-game="{!! $gameId !!}" data-turn="">
-        <div class="col-md-7 col-xs-12 board" data-user="{!! $userId !!}" data-player-white="{!! $playerWhiteId !!}" data-player-black="{!! $playerBlackId !!}">
+        <input type="hidden" class="game-info" data-game="{!! $gameId !!}" data-turn="{!! $turnNumber !!}">
+        <div class="col-md-7 col-xs-12 board" data-user="{!! $userId !!}" data-player-white="{!! $playerWhiteId !!}" data-player-black="{!! $playerBlackId !!}" data-player-login-white="{!! $userWhite !!}" data-player-login-black="{!! $userBlack !!}">
             <div class="row user1">
                 <div class="col-xs-offset-1 user col-md-3 col-xs-4">
                     <img id="user1-img" height="70%" src="/img/white.png"> <i id="user1" data-color="white"></i>
@@ -92,9 +92,9 @@
                 @for ($j = 1; $j < 9; $j++)
                     @if (($i+$j)%2 === 0)
                     <!-- Draw light or dark color -->
-                        <div class="col-xs-1 cell light busy" data-id="{{$i*10+$j}}" data-revert-id="{{(9-$i)*10+$j}}" style="height: 73px;">
+                        <div class="col-xs-1 cell light" data-id="{{$i*10+$j}}" data-revert-id="{{(9-$i)*10+(9 -$j)}}" style="height: 73px;">
                     @else 
-                        <div class="col-xs-1 cell dark busy" data-id="{{$i*10+$j}}" data-revert-id="{{(9-$i)*10+$j}}" style="height: 73px;"> 
+                        <div class="col-xs-1 cell dark" data-id="{{$i*10+$j}}" data-revert-id="{{(9-$i)*10+(9-$j)}}" style="height: 73px;"> 
                     @endif
                     <!-- Start of Logic is here! -->
                     @if(!is_null($secondPlayerInGame))

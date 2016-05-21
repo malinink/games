@@ -32,11 +32,13 @@ define(['./gameConfig', 'WSQueries/sync'], function (gameConfig, sync) {
     }
     function abroad(figureId)
     {
+        $('#'+figureId).removeClass('figure');
         $('#'+figureId).parent().removeClass(opposite);
         $('#'+figureId).css({
-            width : figureSize*coeff,
-            height: figureSize*coeff
+            width : size*coeff,
+            height: size*coeff
         }).appendTo('.hit-'+current);
+        $('.img-content').show();
     }
     function move(figureId, x, y)
     {
@@ -63,14 +65,15 @@ define(['./gameConfig', 'WSQueries/sync'], function (gameConfig, sync) {
             var turn = parseInt($('.game-info').attr('data-turn'));
             if (turnParameters.game !== game) {
                 return; }
+             console.log(turn);
             if (turnParameters.prev !== turn) {
                 sync.send(game, turn);
                 return;
             }
-            move(turnParameters.move.figure, turnParameters.move.x, turnParameters.move.y);
-            /**for (var i=0; i<turnParameters.move.length; i++ ){
-                move(turnParameters.move[i].figure, turnParameters.move[i].x, turnParameters.move[i].y );
-            }*/
+             console.log(turnParameters.move.length);
+            for (var i=0; i<turnParameters.move.length; i++) {
+                move(turnParameters.move[i].figure, turnParameters.move[i].x, turnParameters.move[i].y);
+            }
             var figureType = $('#'+turnParameters.move.figure).children().attr('data-type');
             if (figureType === 'pawn' && ((turnParameters.move.y === 5 && current === 'white')||
                     (turnParameters.move.y === 4 && current === 'black'))) {
@@ -78,10 +81,10 @@ define(['./gameConfig', 'WSQueries/sync'], function (gameConfig, sync) {
             } else {
                 gameConfig.setConfig('pawnSpecial', null)
             }
-            if (turnParameters.hasOwnProperty('remove') && turnParameters.remove.length !== 0) {
-                abroad(turnParameters.remove[0].figure);
+            if (turnParameters.hasOwnProperty('remove')) {
+                abroad(turnParameters.remove.figure);
                 var newPosition = turnParameters.move.x + turnParameters.move.y;
-                var oldPosition =  $('#'+turnParameters.remove[0].figure).parent().attr('id');
+                var oldPosition =  $('#'+turnParameters.remove.figure).parent().attr('id');
                 if (newPosition !== oldPosition) {
                     $('['+attr+'='+oldPosition+']').removeClass('busy');
                 }
