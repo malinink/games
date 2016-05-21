@@ -3,9 +3,9 @@
  * @author Ananskelly
  */
 
-define(['GameControl/turnControl', 'GameControl/gameConfig'], function(turnControl, gameConfig) {
+define(['GameControl/turnControl', 'GameControl/gameConfig'], function (turnControl, gameConfig) {
     return {
-        compile: function(data) {
+        compile: function (data) {
             
             turnControl.apply(data);
 

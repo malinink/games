@@ -11,7 +11,7 @@
     <!-- default parameters -->
     <arg name="report" value="summary"/>
     <arg name="standard" value="PSR2"/>
-    <arg name="extensions" value="php"/>
+    <arg name="extensions" value="php,js,css"/>
     <arg name="report" value="full"/>
 
     <!-- rules and them excludes -->

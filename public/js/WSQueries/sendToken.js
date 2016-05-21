@@ -2,9 +2,9 @@
  *
  * @author Ananskelly
  */
-define(function(){
+define(function () {
     return {
-        send: function(data){
+        send: function (data) {
             var msg = {
                 'name': 'authentication',
                 'data': {

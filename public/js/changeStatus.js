@@ -2,7 +2,7 @@
  *
  * @author IrenJones
  */
-define(function(){
+define(function () {
     return {
         changeStatus: function () {
             var element = document.getElementById('statusContent');

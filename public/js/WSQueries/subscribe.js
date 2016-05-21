@@ -1,10 +1,10 @@
 /**
  *
- * @author Ananaskelly 
+ * @author Ananaskelly
  */
-define(function(){
+define(function () {
     return {
-        sendQuery: function(){
+        sendQuery: function () {
             var gameId = $('.game-info').attr('data-game');
             var msg = {
                 'name': 'subscribe',

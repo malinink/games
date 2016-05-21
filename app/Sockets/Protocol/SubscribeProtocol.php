@@ -79,7 +79,7 @@ class SubscribeProtocol implements ProtocolInterface
                 $response["data"]["turn"] = $turns->sortBy("turn_number")->last()->turn_number;
             } else {
                 $response["data"]["turn"] = 0;
-            } 
+            }
             $this->server->linkClientIdToGame($this->client, $gameId);
         }
         

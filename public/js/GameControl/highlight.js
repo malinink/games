@@ -2,58 +2,59 @@
  *
  * @author Ananskelly
  */
-define(['./gameConfig'], function(gameConfig){
+define(['./gameConfig'], function (gameConfig) {
     var $cellObj = $('.cell');
     var colors = ['white', 'black'];
     var pawnSpecial = gameConfig.getConfig('pawnSpecial');
     var current;
     var opposite;
     var attr;
-    function checkPawnSpecial(y,x) {
-        if (pawnSpecial !== null)
-        {
+    function checkPawnSpecial(y,x)
+    {
+        if (pawnSpecial !== null) {
             var z1=0,z2=0;
             if (pawnSpecial[0] === y && Math.abs(Number(pawnSpecial[1])-Number(x))===1) {
-                if (current === "black")
-                    z1 = Number(y) + 1;
-                else
-                    z1 = Number(y) - 1;
-                if (pawnSpecial[1] - x > 0)
-                    z2 = Number(x) + 1;
-                else
-                    z2 = Number(x) - 1;
-                $(attr+'='+z1+z2).addClass('cell-highlight-enemy');
+                if (current === "black") {
+                    z1 = Number(y) + 1; } else {
+                    z1 = Number(y) - 1; }
+                    if (pawnSpecial[1] - x > 0) {
+                        z2 = Number(x) + 1; } else {
+                        z2 = Number(x) - 1; }
+                        $(attr+'='+z1+z2).addClass('cell-highlight-enemy');
             }
         }
     }
-    function checkEnemy(y,x){
+    function checkEnemy(y,x)
+    {
         if ($('['+attr+'='+y+x+']').hasClass(opposite)) {
             $('['+attr+'='+y+x+']').addClass('cell-highlight-enemy');
         }
     }
-    function simpleAdd(y,x,type){
-        if (x>8 || x<1 || y>8 || y<1)
-            return false;
-        if (!$('['+attr+'='+y+x+']').hasClass('busy')){
+    function simpleAdd(y,x,type)
+    {
+        if (x>8 || x<1 || y>8 || y<1) {
+            return false; }
+        if (!$('['+attr+'='+y+x+']').hasClass('busy')) {
             $('['+attr+'='+y+x+']').addClass('cell-highlighted');
             return true;
-        }
-        else if (type !== 'pawn'){
+        } else if (type !== 'pawn') {
             checkEnemy(y,x);
         }
 
     }
-    function diag(y,x,direction_y,direction_x) {
+    function diag(y,x,direction_y,direction_x)
+    {
         y += direction_y;
         x += direction_x;
-        while (!$('['+attr+'='+y+x+']').hasClass('busy') && y < 9 && y > 0 && x > 0 && x < 9){
+        while (!$('['+attr+'='+y+x+']').hasClass('busy') && y < 9 && y > 0 && x > 0 && x < 9) {
             $('['+attr+'='+y+x+']').addClass('cell-highlighted');
             y += direction_y;
             x += direction_x;
         }
         checkEnemy(y,x);
     }
-    function parall(y,x,direction,flag) {
+    function parall(y,x,direction,flag)
+    {
         
         if (flag === true) {
             x += direction;
@@ -61,8 +62,7 @@ define(['./gameConfig'], function(gameConfig){
                 $('['+attr+'='+y+x+']').addClass('cell-highlighted');
                 x += direction;
             }
-        }
-        else {
+        } else {
             y += direction;
             while (!$('['+attr+'='+y+x+']').hasClass('busy') && y<9 && y>0) {
                 $('['+attr+'='+y+x+']').addClass('cell-highlighted');
@@ -72,16 +72,16 @@ define(['./gameConfig'], function(gameConfig){
         checkEnemy(y,x);
     }
     return {
-        compile: function (currentObj)
-        {
+        compile: function (currentObj) {
+        
             /*
              * get initial param
              */
             current = colors[gameConfig.getConfig('current')];
             console.log(current);
             opposite = colors[gameConfig.getConfig('opposite')];
-            if (!$(currentObj).hasClass(current))
-                return;
+            if (!$(currentObj).hasClass(current)) {
+                return; }
             if (gameConfig.getConfig('revert')) {
                 attr = 'data-revert-id';
             } else {
@@ -97,8 +97,7 @@ define(['./gameConfig'], function(gameConfig){
             
             if (current=== 'black') {
                 direction = -1;
-            }
-            else {
+            } else {
                 direction = 1;
             }
             
@@ -109,14 +108,13 @@ define(['./gameConfig'], function(gameConfig){
                 case 'pawn' : {
                         console.log(Number(cell_y)+direction);
                     var goOnFlag = simpleAdd(Number(cell_y)+direction,Number(cell_x),'pawn');
-                    if (Number(cell_y)===2 && current === 'white' && goOnFlag)
-                        simpleAdd(Number(cell_y)+2,Number(cell_x),'pawn');
-                    else if (Number(cell_y)===7 && current === 'black' && goOnFlag)
-                        simpleAdd(Number(cell_y)-2,Number(cell_x),'pawn');
+                    if (Number(cell_y)===2 && current === 'white' && goOnFlag) {
+                        simpleAdd(Number(cell_y)+2,Number(cell_x),'pawn'); } else if (Number(cell_y)===7 && current === 'black' && goOnFlag) {
+                        simpleAdd(Number(cell_y)-2,Number(cell_x),'pawn'); }
 
-                    checkEnemy(Number(cell_y)+direction,Number(cell_x)+direction);
-                    checkEnemy(Number(cell_y)+direction,Number(cell_x)-direction);
-                    checkPawnSpecial(cell_y,cell_x);
+                        checkEnemy(Number(cell_y)+direction,Number(cell_x)+direction);
+                        checkEnemy(Number(cell_y)+direction,Number(cell_x)-direction);
+                        checkPawnSpecial(cell_y,cell_x);
                     break;
                 }
                 case 'bishop' : {

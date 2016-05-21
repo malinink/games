@@ -2,7 +2,7 @@
  *
  * @author Ananaskelly
  */
-define(['./gameConfig', 'WSQueries/sync'], function(gameConfig, sync){
+define(['./gameConfig', 'WSQueries/sync'], function (gameConfig, sync) {
     var figureSize = gameConfig.getConfig('figureSize');
     var coeff = gameConfig.getConfig('coeff');
     var colors = ['white', 'black'];
@@ -21,21 +21,25 @@ define(['./gameConfig', 'WSQueries/sync'], function(gameConfig, sync){
             }
         }, delay);
     }
-    function changeState() {
+    function changeState()
+    {
         $('.state').text(opposite.toUpperCase()+' IN GAME');
         gameConfig.setConfig('current', colors.indexOf(opposite));
         gameConfig.setConfig('opposite', colors.indexOf(current));
         gameConfig.setConfig('activeState', true);
-        setIntervalTimes(function(color){$('.status').css({'background-color': color});},300,6,['yellow','#ffffff']);
+        setIntervalTimes(function (color) {
+            $('.status').css({'background-color': color});},300,6,['yellow','#ffffff']);
     }
-    function abroad(figureId){
+    function abroad(figureId)
+    {
         $('#'+figureId).parent().removeClass(opposite);
         $('#'+figureId).css({
             width : figureSize*coeff,
             height: figureSize*coeff
         }).appendTo('.hit-'+current);
     }
-    function move(figureId, x, y) {
+    function move(figureId, x, y)
+    {
         var last = $('#'+figureId).parent().attr(attr);
         $('#'+figureId).appendTo('['+attr+'='+y+x+']');
         $('['+attr+'='+last+']').removeClass('busy');
@@ -45,7 +49,7 @@ define(['./gameConfig', 'WSQueries/sync'], function(gameConfig, sync){
         changeState();
     }
     return {
-        apply: function(turnParameters) {
+        apply: function (turnParameters) {
             opposite = colors[gameConfig.getConfig('opposite')];
             current = colors[gameConfig.getConfig('current')];
             revert = gameConfig.getConfig('revert');
@@ -57,8 +61,8 @@ define(['./gameConfig', 'WSQueries/sync'], function(gameConfig, sync){
             }
             var game = parseInt($('.game-info').attr('data-game'));
             var turn = parseInt($('.game-info').attr('data-turn'));
-            if (turnParameters.game !== game)
-                return;
+            if (turnParameters.game !== game) {
+                return; }
             if (turnParameters.prev !== turn) {
                 sync.send(game, turn);
                 return;
@@ -71,8 +75,7 @@ define(['./gameConfig', 'WSQueries/sync'], function(gameConfig, sync){
             if (figureType === 'pawn' && ((turnParameters.move.y === 5 && current === 'white')||
                     (turnParameters.move.y === 4 && current === 'black'))) {
                 gameConfig.setConfig('pawnSpecial', turnParameters.move.y.toString()+turnParameters.move.x);
-            }
-            else {
+            } else {
                 gameConfig.setConfig('pawnSpecial', null)
             }
             if (turnParameters.hasOwnProperty('remove') && turnParameters.remove.length !== 0) {

@@ -2,9 +2,9 @@
  *
  * @author Ananaskelly
  */
-define(function(){
+define(function () {
     return {
-        send: function(gameId, turnId){
+        send: function (gameId, turnId) {
             var data = {
                 'name': 'synchronize',
                 'data': {

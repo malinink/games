@@ -2,7 +2,7 @@
  *
  * @author Ananaskelly
  */
-define(function(){
+define(function () {
     var config = {
         'userState': 'none',
         'activeState': true,
@@ -14,10 +14,10 @@ define(function(){
         'pawnSpecial': null
     }
     return {
-        setConfig: function(param, value){
+        setConfig: function (param, value) {
             config[param] = value;
         },
-        getConfig: function(param){
+        getConfig: function (param) {
             return config[param];
         }
     }
