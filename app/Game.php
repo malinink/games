@@ -268,14 +268,21 @@ class Game extends Model
             $currentColor = true;
         }
         
+        $boardInfo = BoardInfo::find($figureId);
+        $boardInfo->turn_number =  $turnNumber;
+        $currentPosition = $boardInfo->position;
+        
         $turnInfo = new TurnInfo();
         $turnInfo->game_id = $game->id;
         $turnInfo->turn_number = $turnNumber;
-        $turnInfo->move = (int)$figureId.$x.$y;
+        $turnInfo->move = (int)$currentPosition.$y.$x;
         $turnInfo->options = $options;
         $turnInfo->turn_start_time = Carbon::now();
         $turnInfo->user_turn = $currentColor;
         $turnInfo->save();
+        
+        $boardInfo->position = (int)$y.$x;
+        $boardInfo->save();
         
         $sendingData = [
             'game' => $game->id,
@@ -283,9 +290,11 @@ class Game extends Model
             'turn' => $turnNumber,
             'prev' => $turnNumber-1,
             'move' => [
-                        'figure' => $figureId,
-                        'x'        => $x,
-                        'y'        => $y,
+                        [
+                            'figure' => $figureId,
+                            'x'        => $x,
+                            'y'        => $y
+                        ]
                     ]
             ];
         if ($event!='none') {
@@ -566,8 +575,9 @@ class Game extends Model
 
             //check if we eat something
             if ($eatenFigure === 1) {
-                if ($eatenFigure->color != $figureColor) {
-                    $eatenFigureId = $eatenFigure->id;
+                $eatFig = BoardInfo::where(['position' => $y . $x, 'game_id' => $gameId])->first();
+                if ($eatFig->color != $figureColor) {
+                    $eatenFigureId = $eatFig->id;
                     $eat = 1;
                     $options = $eatenFigureId;
                 } else {
