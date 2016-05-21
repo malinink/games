@@ -306,15 +306,185 @@ class Game extends Model
         ]);
     }
     
+    /*
+     * @param int $fromX
+     * @param int $fromY
+     * @param int $toX
+     * @param int $toY
+     *
+     * @return boolean
+     */
+    private function tryMovePawn($fromX, $fromY, $toX, $toY, $eatenFigure, $color)
+    {
+        $delta = 1;
+        if ($color) {
+            $delta = -1;
+        }
+        
+        if ($fromX != $toX) {
+            if (($eatenFigure == 1) && (abs($fromX - $toX) == 1) && ($fromY + $delta == $toY)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        
+        if ($fromY + $delta != $toY) {
+            if ($fromY == 2 || $fromY == 7) {
+                return $fromY + 2*$delta == $toY;
+            } else {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+    
+    /*
+     * @param int $fromX
+     * @param int $fromY
+     * @param int $toX
+     * @param int $toY
+     *
+     * @return boolean
+     */
+    private function tryMoveRook($fromX, $fromY, $toX, $toY)
+    {
+        if ($fromX == $toX || $fromY == $toY) {
+            return true;
+        }
+        
+        return false;
+    }
+    
+    /*
+     * @param int $fromX
+     * @param int $fromY
+     * @param int $toX
+     * @param int $toY
+     *
+     * @return boolean
+     */
+    private function tryMoveKnight($fromX, $fromY, $toX, $toY)
+    {
+        if (abs($toX - $fromX) == 2 && abs($toY - $fromY) == 1) {
+            return true;
+        }
+        
+        if (abs($toX - $fromX) == 1 && abs($toY - $fromY) == 2) {
+            return true;
+        }
+        
+        return false;
+    }
+    
+    /*
+     * @param int $fromX
+     * @param int $fromY
+     * @param int $toX
+     * @param int $toY
+     *
+     * @return boolean
+     */
+    private function tryMoveBishop($fromX, $fromY, $toX, $toY)
+    {
+        if (abs($fromX - $toX) == abs($fromY - $toY)) {
+            return true;
+        }
+        
+        return false;
+    }
+    
+    /*
+     * @param int $fromX
+     * @param int $fromY
+     * @param int $toX
+     * @param int $toY
+     *
+     * @return boolean
+     */
+    private function tryMoveQueen($fromX, $fromY, $toX, $toY)
+    {
+        return tryMoveBishop($fromX, $fromY, $toX, $toY) ||
+               tryMoveRook($fromX, $fromY, $toX, $toY);
+    }
+    
+    /*
+     * @param int $fromX
+     * @param int $fromY
+     * @param int $toX
+     * @param int $toY
+     * 
+     * @return boolean
+     */
+    private function tryRoque($fromX, $fromY, $toX, $toY)
+    {
+        return false;
+    }
+
+
+    /*
+     * @param int $fromX
+     * @param int $fromY
+     * @param int $toX
+     * @param int $toY
+     *
+     * @return boolean
+     */
+    private function tryMoveKing($fromX, $fromY, $toX, $toY)
+    {
+        $delta = abs($fromX - $toX) + abs($fromY - $toY);
+        if ($delta == 1 || $delta == 2) {
+            return true;
+        }
+        
+        return false;
+    }
+    
     /**
+     * Check turn
+     * throw Exception if we can't move figure
      *
      * @param BoardInfo $figure
-     * @param type $x
-     * @param type $y
+     * @param int $x
+     * @param int $y
+     * @param int $eatenFigure
+     *
+     * @return void
      */
-    protected function checkGameRulesOnFigureMove(BoardInfo $figure, $x, $y)
+    protected function checkGameRulesOnFigureMove(BoardInfo $figure, $x, $y, $eatenFigure)
     {
+        $fromX = $figure->position % 10;
+        $fromY = ($figure->position - $fromX) / 10;
+        if ($fromX == 0 || $fromY == 0) {
+            throw new Exception("Can't move eaten figure");
+        }
         
+        $result = false;
+        switch ($figure->figure) {
+            case 0:
+                $result = $this->tryMovePawn($fromX, $fromY, $x, $y, $eatenFigure, $figure->color);
+                break;
+            case 1:
+                $result = $this->tryMoveRook($fromX, $fromY, $x, $y);
+                break;
+            case 2:
+                $result = $this->tryMoveKnight($fromX, $fromY, $x, $y);
+                break;
+            case 3:
+                $result = $this->tryMoveBishop($fromX, $fromY, $x, $y);
+                break;
+            case 4:
+                $result = $this->tryMoveQueen($fromX, $fromY, $x, $y);
+                break;
+            case 5:
+                $result = $this->tryMoveKing($fromX, $fromY, $x, $y);
+                break;
+        }
+        
+        if (!$result) {
+            throw new Exception("Can't move figure");
+        }
     }
 
     /**
@@ -391,7 +561,7 @@ class Game extends Model
                 throw new Exception("Figure isn't on board");
             }
 
-            $this->checkGameRulesOnFigureMove($figureGet, $x, $y);
+            $this->checkGameRulesOnFigureMove($figureGet, $x, $y, $eatenFigure);
 
 
             //check if we eat something
