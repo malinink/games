@@ -7,7 +7,8 @@
     <exclude-pattern>_ide_helper*.php</exclude-pattern>
     <exclude-pattern>bootstrap/cache</exclude-pattern>
     <exclude-pattern>storage</exclude-pattern>
-        
+    <exclude-pattern>*.min.js</exclude-pattern>
+                  
     <!-- default parameters -->
     <arg name="report" value="summary"/>
     <arg name="standard" value="PSR2"/>
