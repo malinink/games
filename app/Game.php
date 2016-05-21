@@ -420,7 +420,7 @@ class Game extends Model
             return true;
         } catch (Exception $e) {
             //can see $e if want
-            echo $e->getMessage();
+            //echo $e->getMessage();
             return false;
         }
     }

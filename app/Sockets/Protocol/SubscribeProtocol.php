@@ -71,11 +71,15 @@ class SubscribeProtocol implements ProtocolInterface
         
         if (($game === null) || !$this->server->CheckIsSetClientToUserId($this->client)) {
             $response["data"]["state"] = "failed";
-        } elseif ($game->time_finished === null) {
+        } elseif ($game->time_finished !== null) {
             $response["data"]["state"] = "unavailable";
         } else {
-            $turns = $game->turnInfos();
-            $response["data"]["turn"] = $turns->sortBy("turn_number")->last()->turn_number;
+            $turns = $game->turnInfos;
+            if (!$turns->isEmpty()) {
+                $response["data"]["turn"] = $turns->sortBy("turn_number")->last()->turn_number;
+            } else {
+                $response["data"]["turn"] = 0;
+            } 
             $this->server->linkClientIdToGame($this->client, $gameId);
         }
         
