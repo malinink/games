@@ -9,6 +9,7 @@ define(['./gameConfig'], function (gameConfig) {
     var current;
     var opposite;
     var attr;
+    var userColor;
     function checkPawnSpecial(y,x)
     {
         if (pawnSpecial !== null) {
@@ -26,7 +27,7 @@ define(['./gameConfig'], function (gameConfig) {
     }
     function checkEnemy(y,x)
     {
-        if ($('['+attr+'='+y+x+']').hasClass(opposite)) {
+        if ($('['+attr+'='+y+x+']').children().hasClass(opposite)) {
             $('['+attr+'='+y+x+']').addClass('cell-highlight-enemy');
         }
     }
@@ -77,9 +78,11 @@ define(['./gameConfig'], function (gameConfig) {
             /*
              * get initial param
              */
-            current = colors[gameConfig.getConfig('current')];
-            
-            opposite = colors[gameConfig.getConfig('opposite')];
+            current = gameConfig.getConfig('userState');
+            if (current === 'white')
+                opposite = 'black';
+            else 
+                opposite = 'white';
             if (!$(currentObj).hasClass(current)) {
                 return; }
             if (gameConfig.getConfig('revert')) {
@@ -94,7 +97,7 @@ define(['./gameConfig'], function (gameConfig) {
             var figure = $(currentObj).attr('id');
             var cell = $(currentObj).parent().attr(attr);
             
-            if (current=== 'black') {
+            if (current === 'black') {
                 direction = -1;
             } else {
                 direction = 1;
