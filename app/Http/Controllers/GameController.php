@@ -54,10 +54,17 @@ class GameController extends BaseController
         $board=[];
         $newPos=[];
         $state=0;
+        $turnNumber = 0;
+        
+        $turnInfo = $game->turnInfos->sortBy('id')->last();
+        if (!is_null($turnInfo)) {
+            $turnNumber = $turnInfo -> turn_number;
+        }
         /*
          * check permissions
          */
         $players = [null, null];
+        $usersNames = [null, null];
         /* @var $game Game */
         foreach ($game->userGames as $userGame) {
             /* @var $userGame UserGame */
@@ -66,10 +73,13 @@ class GameController extends BaseController
                 $colorOfGamer = (int) $userGame->color;
             }
         }
+        
 
         if ($players[0] != null && $players[1] != null) {
             $secondPlayerInGame = 1;
-
+            foreach ($game->userGames as $userGame) {
+                $usersNames[(int) $userGame->color] = $userGame->user->name;
+            }
             foreach ($game->boardInfos as $boardInfo) {
                 $typeNumber = $boardInfo->figure;
                 $diffTypes = ['pawn', 'rook', 'knight', 'bishop', 'queen', 'king'];
@@ -101,7 +111,7 @@ class GameController extends BaseController
                             $state=1;
                             $info= [
                                 'type' => $figureOne['type'],
-                                'position' => (9 - $i) * 10 + $j,
+                                'position' => (9 - $i) * 10 + (9-$j),
                                 'id' => $figureOne['id'],
                                 'color' => $figureOne['color'],
                             ];
@@ -114,22 +124,28 @@ class GameController extends BaseController
         if ($state === 0) {
             return view('game.game', [
                 'gameId' => $game->id,
+                'userWhite' => $usersNames[0],
+                'userBlack' => $usersNames[1],
                 'userId' => $user->id,
                 'playerWhiteId' => $players[0],
                 'playerBlackId' => $players[1],
                 'boards' => $board,
                 'colorOfGamer' => $colorOfGamer,
                 'secondPlayerInGame' => $secondPlayerInGame,
+                'turnNumber' => $turnNumber
             ]);
         } else {
             return view('game.game', [
                 'gameId' => $game->id,
+                'userWhite' => $usersNames[0],
+                'userBlack' => $usersNames[1],
                 'userId' => $user->id,
                 'playerWhiteId' => $players[0],
                 'playerBlackId' => $players[1],
                 'boards' => $newPos,
                 'colorOfGamer' => $colorOfGamer,
                 'secondPlayerInGame' => $secondPlayerInGame,
+                'turnNumber' => $turnNumber
             ]);
         }
     }
