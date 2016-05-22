@@ -34,12 +34,16 @@ define(['GameControl/gameConfig', 'changeStatus'], function (gameConfig, changeS
                 $('#user2').attr('data-color', 'white');
                 $('#user1-img').attr('src', '/img/black.png');
                 $('#user2-img').attr('src', '/img/white.png');
+                $('.up').addClass('hit-white');
+                $('.down').addClass('hit-black');
             } else {
                 attr = 'data-id';
+                $('.up').addClass('hit-black');
+                $('.down').addClass('hit-white');
             }
             for (var k=0; k<data.users.length; k++) {
                 var colorInd = parseInt(data.users[k].color);
-                $('.board').attr('data-player'+colors[colorInd], data.users[k].id);
+                $('.board').attr('data-player-'+colors[colorInd], data.users[k].id);
                 $('[data-color='+colors[parseInt(data.users[k].color)]+']').text(data.users[k].login);
             }
             for (var j=0; j<colors.length; j++) {
