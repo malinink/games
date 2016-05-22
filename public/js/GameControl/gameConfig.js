@@ -11,6 +11,7 @@ define(function () {
         'opposite': 1,
         'figureSize': 0,
         'coeff': 0.4,
+        'init': false,
         'pawnSpecial': null
     }
     return {
