@@ -79,95 +79,94 @@ define(['./gameConfig'], function (gameConfig) {
              * get initial param
              */
             current = gameConfig.getConfig('userState');
-            if (current === 'white')
-                opposite = 'black';
-            else 
-                opposite = 'white';
-            if (!$(currentObj).hasClass(current)) {
-                return; }
-            if (gameConfig.getConfig('revert')) {
-                attr = 'data-revert-id';
-            } else {
-                attr = 'data-id';
-            }
-            $cellObj.removeClass('cell-highlight-enemy');
-            $cellObj.removeClass('cell-highlighted');
+            if (current === 'white') {
+                opposite = 'black'; } else {
+                opposite = 'white'; }
+                if (!$(currentObj).hasClass(current)) {
+                    return; }
+                if (gameConfig.getConfig('revert')) {
+                    attr = 'data-revert-id';
+                } else {
+                    attr = 'data-id';
+                }
+                $cellObj.removeClass('cell-highlight-enemy');
+                $cellObj.removeClass('cell-highlighted');
             
-            var type = $(currentObj).children().attr('data-type');
-            var figure = $(currentObj).attr('id');
-            var cell = $(currentObj).parent().attr(attr);
+                var type = $(currentObj).children().attr('data-type');
+                var figure = $(currentObj).attr('id');
+                var cell = $(currentObj).parent().attr(attr);
             
-            if (current === 'black') {
-                direction = -1;
-            } else {
-                direction = 1;
-            }
+                if (current === 'black') {
+                    direction = -1;
+                } else {
+                    direction = 1;
+                }
             
-            var cell_y = cell[0];
-            var cell_x = cell[1];
+                var cell_y = cell[0];
+                var cell_x = cell[1];
 
-            switch (type) {
-                case 'pawn' : {
+                switch (type) {
+                    case 'pawn' : {
                         console.log(Number(cell_y)+direction);
-                    var goOnFlag = simpleAdd(Number(cell_y)+direction,Number(cell_x),'pawn');
-                    if (Number(cell_y)===2 && current === 'white' && goOnFlag) {
-                        simpleAdd(Number(cell_y)+2,Number(cell_x),'pawn'); } else if (Number(cell_y)===7 && current === 'black' && goOnFlag) {
-                        simpleAdd(Number(cell_y)-2,Number(cell_x),'pawn'); }
+                        var goOnFlag = simpleAdd(Number(cell_y)+direction,Number(cell_x),'pawn');
+                        if (Number(cell_y)===2 && current === 'white' && goOnFlag) {
+                            simpleAdd(Number(cell_y)+2,Number(cell_x),'pawn'); } else if (Number(cell_y)===7 && current === 'black' && goOnFlag) {
+                            simpleAdd(Number(cell_y)-2,Number(cell_x),'pawn'); }
 
-                        checkEnemy(Number(cell_y)+direction,Number(cell_x)+direction);
-                        checkEnemy(Number(cell_y)+direction,Number(cell_x)-direction);
-                        checkPawnSpecial(cell_y,cell_x);
-                    break;
-                }
-                case 'bishop' : {
-                    diag(Number(cell_y),Number(cell_x),-1,1);
-                    diag(Number(cell_y),Number(cell_x),1,1);
-                    diag(Number(cell_y),Number(cell_x),1,-1);
-                    diag(Number(cell_y),Number(cell_x),-1,-1);
-                    break;
-                }
-                case 'rook' : {
-                    parall(Number(cell_y),Number(cell_x),-1,true);
-                    parall(Number(cell_y),Number(cell_x),1,true);
-                    parall(Number(cell_y),Number(cell_x),1,false);
-                    parall(Number(cell_y),Number(cell_x),-1,false);
-                    break;
-                }
-                case 'knight': {
-                    simpleAdd(Number(cell_y)-2,Number(cell_x)+1);
-                    simpleAdd(Number(cell_y)-2,Number(cell_x)-1);
-                    simpleAdd(Number(cell_y)-1,Number(cell_x)-2);
-                    simpleAdd(Number(cell_y)+1,Number(cell_x)-2);
-                    simpleAdd(Number(cell_y)+2,Number(cell_x)-1);
-                    simpleAdd(Number(cell_y)+2,Number(cell_x)+1);
-                    simpleAdd(Number(cell_y)+1,Number(cell_x)+2);
-                    simpleAdd(Number(cell_y)-1,Number(cell_x)+2);
-                    break;
-                }
-                case 'king': {
-                    simpleAdd(Number(cell_y),Number(cell_x)+1);
-                    simpleAdd(Number(cell_y),Number(cell_x)-1);
-                    simpleAdd(Number(cell_y)+1,Number(cell_x)+1);
-                    simpleAdd(Number(cell_y)-1,Number(cell_x)-1);
-                    simpleAdd(Number(cell_y)+1,Number(cell_x)-1);
-                    simpleAdd(Number(cell_y)-1,Number(cell_x)+1);
-                    simpleAdd(Number(cell_y)-1,Number(cell_x));
-                    simpleAdd(Number(cell_y)+1,Number(cell_x));
+                            checkEnemy(Number(cell_y)+direction,Number(cell_x)+direction);
+                            checkEnemy(Number(cell_y)+direction,Number(cell_x)-direction);
+                            checkPawnSpecial(cell_y,cell_x);
+                        break;
+                    }
+                    case 'bishop' : {
+                        diag(Number(cell_y),Number(cell_x),-1,1);
+                        diag(Number(cell_y),Number(cell_x),1,1);
+                        diag(Number(cell_y),Number(cell_x),1,-1);
+                        diag(Number(cell_y),Number(cell_x),-1,-1);
+                        break;
+                    }
+                    case 'rook' : {
+                        parall(Number(cell_y),Number(cell_x),-1,true);
+                        parall(Number(cell_y),Number(cell_x),1,true);
+                        parall(Number(cell_y),Number(cell_x),1,false);
+                        parall(Number(cell_y),Number(cell_x),-1,false);
+                        break;
+                    }
+                    case 'knight': {
+                        simpleAdd(Number(cell_y)-2,Number(cell_x)+1);
+                        simpleAdd(Number(cell_y)-2,Number(cell_x)-1);
+                        simpleAdd(Number(cell_y)-1,Number(cell_x)-2);
+                        simpleAdd(Number(cell_y)+1,Number(cell_x)-2);
+                        simpleAdd(Number(cell_y)+2,Number(cell_x)-1);
+                        simpleAdd(Number(cell_y)+2,Number(cell_x)+1);
+                        simpleAdd(Number(cell_y)+1,Number(cell_x)+2);
+                        simpleAdd(Number(cell_y)-1,Number(cell_x)+2);
+                        break;
+                    }
+                    case 'king': {
+                        simpleAdd(Number(cell_y),Number(cell_x)+1);
+                        simpleAdd(Number(cell_y),Number(cell_x)-1);
+                        simpleAdd(Number(cell_y)+1,Number(cell_x)+1);
+                        simpleAdd(Number(cell_y)-1,Number(cell_x)-1);
+                        simpleAdd(Number(cell_y)+1,Number(cell_x)-1);
+                        simpleAdd(Number(cell_y)-1,Number(cell_x)+1);
+                        simpleAdd(Number(cell_y)-1,Number(cell_x));
+                        simpleAdd(Number(cell_y)+1,Number(cell_x));
 
-                    break;
+                        break;
+                    }
+                    case 'queen': {
+                        parall(Number(cell_y),Number(cell_x),-1,true);
+                        parall(Number(cell_y),Number(cell_x),1,true);
+                        parall(Number(cell_y),Number(cell_x),1,false);
+                        parall(Number(cell_y),Number(cell_x),-1,false);
+                        diag(Number(cell_y),Number(cell_x),-1,1);
+                        diag(Number(cell_y),Number(cell_x),1,1);
+                        diag(Number(cell_y),Number(cell_x),1,-1);
+                        diag(Number(cell_y),Number(cell_x),-1,-1);
+                        break;
+                    }
                 }
-                case 'queen': {
-                    parall(Number(cell_y),Number(cell_x),-1,true);
-                    parall(Number(cell_y),Number(cell_x),1,true);
-                    parall(Number(cell_y),Number(cell_x),1,false);
-                    parall(Number(cell_y),Number(cell_x),-1,false);
-                    diag(Number(cell_y),Number(cell_x),-1,1);
-                    diag(Number(cell_y),Number(cell_x),1,1);
-                    diag(Number(cell_y),Number(cell_x),1,-1);
-                    diag(Number(cell_y),Number(cell_x),-1,-1);
-                    break;
-                }
-            }
         }
     }
 })
