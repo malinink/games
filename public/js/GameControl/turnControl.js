@@ -10,7 +10,7 @@ define(['./gameConfig', 'WSQueries/sync'], function (gameConfig, sync) {
     var current;
     var revert;
     var attr = '';
-    
+    var size = $('.cell').width();
     function setIntervalTimes(callback, delay, time, custom)
     {
         var count = 0;
@@ -32,13 +32,12 @@ define(['./gameConfig', 'WSQueries/sync'], function (gameConfig, sync) {
     }
     function abroad(figureId)
     {
-        $('#'+figureId).removeClass('figure');
         $('#'+figureId).parent().removeClass(opposite);
         $('#'+figureId).css({
             width : size*coeff,
             height: size*coeff
-        }).appendTo('.hit-'+current);
-        $('.img-content').show();
+        }).appendTo('.hit-'+opposite);
+        $('#'+figureId).removeClass('figure');
     }
     function move(figureId, x, y)
     {
