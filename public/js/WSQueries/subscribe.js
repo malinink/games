@@ -1,15 +1,16 @@
 /**
  *
- * @author Ananskelly
+ * @author Ananaskelly
  */
 define(function () {
     return {
-        send: function (data) {
+        sendQuery: function () {
+            var gameId = $('.game-info').attr('data-game');
             var msg = {
-                'name': 'authentication',
+                'name': 'subscribe',
                 'data': {
                     'type': 'request',
-                    'token': data.token,
+                    'game': gameId
                 }
             }
             console.log(msg);
@@ -17,5 +18,3 @@ define(function () {
         }
     }
 })
-
-

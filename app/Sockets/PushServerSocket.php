@@ -153,12 +153,12 @@ class PushServerSocket implements MessageComponentInterface
         if (isset($this->clientToUserIds[$client->resourceId])) {
             if (isset($this->clientToGameIds[$gameId])) {
                 $this->clientToGameIds[$gameId]->attach($client);
-                $this->gameOfClientIds[$client]->attach($gameId);
+                $this->gameOfClientIds[$client] = $gameId;
                 return true;
             } else {
                 $this->clientToGameIds[$gameId] = new SplObjectStorage();
-                $this->cleintToGameIds[$gameId]->attach($client);
-                $this->gameOfClientIds[$client]->attach($gameId);
+                $this->clientToGameIds[$gameId]->attach($client);
+                $this->gameOfClientIds[$client] = $gameId;
                 return true;
             }
         } else {

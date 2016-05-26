@@ -31,21 +31,21 @@ class TurnController extends BaseController
         );
 
         if ($turnValidatedSuccessfully === true) {
-            $answer = json_encode([
+            $answer = [
                 'name' => 'turn',
                 'data' =>
                 [
                     'state' => 'success'
                 ]
-            ]);
+            ];
         } else {
-            $answer = json_encode([
+            $answer = [
                 'name' => 'turn',
                 'data' =>
                 [
                     'state' => 'failed'
                 ]
-            ]);
+            ];
         }
         return response()->json($answer);
     }
