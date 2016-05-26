@@ -25,7 +25,7 @@ class HomeController extends BaseController
     public function websockets()
     {
         
-        $game = \App\Game::find(5);
+        $game = \App\Game::find(1);
         $players = [];
         foreach ($game->userGames as $userGame) {
             $players[] = [
