@@ -323,7 +323,8 @@ class Game extends Model
      *
      * @return void
      */
-    private function swap(&$x, &$y) {
+    private function swap(&$x, &$y)
+    {
         $temp = $x;
         $x = $y;
         $y = $temp;
@@ -507,8 +508,15 @@ class Game extends Model
         }
         
         $position = $toY * 10 + $toX + $delta;
-        $rook = BoardInfo::where(["figure" => 1, "color" => $color, "position" => $position, "game_id" => $gameId])->get()->first();
-        $king = BoardInfo::where(["figure" => 5, "color" => $color, "game_id" => $gameId])->get()->first();
+        $rook = BoardInfo::where(["figure" => 1,
+                                  "color" => $color,
+                                  "position" => $position,
+                                  "game_id" => $gameId
+                                 ])->get()->first();
+        $king = BoardInfo::where(["figure" => 5,
+                                  "color" => $color,
+                                  "game_id" => $gameId
+                                 ])->get()->first();
         
         if ($king === null || $rook === null) {
             return false;
