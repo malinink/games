@@ -93,7 +93,7 @@ define(['./gameConfig', 'WSQueries/sync'], function (gameConfig, sync) {
             if (turnParameters.hasOwnProperty('change') && turnParameters.change.lenght !== 0 ) {
                 var $img = $('<img>');
                 $img.attr('src','/figure/'+config[turnParameters.change[0].type]+'-'+user+'.png');
-                $img.attr('data-type', config[turnParameters.change[0].type] );
+                $img.attr('data-type', config[turnParameters.change[0].type]);
                 $('<div class="figure '+current+'" id="' + turnParameters.change[0].figure +'">').appendTo('['+attr+'='+turnParameters.move.y+turnParameters.move.x+']').append($img);
                 $img.addClass('img-content');
                 $('['+attr+'='+turnParameters.move.y+turnParameters.move.x+']').addClass('busy');
