@@ -3,7 +3,7 @@
  * @author Ananskelly
  */
 define(['GameControl/gameConfig', 'changeStatus'], function (gameConfig, changeStatus) {
-    var config = ['pawn', 'rook', 'knight', 'bishop', 'queen', 'king'];
+    var config = ['pawn', 'rook', 'knight', 'bishop', 'king', 'queen'];
     var colors = ['white', 'black']
     return {
         compile: function (data) {
