@@ -53,6 +53,11 @@ class Game extends Model
      */
     public $timestamps = false;
     
+    /**
+     * Constant for figure type
+     *
+     * @var const int
+     */
     const PAWN = 0;
     const ROOK = 1;
     const KNIGHT = 2;
