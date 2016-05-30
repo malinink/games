@@ -53,6 +53,13 @@ class Game extends Model
      */
     public $timestamps = false;
     
+    const PAWN = 0;
+    const ROOK = 1;
+    const KNIGHT = 2;
+    const BISHOP = 3;
+    const KING = 4;
+    const QUEEN = 5;
+    
     /**
      * Create BoardInfo
      *
@@ -84,7 +91,7 @@ class Game extends Model
             } else {
                 $figure = 8 - $j;
             };
-            if ($j == 0 || $j == 4 || $j == 7) {
+            if ($j == 0 || $j == 3 || $j == 7) {
                 $special = 1;
             }
             $game->createBoardInfo(0, 21+$j, 0, false);
@@ -254,9 +261,6 @@ class Game extends Model
         $game = $data['game'];
         $user = $data['user'];
         $turnNumber = $data['turn'];
-        $figureId = $data['figure'];
-        $x = $data['x'];
-        $y = $data['y'];
         $eatenFigureId = $data['eatenFigureId'];
         $typeId = $data['typeId'];
         $options = $data['options'];
@@ -269,34 +273,36 @@ class Game extends Model
             $currentColor = true;
         }
         
-        $boardInfo = BoardInfo::find($figureId);
-        $boardInfo->turn_number =  $turnNumber;
-        $currentPosition = $boardInfo->position;
+        $size = count($data['move']);
         
-        $turnInfo = new TurnInfo();
-        $turnInfo->game_id = $game->id;
-        $turnInfo->turn_number = $turnNumber;
-        $turnInfo->move = (int)$currentPosition.$y.$x;
-        $turnInfo->options = $options;
-        $turnInfo->turn_start_time = Carbon::now();
-        $turnInfo->user_turn = $currentColor;
-        $turnInfo->save();
-        
-        $boardInfo->position = (int)$y.$x;
-        $boardInfo->save();
+        $figureId = 0;
+        for ($i = 0; $i < $size; $i++) {
+            $figureId = $data['move'][$i]['figure'];
+            $x = $data['move'][$i]['x'];
+            $y = $data['move'][$i]['y'];
+            $boardInfo = BoardInfo::find($figureId);
+            $boardInfo->turn_number =  $turnNumber;
+            $currentPosition = $boardInfo->position;
+
+            $turnInfo = new TurnInfo();
+            $turnInfo->game_id = $game->id;
+            $turnInfo->turn_number = $turnNumber;
+            $turnInfo->move = (int)$currentPosition.$y.$x;
+            $turnInfo->options = $options;
+            $turnInfo->turn_start_time = Carbon::now();
+            $turnInfo->user_turn = $currentColor;
+            $turnInfo->save();
+
+            $boardInfo->position = (int)$y.$x;
+            $boardInfo->save();
+        }
         
         $sendingData = [
             'game' => $game->id,
             'user' => $user->id,
             'turn' => $turnNumber,
             'prev' => $turnNumber-1,
-            'move' => [
-                        [
-                            'figure' => $figureId,
-                            'x'        => $x,
-                            'y'        => $y
-                        ]
-                    ]
+            'move' => $data["move"]
             ];
         if ($event!='none') {
             $sendingData['event'] = $event;
@@ -323,7 +329,7 @@ class Game extends Model
      *
      * @return void
      */
-    private function swap(&$x, &$y)
+    private static function swap(&$x, &$y)
     {
         $temp = $x;
         $x = $y;
@@ -338,7 +344,7 @@ class Game extends Model
      *
      * @return boolean
      */
-    private function tryMovePawn($fromX, $fromY, $toX, $toY, $gameId, $color)
+    private function tryMovePawn($fromX, $fromY, $toX, $toY, $color)
     {
         $delta = 1;
         if ($color) {
@@ -346,7 +352,7 @@ class Game extends Model
         }
         
         $pos = $toY * 10 + $toX;
-        $count = BoardInfo::where(["game_id"=> $gameId, "position" => $pos])->count();
+        $count = BoardInfo::where(["game_id"=> $this->id, "position" => $pos])->count();
 
         //check eat
         if (abs($fromX - $toX) == 1 && $fromY + $delta == $toY) {
@@ -377,6 +383,32 @@ class Game extends Model
     }
     
     /*
+     * @param int $from
+     * @param int $to
+     * @param int $coordinate
+     * @param int $gameId
+     * @param function $position
+     *
+     * @return boolean
+     */
+    private function checkFigureOnLine($from, $to, $coordinate, $position)
+    {
+        if ($from > $to) {
+            $this->swap($from, $to);
+        }
+            
+        for ($i = $from + 1; $i < $to; $i++) {
+            $pos = $position($i, $coordinate);
+            $count = BoardInfo::where(["game_id"=> $this->id, "position" => $pos])->count();
+
+            if ($count !== 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    /*
      * @param int $fromX
      * @param int $fromY
      * @param int $toX
@@ -384,38 +416,18 @@ class Game extends Model
      *
      * @return boolean
      */
-    private function tryMoveRook($fromX, $fromY, $toX, $toY, $gameId)
+    private function tryMoveRook($fromX, $fromY, $toX, $toY)
     {
         if ($fromX == $toX) {
-            if ($fromY > $toY) {
-                $this->swap($fromY, $toY);
-            }
-            
-            for ($i = $fromY + 1; $i < $toY; $i++) {
-                $pos = $i * 10 + $fromX;
-                $count = BoardInfo::where(["game_id"=> $gameId, "position" => $pos])->count();
-                
-                if ($count !== 0) {
-                    return false;
-                }
-            }
-            return true;
+            return $this->checkFigureOnLine($fromY, $toY, $fromX, function ($i, $fromX) {
+                return $i * 10 + $fromX;
+            });
         }
         
         if ($fromY == $toY) {
-            if ($fromX > $toX) {
-                $this->swap($fromX, $toX);
-            }
-            
-            for ($i = $fromX + 1; $i < $toX; $i++) {
-                $pos = $fromY * 10 + $i;
-                $count = BoardInfo::where(["game_id"=> $gameId, "position" => $pos])->count();
-                if ($count !== 0) {
-                    return false;
-                }
-            }
-            
-            return true;
+            return $this->checkFigureOnLine($fromX, $toX, $fromY, function ($i, $fromY) {
+                return $fromY * 10 + $i;
+            });
         }
         
         return false;
@@ -450,7 +462,7 @@ class Game extends Model
      *
      * @return boolean
      */
-    private function tryMoveBishop($fromX, $fromY, $toX, $toY, $gameId)
+    private function tryMoveBishop($fromX, $fromY, $toX, $toY)
     {
         $deltaX = abs($fromX - $toX);
         $deltaY = abs($fromY - $toY);
@@ -467,7 +479,7 @@ class Game extends Model
             
             for ($i = 1; $i < $deltaX; $i++) {
                 $pos = ($fromY + $i * $flag2) * 10 + $fromX + $i * $flag1;
-                $count = BoardInfo::where(["game_id"=> $gameId, "position" => $pos])->count();
+                $count = BoardInfo::where(["game_id"=> $this->id, "position" => $pos])->count();
                 if ($count !== 0) {
                     return false;
                 }
@@ -486,10 +498,10 @@ class Game extends Model
      *
      * @return boolean
      */
-    private function tryMoveQueen($fromX, $fromY, $toX, $toY, $gameId)
+    private function tryMoveQueen($fromX, $fromY, $toX, $toY)
     {
-        return $this->tryMoveBishop($fromX, $fromY, $toX, $toY, $gameId) ||
-               $this->tryMoveRook($fromX, $fromY, $toX, $toY, $gameId);
+        return $this->tryMoveBishop($fromX, $fromY, $toX, $toY) ||
+               $this->tryMoveRook($fromX, $fromY, $toX, $toY);
     }
     
     /*
@@ -500,25 +512,30 @@ class Game extends Model
      * 
      * @return boolean
      */
-    private function tryRoque($fromX, $fromY, $toX, $toY, $color, $gameId)
+    private function tryRoque($fromX, $fromY, $toX, $toY, $color, &$roque)
     {
         $delta = 1;
         if ($toX < $fromX) {
             $delta = -1;
         }
         
+        $gameId = $this->id;
         $position = $toY * 10 + $toX + $delta;
-        $rook = BoardInfo::where(["figure" => 1,
+        $rook = BoardInfo::where(["figure" => self::ROOK,
                                   "color" => $color,
                                   "position" => $position,
                                   "game_id" => $gameId
                                  ])->get()->first();
-        $king = BoardInfo::where(["figure" => 5,
+        $king = BoardInfo::where(["figure" => self::KING,
                                   "color" => $color,
                                   "game_id" => $gameId
                                  ])->get()->first();
         
         if ($king === null || $rook === null) {
+            return false;
+        }
+        
+        if ($rook->figure != self::ROOK) {
             return false;
         }
         
@@ -536,7 +553,8 @@ class Game extends Model
         
         $oppositeFigures = BoardInfo::where(["color" => (1 - $color), "game_id" => $gameId])->get()->all();
         foreach ($oppositeFigures as $oppositeFigure) {
-            if ($this->checkGameRulesOnFigureMove($oppositeFigure, $fromX, $fromY, $gameId, true)) {
+            $temp = false;
+            if ($this->checkGameRulesOnFigureMove($oppositeFigure, $fromX, $fromY, $temp, true)) {
                 return false;
             }
         }
@@ -545,9 +563,10 @@ class Game extends Model
         $rook->special = false;
         $king->save();
         $rook->save();
+        
+        $roque = $rook;
         return true;
     }
-
 
     /*
      * @param int $fromX
@@ -557,13 +576,13 @@ class Game extends Model
      *
      * @return boolean
      */
-    private function tryMoveKing($fromX, $fromY, $toX, $toY, $color, $gameId)
+    private function tryMoveKing($fromX, $fromY, $toX, $toY, $color, &$roque)
     {
         $deltaX = abs($fromX - $toX);
         $deltaY = abs($fromY - $toY);
         
         if (($deltaX == 3 || $deltaX == 2) && $deltaY == 0) {
-            return $this->tryRoque($fromX, $fromY, $toX, $toY, $color, $gameId);
+            return $this->tryRoque($fromX, $fromY, $toX, $toY, $color, $roque);
         }
         
         if ($deltaX <= 1 && $deltaY <= 1) {
@@ -584,7 +603,7 @@ class Game extends Model
      *
      * @return void
      */
-    protected function checkGameRulesOnFigureMove(BoardInfo $figure, $x, $y, $gameId, $noExceptions = false)
+    protected function checkGameRulesOnFigureMove(BoardInfo $figure, $x, $y, &$roque, $noExceptions = false)
     {
         $fromX = $figure->position % 10;
         $fromY = ($figure->position - $fromX) / 10;
@@ -598,23 +617,23 @@ class Game extends Model
         
         $success = false;
         switch ($figure->figure) {
-            case 0:
-                $success = $this->tryMovePawn($fromX, $fromY, $x, $y, $gameId, $figure->color);
+            case self::PAWN:
+                $success = $this->tryMovePawn($fromX, $fromY, $x, $y, $figure->color);
                 break;
-            case 1:
-                $success = $this->tryMoveRook($fromX, $fromY, $x, $y, $gameId);
+            case self::ROOK:
+                $success = $this->tryMoveRook($fromX, $fromY, $x, $y);
                 break;
-            case 2:
-                $success = $this->tryMoveKnight($fromX, $fromY, $x, $y, $gameId);
+            case self::KNIGHT:
+                $success = $this->tryMoveKnight($fromX, $fromY, $x, $y);
                 break;
-            case 3:
-                $success = $this->tryMoveBishop($fromX, $fromY, $x, $y, $gameId);
+            case self::BISHOP:
+                $success = $this->tryMoveBishop($fromX, $fromY, $x, $y);
                 break;
-            case 4:
-                $success = $this->tryMoveQueen($fromX, $fromY, $x, $y, $gameId);
+            case self::QUEEN:
+                $success = $this->tryMoveQueen($fromX, $fromY, $x, $y);
                 break;
-            case 5:
-                $success = $this->tryMoveKing($fromX, $fromY, $x, $y, $figure->color, $gameId);
+            case self::KING:
+                $success = $this->tryMoveKing($fromX, $fromY, $x, $y, $figure->color, $roque);
                 break;
         }
         
@@ -698,8 +717,8 @@ class Game extends Model
                 throw new Exception("Figure isn't on board");
             }
 
-            $this->checkGameRulesOnFigureMove($figureGet, $x, $y, $gameId);
-
+            $roque = null;
+            $this->checkGameRulesOnFigureMove($figureGet, $x, $y, $roque);
 
             //check if we eat something
             if ($eatenFigure === 1) {
@@ -715,7 +734,7 @@ class Game extends Model
                 }
             }
 
-            if ($figureGet->figure == 1 || $figureGet->figure == 5) {
+            if ($figureGet->figure == self::ROOK || $figureGet->figure == self::KING) {
                 $figureGet->special = false;
                 $figureGet->save();
             }
@@ -724,13 +743,30 @@ class Game extends Model
                 'game' => $this,
                 'user' => $user,
                 'turn' => $turnNumber,
-                'figure' => $figureId,
-                'x' => $x,
-                'y' => $y,
+                'move' => [
+                            [
+                                'figure' => $figureId,
+                                'x' => $x,
+                                'y' => $y
+                            ]
+                          ],
                 'eatenFigureId' => $eatenFigureId,
                 'typeId' => $typeId,
                 'options' => $options
             ];
+            
+            if ($roque != null) {
+                $id = $roque->id;
+                $delta = -1;
+                if ($x < ($figureGet->position % 10)) {
+                    $delta = 1;
+                }
+                $X = $roque->position % 10;
+                $Y = ($roque->position - $X) / 10;
+                $X += 2*$delta;
+                array_push($data['move'], ['figure' => $id, 'x' => $X, 'y' => $Y]);
+            }
+            
             Game::sendMessage($event, $eat, $change, $data);
             return true;
         } catch (Exception $e) {
