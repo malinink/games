@@ -387,7 +387,7 @@ class Game extends Model
      * @param int $to
      * @param int $coordinate
      * @param int $gameId
-     * @param function $position
+     * @param object<Closure> $position
      *
      * @return boolean
      */
@@ -599,7 +599,8 @@ class Game extends Model
      * @param BoardInfo $figure
      * @param int $x
      * @param int $y
-     * @param int $eatenFigure
+     * @param bool roque
+     * @param bool noException
      *
      * @return void
      */
