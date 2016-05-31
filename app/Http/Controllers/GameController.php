@@ -82,7 +82,7 @@ class GameController extends BaseController
             }
             foreach ($game->boardInfos as $boardInfo) {
                 $typeNumber = $boardInfo->figure;
-                $diffTypes = ['pawn', 'rook', 'knight', 'bishop', 'queen', 'king'];
+                $diffTypes = ['pawn', 'rook', 'knight', 'bishop', 'king', 'queen'];
                 $type = $diffTypes[$typeNumber];
 
                 if ($boardInfo->color == (int)Game::BLACK) {
