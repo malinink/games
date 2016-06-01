@@ -1,8 +1,11 @@
 <?php
-
+/**
+ *
+ * @author IrenJones
+ */
 namespace App\Http\Controllers\Ajax;
 
-use App\Http\Requests;
+use App\Http\Requests\TurnRequest;
 use Illuminate\Http\Request;
 use App\Game;
 use App\Http\Controllers\BaseController;
@@ -15,7 +18,7 @@ class TurnController extends BaseController
      *
      * @return json
      */
-    public function turn(Request $msg)
+    public function turn(TurnRequest $msg)
     {
         $data = json_decode($msg->getContent(), true);
         $user=  Auth::user();
